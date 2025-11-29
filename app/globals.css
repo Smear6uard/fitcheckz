@@ -1,26 +1,231 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* FitCheckz Brand Colors */
+  --brand-teal: #20C8A8;
+  --brand-lime: #CCFF00;
+  --brand-cream: #F8F5F0;
+  --brand-lavender: #E0D5FF;
+  --brand-blush: #FFD6E7;
+  --brand-charcoal: #1A1A1A;
+  --brand-off-white: #FAFBF9;
+  --brand-success: #10B981;
+  --brand-error: #EF4444;
+
+  /* FitCheckz Brand Theme - 60% Cream, 30% Teal, 10% Lime */
+  --background: #FAFBF9;
+  --foreground: #1A1A1A;
+  --card: #F8F5F0;
+  --card-foreground: #1A1A1A;
+  --popover: #F8F5F0;
+  --popover-foreground: #1A1A1A;
+  --primary: #20C8A8;
+  --primary-foreground: #FAFBF9;
+  --secondary: #F8F5F0;
+  --secondary-foreground: #1A1A1A;
+  --muted: #F8F5F0;
+  --muted-foreground: #1A1A1A;
+  --accent: #E0D5FF;
+  --accent-foreground: #1A1A1A;
+  --destructive: #EF4444;
+  --destructive-foreground: #FAFBF9;
+  --border: #E0D5FF;
+  --input: #F8F5F0;
+  --ring: #20C8A8;
+  --chart-1: #20C8A8;
+  --chart-2: #CCFF00;
+  --chart-3: #E0D5FF;
+  --chart-4: #FFD6E7;
+  --chart-5: #10B981;
+  --radius: 0.75rem;
+  --sidebar: #F8F5F0;
+  --sidebar-foreground: #1A1A1A;
+  --sidebar-primary: #20C8A8;
+  --sidebar-primary-foreground: #FAFBF9;
+  --sidebar-accent: #E0D5FF;
+  --sidebar-accent-foreground: #1A1A1A;
+  --sidebar-border: #E0D5FF;
+  --sidebar-ring: #20C8A8;
+}
+
+.dark {
+  --background: oklch(0.14 0.02 250);
+  --foreground: oklch(0.96 0.01 210);
+  --card: oklch(0.18 0.02 250);
+  --card-foreground: oklch(0.96 0.01 210);
+  --popover: oklch(0.18 0.02 250);
+  --popover-foreground: oklch(0.96 0.01 210);
+  --primary: oklch(0.7 0.14 195);
+  --primary-foreground: oklch(0.14 0.02 250);
+  --secondary: oklch(0.25 0.02 250);
+  --secondary-foreground: oklch(0.96 0.01 210);
+  --muted: oklch(0.25 0.02 250);
+  --muted-foreground: oklch(0.65 0.01 210);
+  --accent: oklch(0.7 0.14 195);
+  --accent-foreground: oklch(0.14 0.02 250);
+  --destructive: oklch(0.5 0.2 25);
+  --destructive-foreground: oklch(0.96 0.01 210);
+  --border: oklch(0.3 0.02 250);
+  --input: oklch(0.3 0.02 250);
+  --ring: oklch(0.7 0.14 195);
+  --chart-1: oklch(0.7 0.14 195);
+  --chart-2: oklch(0.65 0.15 160);
+  --chart-3: oklch(0.55 0.12 250);
+  --chart-4: oklch(0.75 0.12 85);
+  --chart-5: oklch(0.8 0.1 50);
+  --sidebar: oklch(0.18 0.02 250);
+  --sidebar-foreground: oklch(0.96 0.01 210);
+  --sidebar-primary: oklch(0.7 0.14 195);
+  --sidebar-primary-foreground: oklch(0.14 0.02 250);
+  --sidebar-accent: oklch(0.25 0.02 250);
+  --sidebar-accent-foreground: oklch(0.96 0.01 210);
+  --sidebar-border: oklch(0.3 0.02 250);
+  --sidebar-ring: oklch(0.7 0.14 195);
 }
 
 @theme inline {
+  --font-sans: "Inter", "Inter Fallback";
+  --font-mono: "Geist Mono", "Geist Mono Fallback";
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* Brand Colors */
+  --color-brand-teal: var(--brand-teal);
+  --color-brand-lime: var(--brand-lime);
+  --color-brand-cream: var(--brand-cream);
+  --color-brand-lavender: var(--brand-lavender);
+  --color-brand-blush: var(--brand-blush);
+  --color-brand-charcoal: var(--brand-charcoal);
+  --color-brand-success: var(--brand-success);
+  --color-brand-error: var(--brand-error);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Hide scrollbar for testimonials carousel */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Floating animation for hero mockup */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  /* Fade in on scroll animation */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  /* Hand-drawn underline utility for signature visual motif */
+  .underline-hand-drawn {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--brand-lime);
+    text-decoration-style: wavy;
+  }
+
+  /* Radial gradient utility for email capture section */
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+
+  /* Slide/tilt-in animation for screenshot placeholders */
+  @keyframes slide-tilt-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px) rotate(3deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) rotate(0deg);
+    }
+  }
+
+  .animate-slide-tilt-in {
+    animation: slide-tilt-in 500ms ease-out both;
+  }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .animate-fade-in-up,
+    .animate-slide-tilt-in {
+      animation: none;
+    }
+    * {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
 }
