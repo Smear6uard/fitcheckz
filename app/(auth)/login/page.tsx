@@ -1,6 +1,25 @@
+import { Suspense } from "react"
 import Link from "next/link"
 import { LoginForm } from "@/components/auth/LoginForm"
 import { Button } from "@/components/ui/button"
+
+export const dynamic = 'force-dynamic'
+
+function LoginFormFallback() {
+  return (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <div className="h-4 bg-muted animate-pulse rounded" />
+        <div className="h-10 bg-muted animate-pulse rounded" />
+      </div>
+      <div className="space-y-2">
+        <div className="h-4 bg-muted animate-pulse rounded" />
+        <div className="h-10 bg-muted animate-pulse rounded" />
+      </div>
+      <div className="h-10 bg-muted animate-pulse rounded" />
+    </div>
+  )
+}
 
 export default function LoginPage() {
   return (
@@ -13,7 +32,9 @@ export default function LoginPage() {
           </p>
         </div>
         <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
-          <LoginForm />
+          <Suspense fallback={<LoginFormFallback />}>
+            <LoginForm />
+          </Suspense>
           <div className="mt-4 text-center text-sm">
             <Link
               href="/reset-password"
