@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -7,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Heart, ExternalLink } from "lucide-react"
 import type { WardrobeItem } from "@/types/wardrobe"
+import { VisualizationButton } from "./VisualizationButton"
 
 interface OutfitCardProps {
   outfit: {
@@ -17,11 +19,14 @@ interface OutfitCardProps {
     risk_level?: number
     occasion?: string
     liked?: boolean
+    visualization_url?: string | null
   }
   onLike?: (id: string, liked: boolean) => void
 }
 
 export function OutfitCard({ outfit, onLike }: OutfitCardProps) {
+  const [visualizationUrl, setVisualizationUrl] = useState(outfit.visualization_url)
+
   const handleLike = async () => {
     if (onLike) {
       onLike(outfit.id, !outfit.liked)
@@ -60,6 +65,19 @@ export function OutfitCard({ outfit, onLike }: OutfitCardProps) {
         </div>
       </CardHeader>
       <CardContent>
+        {visualizationUrl && (
+          <div className="mb-4">
+            <div className="aspect-[3/4] relative rounded-lg overflow-hidden">
+              <Image
+                src={visualizationUrl}
+                alt="Outfit visualization"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
+          </div>
+        )}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
           {outfit.items?.slice(0, 4).map((item) => (
             <div key={item.id} className="aspect-square relative rounded-lg overflow-hidden bg-muted">
@@ -78,12 +96,19 @@ export function OutfitCard({ outfit, onLike }: OutfitCardProps) {
             {outfit.ai_explanation}
           </p>
         )}
-        <Button variant="outline" asChild className="w-full">
-          <Link href={`/outfits/${outfit.id}`}>
-            View Details
-            <ExternalLink className="ml-2 h-4 w-4" />
-          </Link>
-        </Button>
+        <div className="space-y-2">
+          <VisualizationButton
+            outfitId={outfit.id}
+            existingVisualization={visualizationUrl}
+            onVisualizationComplete={(url) => setVisualizationUrl(url)}
+          />
+          <Button variant="outline" asChild className="w-full">
+            <Link href={`/outfits/${outfit.id}`}>
+              View Details
+              <ExternalLink className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   )

@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
-import { openai } from '@/lib/openai/client'
+import { openrouter, MODELS } from '@/lib/openrouter/client'
 import { SYSTEM_PROMPT, createUserPrompt } from '@/lib/openai/prompts'
 
 export async function POST(request: Request) {
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
       )
     }
 
-    // Generate outfits with OpenAI
+    // Generate outfits with Claude via OpenRouter
     const userPrompt = createUserPrompt(profile, wardrobeItems, {
       occasion,
       season,
@@ -76,8 +76,8 @@ export async function POST(request: Request) {
       timeOfDay,
     })
 
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+    const completion = await openrouter.chat.completions.create({
+      model: MODELS.CREATIVE,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: userPrompt },
@@ -89,7 +89,7 @@ export async function POST(request: Request) {
 
     const responseContent = completion.choices[0]?.message?.content
     if (!responseContent) {
-      throw new Error('No response from OpenAI')
+      throw new Error('No response from OpenRouter')
     }
 
     let outfits
@@ -117,7 +117,7 @@ export async function POST(request: Request) {
             outfits = [outfits]
           }
         } catch {
-          throw new Error('Failed to parse OpenAI response')
+          throw new Error('Failed to parse OpenRouter response')
         }
       }
     }

@@ -20,6 +20,14 @@ export interface Database {
           budget_range: 'budget' | 'mid' | 'luxury' | null
           skin_tone: 'fair' | 'light' | 'medium' | 'deep' | null
           aesthetic_preference: 'minimalist' | 'trendy' | 'classic' | 'edgy' | null
+          style_vibes: string[] | null
+          typical_occasions: string[] | null
+          age_range: string | null
+          gender: string | null
+          favorite_colors: string[] | null
+          fashion_goals: string[] | null
+          onboarding_completed: boolean
+          onboarding_completed_at: string | null
           created_at: string
           updated_at: string
         }
@@ -33,6 +41,14 @@ export interface Database {
           budget_range?: 'budget' | 'mid' | 'luxury' | null
           skin_tone?: 'fair' | 'light' | 'medium' | 'deep' | null
           aesthetic_preference?: 'minimalist' | 'trendy' | 'classic' | 'edgy' | null
+          style_vibes?: string[] | null
+          typical_occasions?: string[] | null
+          age_range?: string | null
+          gender?: string | null
+          favorite_colors?: string[] | null
+          fashion_goals?: string[] | null
+          onboarding_completed?: boolean
+          onboarding_completed_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -46,6 +62,14 @@ export interface Database {
           budget_range?: 'budget' | 'mid' | 'luxury' | null
           skin_tone?: 'fair' | 'light' | 'medium' | 'deep' | null
           aesthetic_preference?: 'minimalist' | 'trendy' | 'classic' | 'edgy' | null
+          style_vibes?: string[] | null
+          typical_occasions?: string[] | null
+          age_range?: string | null
+          gender?: string | null
+          favorite_colors?: string[] | null
+          fashion_goals?: string[] | null
+          onboarding_completed?: boolean
+          onboarding_completed_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -166,6 +190,10 @@ export interface Database {
           liked: boolean
           worn: boolean
           worn_date: string | null
+          visualization_url: string | null
+          visualization_status: 'pending' | 'processing' | 'completed' | 'failed' | null
+          visualization_prompt: string | null
+          replicate_prediction_id: string | null
           created_at: string
           suggested_at: string
         }
@@ -181,6 +209,10 @@ export interface Database {
           liked?: boolean
           worn?: boolean
           worn_date?: string | null
+          visualization_url?: string | null
+          visualization_status?: 'pending' | 'processing' | 'completed' | 'failed' | null
+          visualization_prompt?: string | null
+          replicate_prediction_id?: string | null
           created_at?: string
           suggested_at?: string
         }
@@ -196,6 +228,10 @@ export interface Database {
           liked?: boolean
           worn?: boolean
           worn_date?: string | null
+          visualization_url?: string | null
+          visualization_status?: 'pending' | 'processing' | 'completed' | 'failed' | null
+          visualization_prompt?: string | null
+          replicate_prediction_id?: string | null
           created_at?: string
           suggested_at?: string
         }
@@ -272,6 +308,7 @@ export interface Database {
           outfit_suggestions_count: number
           wardrobe_items_count: number
           outfits_saved: number
+          visualizations_generated: number
           created_at: string
         }
         Insert: {
@@ -281,6 +318,7 @@ export interface Database {
           outfit_suggestions_count?: number
           wardrobe_items_count?: number
           outfits_saved?: number
+          visualizations_generated?: number
           created_at?: string
         }
         Update: {
@@ -290,6 +328,7 @@ export interface Database {
           outfit_suggestions_count?: number
           wardrobe_items_count?: number
           outfits_saved?: number
+          visualizations_generated?: number
           created_at?: string
         }
       }
