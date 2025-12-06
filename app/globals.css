@@ -232,4 +232,37 @@
       animation-duration: 0.01ms !important;
     }
   }
+
+  /* Mobile safe area utilities for iOS notches and home indicators */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Touch target minimum sizes for accessibility (44px Apple, 48px Google) */
+  .touch-target {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .touch-target-lg {
+    min-width: 48px;
+    min-height: 48px;
+  }
+
+  /* Disable pull-to-refresh overscroll on mobile to prevent conflicts */
+  .disable-overscroll {
+    overscroll-behavior-y: contain;
+  }
 }

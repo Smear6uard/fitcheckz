@@ -1,0 +1,37 @@
+{
+  "name": "FitCheckz - AI Personal Stylist",
+  "short_name": "FitCheckz",
+  "description": "Your AI-powered outfit recommendation service",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#32B8C6",
+  "orientation": "portrait",
+  "categories": ["lifestyle", "shopping"],
+  "icons": [
+    {
+      "src": "/Favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/Icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Add Item",
+      "url": "/wardrobe/upload",
+      "icons": [{ "src": "/Favicon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Generate Outfit",
+      "url": "/outfits/generate",
+      "icons": [{ "src": "/Favicon.png", "sizes": "192x192" }]
+    }
+  ]
+}

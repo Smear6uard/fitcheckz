@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,15 +14,21 @@ import {
 } from "@/components/ui/select"
 import { toast } from "sonner"
 import { compressImage } from "@/lib/utils/imageOptimization"
-import { Upload, X } from "lucide-react"
+import { Upload, X, Camera } from "lucide-react"
 import Image from "next/image"
+import { CameraCapture } from "./CameraCapture"
+import { isMobileDevice, hasCamera } from "@/lib/utils/deviceDetection"
 
 export function ItemUpload() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [compressionProgress, setCompressionProgress] = useState(0)
   const [preview, setPreview] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
+  const [showCamera, setShowCamera] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [cameraAvailable, setCameraAvailable] = useState(false)
   const [formData, setFormData] = useState({
     item_name: "",
     category: "",
@@ -35,6 +41,11 @@ export function ItemUpload() {
     condition: "",
     removeBg: false,
   })
+
+  useEffect(() => {
+    setIsMobile(isMobileDevice())
+    setCameraAvailable(hasCamera())
+  }, [])
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
@@ -53,6 +64,17 @@ export function ItemUpload() {
     reader.readAsDataURL(selectedFile)
   }
 
+  const handleCameraCapture = async (imageData: string) => {
+    // Convert base64 to File object
+    const response = await fetch(imageData)
+    const blob = await response.blob()
+    const file = new File([blob], `camera-${Date.now()}.jpg`, { type: "image/jpeg" })
+
+    setFile(file)
+    setPreview(imageData)
+    setShowCamera(false)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!file) {
@@ -63,8 +85,10 @@ export function ItemUpload() {
     setUploading(true)
 
     try {
-      // Compress image
+      // Compress image with progress
+      setCompressionProgress(30)
       const compressedFile = await compressImage(file)
+      setCompressionProgress(60)
 
       // Upload image
       const uploadFormData = new FormData()
@@ -79,6 +103,7 @@ export function ItemUpload() {
       if (!uploadRes.ok) throw new Error("Failed to upload image")
 
       const { url } = await uploadRes.json()
+      setCompressionProgress(80)
 
       // Create wardrobe item
       const itemData = {
@@ -102,61 +127,98 @@ export function ItemUpload() {
 
       if (!res.ok) throw new Error("Failed to create item")
 
+      setCompressionProgress(100)
       toast.success("Item added to wardrobe!")
       router.push("/wardrobe")
     } catch (error: any) {
       toast.error(error.message || "Failed to upload item")
     } finally {
       setUploading(false)
+      setCompressionProgress(0)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="image">Item Photo</Label>
-        <div className="border-2 border-dashed rounded-lg p-4">
-          {preview ? (
-            <div className="relative aspect-square max-w-xs mx-auto">
-              <Image
-                src={preview}
-                alt="Preview"
-                fill
-                className="object-cover rounded-lg"
-              />
-              <Button
-                type="button"
-                variant="destructive"
-                size="icon"
-                className="absolute top-2 right-2"
-                onClick={() => {
-                  setPreview(null)
-                  setFile(null)
-                }}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          ) : (
-            <label
-              htmlFor="image-upload"
-              className="flex flex-col items-center justify-center cursor-pointer"
-            >
-              <Upload className="h-12 w-12 text-muted-foreground mb-2" />
-              <span className="text-sm text-muted-foreground">
-                Click to upload or drag and drop
-              </span>
-            </label>
-          )}
-          <Input
-            id="image-upload"
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="hidden"
-            disabled={uploading}
-          />
-        </div>
+    <>
+      {showCamera && (
+        <CameraCapture
+          onCapture={handleCameraCapture}
+          onClose={() => setShowCamera(false)}
+        />
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="image">Item Photo</Label>
+          <div className="border-2 border-dashed rounded-lg p-4">
+            {preview ? (
+              <div className="relative aspect-square max-w-xs mx-auto">
+                <Image
+                  src={preview}
+                  alt="Preview"
+                  fill
+                  className="object-cover rounded-lg"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  className="absolute top-2 right-2 touch-target"
+                  onClick={() => {
+                    setPreview(null)
+                    setFile(null)
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <label
+                  htmlFor="image-upload"
+                  className="flex flex-col items-center justify-center cursor-pointer py-4"
+                >
+                  <Upload className="h-12 w-12 text-muted-foreground mb-2" />
+                  <span className="text-sm text-muted-foreground">
+                    Click to upload or drag and drop
+                  </span>
+                </label>
+
+                {isMobile && cameraAvailable && (
+                  <>
+                    <div className="relative">
+                      <div className="absolute inset-0 flex items-center">
+                        <span className="w-full border-t" />
+                      </div>
+                      <div className="relative flex justify-center text-xs uppercase">
+                        <span className="bg-background px-2 text-muted-foreground">
+                          Or
+                        </span>
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full touch-target"
+                      onClick={() => setShowCamera(true)}
+                      disabled={uploading}
+                    >
+                      <Camera className="mr-2 h-4 w-4" />
+                      Take Photo
+                    </Button>
+                  </>
+                )}
+              </div>
+            )}
+            <Input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+              disabled={uploading}
+            />
+          </div>
         <div className="flex items-center space-x-2">
           <input
             type="checkbox"
@@ -305,10 +367,15 @@ export function ItemUpload() {
         />
       </div>
 
-      <Button type="submit" disabled={uploading} className="w-full">
-        {uploading ? "Uploading..." : "Add to Wardrobe"}
+      <Button type="submit" disabled={uploading} className="w-full touch-target">
+        {uploading
+          ? compressionProgress > 0
+            ? `Processing... ${compressionProgress}%`
+            : "Uploading..."
+          : "Add to Wardrobe"}
       </Button>
-    </form>
+      </form>
+    </>
   )
 }
 

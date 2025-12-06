@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { openrouter, MODELS } from '@/lib/openrouter/client'
 import { SYSTEM_PROMPT, createUserPrompt } from '@/lib/openai/prompts'
+import { scoreOutfit } from '@/lib/ai/outfit-scorer'
 
 export async function POST(request: Request) {
   try {
@@ -122,7 +123,7 @@ export async function POST(request: Request) {
       }
     }
 
-    // Save outfit suggestions to database
+    // Save outfit suggestions to database with scoring
     const savedOutfits = []
     for (const outfit of outfits) {
       // Find item IDs from item names
@@ -137,6 +138,14 @@ export async function POST(request: Request) {
 
       if (itemIds.length === 0) continue
 
+      // Get full items for scoring
+      const outfitItems = itemIds
+        .map((id: string) => wardrobeItems.find((wi) => wi.id === id))
+        .filter(Boolean)
+
+      // Calculate outfit score
+      const scoredOutfit = scoreOutfit(outfitItems, occasion, season)
+
       const { data: savedOutfit, error: saveError } = await supabase
         .from('outfit_suggestions')
         .insert({
@@ -147,6 +156,8 @@ export async function POST(request: Request) {
           mood,
           ai_explanation: outfit.explanation,
           risk_level: outfit.boldness_level,
+          scores: scoredOutfit.scores,
+          overall_score: scoredOutfit.overallScore,
         })
         .select()
         .single()
@@ -154,9 +165,8 @@ export async function POST(request: Request) {
       if (!saveError && savedOutfit) {
         savedOutfits.push({
           ...savedOutfit,
-          items: itemIds.map((id: string) =>
-            wardrobeItems.find((wi) => wi.id === id)
-          ),
+          items: outfitItems,
+          scoredOutfit,
         })
       }
     }
@@ -167,10 +177,17 @@ export async function POST(request: Request) {
       weekStart.setDate(weekStart.getDate() - weekStart.getDay())
       weekStart.setHours(0, 0, 0, 0)
 
+      const { data: currentUsage } = await supabase
+        .from('feature_usage')
+        .select('outfit_suggestions_count')
+        .eq('user_id', user.id)
+        .eq('week_start', weekStart.toISOString().split('T')[0])
+        .single()
+
       await supabase.from('feature_usage').upsert({
         user_id: user.id,
         week_start: weekStart.toISOString().split('T')[0],
-        outfit_suggestions_count: (usage?.outfit_suggestions_count || 0) + 1,
+        outfit_suggestions_count: (currentUsage?.outfit_suggestions_count || 0) + 1,
       })
     }
 

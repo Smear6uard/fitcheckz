@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import {
@@ -12,9 +12,12 @@ import {
 } from "@/components/ui/select"
 import { toast } from "sonner"
 import { Sparkles } from "lucide-react"
+import { GenerationProgress } from "./GenerationProgress"
+import { fetchWithRetry, handleApiError, parseApiError } from "@/lib/utils/api-error-handler"
 
 export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) => void }) {
   const [loading, setLoading] = useState(false)
+  const [progressStage, setProgressStage] = useState(0)
   const [params, setParams] = useState({
     occasion: "",
     season: "",
@@ -22,30 +25,63 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
     timeOfDay: "",
   })
 
+  // Progress stage advancement while loading
+  useEffect(() => {
+    if (!loading) {
+      setProgressStage(0)
+      return
+    }
+
+    // Stage 0: Analyzing wardrobe (0s)
+    // Stage 1: Finding combinations (3s)
+    // Stage 2: Finalizing outfits (6s)
+    // Stage 3: Almost ready (9s)
+    const timers = [
+      setTimeout(() => setProgressStage(1), 3000),
+      setTimeout(() => setProgressStage(2), 6000),
+      setTimeout(() => setProgressStage(3), 9000),
+    ]
+
+    return () => timers.forEach(clearTimeout)
+  }, [loading])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setProgressStage(0)
 
     try {
-      const res = await fetch("/api/outfits/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(params),
-      })
+      const res = await fetchWithRetry(
+        "/api/outfits/generate",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(params),
+        },
+        {
+          maxRetries: 2,
+          onRetry: (attempt) => {
+            toast.info(`Retrying... (attempt ${attempt}/2)`)
+          },
+        }
+      )
 
       if (!res.ok) {
-        const error = await res.json()
-        throw new Error(error.error || "Failed to generate outfits")
+        throw await parseApiError(res)
       }
 
       const data = await res.json()
       onGenerate(data.outfits)
       toast.success("Outfits generated!")
     } catch (error: any) {
-      toast.error(error.message || "Failed to generate outfits")
+      handleApiError(error, "Outfit Generation")
     } finally {
       setLoading(false)
     }
+  }
+
+  if (loading) {
+    return <GenerationProgress stage={progressStage} />
   }
 
   return (
@@ -137,7 +173,7 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
 
       <Button type="submit" disabled={loading} className="w-full">
         <Sparkles className="mr-2 h-4 w-4" />
-        {loading ? "Generating..." : "Generate Outfits"}
+        Generate Outfits
       </Button>
     </form>
   )

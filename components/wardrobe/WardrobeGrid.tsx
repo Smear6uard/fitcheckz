@@ -1,6 +1,9 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { ItemCard } from "./ItemCard"
+import { EmptyState } from "@/components/ui/empty-state"
+import { Shirt } from "lucide-react"
 import type { WardrobeItem } from "@/types/wardrobe"
 
 interface WardrobeGridProps {
@@ -8,17 +11,19 @@ interface WardrobeGridProps {
 }
 
 export function WardrobeGrid({ items }: WardrobeGridProps) {
+  const router = useRouter()
+
   if (items.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground mb-4">No items in your wardrobe yet</p>
-        <a
-          href="/wardrobe/upload"
-          className="text-primary hover:underline"
-        >
-          Add your first item
-        </a>
-      </div>
+      <EmptyState
+        icon={Shirt}
+        title="Your wardrobe is empty"
+        description="Start building your digital closet by adding your first clothing item. Take a photo or upload from your gallery."
+        action={{
+          label: "Add Your First Item",
+          onClick: () => router.push("/wardrobe/upload"),
+        }}
+      />
     )
   }
 

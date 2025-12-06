@@ -4,12 +4,18 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { OutfitGenerator } from "@/components/outfits/OutfitGenerator"
 import { OutfitCard } from "@/components/outfits/OutfitCard"
+import { OutfitCardSkeleton } from "@/components/outfits/OutfitCardSkeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { EmptyState } from "@/components/ui/empty-state"
+import { History, Heart } from "lucide-react"
+import { fetchWithRetry, handleApiError, parseApiError } from "@/lib/utils/api-error-handler"
 
 export default function OutfitsPage() {
   const [generatedOutfits, setGeneratedOutfits] = useState<any[]>([])
   const [history, setHistory] = useState<any[]>([])
   const [favorites, setFavorites] = useState<any[]>([])
+  const [loadingHistory, setLoadingHistory] = useState(false)
+  const [loadingFavorites, setLoadingFavorites] = useState(false)
 
   const handleGenerate = (outfits: any[]) => {
     setGeneratedOutfits(outfits)
@@ -18,54 +24,63 @@ export default function OutfitsPage() {
   }
 
   const fetchHistory = async () => {
+    setLoadingHistory(true)
     try {
-      const res = await fetch("/api/outfits/history")
-      if (res.ok) {
-        const data = await res.json()
-        setHistory(data)
+      const res = await fetchWithRetry("/api/outfits/history")
+      if (!res.ok) {
+        throw await parseApiError(res)
       }
+      const data = await res.json()
+      setHistory(data)
     } catch (error) {
-      console.error("Failed to fetch history:", error)
+      handleApiError(error, "Fetch History")
+    } finally {
+      setLoadingHistory(false)
     }
   }
 
   const fetchFavorites = async () => {
+    setLoadingFavorites(true)
     try {
-      const res = await fetch("/api/outfits/favorites")
-      if (res.ok) {
-        const data = await res.json()
-        setFavorites(data)
+      const res = await fetchWithRetry("/api/outfits/favorites")
+      if (!res.ok) {
+        throw await parseApiError(res)
       }
+      const data = await res.json()
+      setFavorites(data)
     } catch (error) {
-      console.error("Failed to fetch favorites:", error)
+      handleApiError(error, "Fetch Favorites")
+    } finally {
+      setLoadingFavorites(false)
     }
   }
 
   const handleLike = async (id: string, liked: boolean) => {
     try {
-      // Update in database
-      const res = await fetch(`/api/outfits/${id}`, {
+      const res = await fetchWithRetry(`/api/outfits/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ liked }),
       })
 
-      if (res.ok) {
-        // Update local state
-        setGeneratedOutfits((prev) =>
-          prev.map((o) => (o.id === id ? { ...o, liked } : o))
-        )
-        setHistory((prev) =>
-          prev.map((o) => (o.id === id ? { ...o, liked } : o))
-        )
-        if (liked) {
-          fetchFavorites()
-        } else {
-          setFavorites((prev) => prev.filter((o) => o.id !== id))
-        }
+      if (!res.ok) {
+        throw await parseApiError(res)
+      }
+
+      // Update local state
+      setGeneratedOutfits((prev) =>
+        prev.map((o) => (o.id === id ? { ...o, liked } : o))
+      )
+      setHistory((prev) =>
+        prev.map((o) => (o.id === id ? { ...o, liked } : o))
+      )
+      if (liked) {
+        fetchFavorites()
+      } else {
+        setFavorites((prev) => prev.filter((o) => o.id !== id))
       }
     } catch (error) {
-      console.error("Failed to update like:", error)
+      handleApiError(error, "Update Like")
     }
   }
 
@@ -119,35 +134,53 @@ export default function OutfitsPage() {
         </TabsContent>
 
         <TabsContent value="history" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            {history.length === 0 ? (
-              <p className="text-muted-foreground">No outfit history yet</p>
-            ) : (
-              history.map((outfit) => (
+          {loadingHistory ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              <OutfitCardSkeleton />
+              <OutfitCardSkeleton />
+            </div>
+          ) : history.length === 0 ? (
+            <EmptyState
+              icon={History}
+              title="No outfit history yet"
+              description="Generate your first outfit to see it here. Your AI-powered style recommendations will appear in this tab."
+            />
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
+              {history.map((outfit) => (
                 <OutfitCard
                   key={outfit.id}
                   outfit={outfit}
                   onLike={handleLike}
                 />
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="favorites" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            {favorites.length === 0 ? (
-              <p className="text-muted-foreground">No favorite outfits yet</p>
-            ) : (
-              favorites.map((outfit) => (
+          {loadingFavorites ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              <OutfitCardSkeleton />
+              <OutfitCardSkeleton />
+            </div>
+          ) : favorites.length === 0 ? (
+            <EmptyState
+              icon={Heart}
+              title="No favorite outfits yet"
+              description="Like outfits you love by clicking the heart icon. Your favorites will be saved here for easy access."
+            />
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
+              {favorites.map((outfit) => (
                 <OutfitCard
                   key={outfit.id}
                   outfit={outfit}
                   onLike={handleLike}
                 />
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>

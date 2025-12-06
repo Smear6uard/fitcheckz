@@ -14,13 +14,16 @@ export function ItemCard({ item }: ItemCardProps) {
   return (
     <Link href={`/wardrobe/${item.id}`}>
       <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
-        <div className="aspect-square relative bg-muted">
+        <div className="aspect-square relative bg-muted overflow-hidden">
           <Image
             src={item.photo_url}
             alt={item.item_name}
             fill
-            className="object-cover"
+            className="object-cover transition-opacity duration-300"
             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+            placeholder="blur"
+            blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cfilter id='b' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='20'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23808080' filter='url(%23b)'/%3E%3C/svg%3E"
+            loading="lazy"
           />
         </div>
         <CardContent className="p-4">

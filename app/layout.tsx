@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Toaster } from "sonner"
+import { QueryProvider } from "@/lib/query/provider"
 import "./globals.css"
 
 const _inter = Inter({ subsets: ["latin"] })
@@ -15,6 +16,12 @@ export const metadata: Metadata = {
   generator: "v0.app",
   keywords: ["AI stylist", "outfit recommendations", "fashion", "wardrobe", "personal styling"],
   authors: [{ name: "FitCheckz" }],
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "FitCheckz",
+  },
   openGraph: {
     title: "FitCheckz - Your AI Personal Stylist",
     description: "Get your fit checked. Dress with confidence.",
@@ -40,9 +47,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans antialiased`}>
-        {children}
-        <Toaster />
-        <Analytics />
+        <QueryProvider>
+          {children}
+          <Toaster />
+          <Analytics />
+        </QueryProvider>
       </body>
     </html>
   )
