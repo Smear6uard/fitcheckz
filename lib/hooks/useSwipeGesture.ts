@@ -33,7 +33,8 @@ export function useSwipeGesture(options: SwipeGestureOptions) {
       }
 
       // Detect swipe on release
-      if (last && distance > threshold) {
+      const dist = Array.isArray(distance) ? Math.hypot(distance[0], distance[1]) : distance
+      if (last && dist > threshold) {
         const isHorizontal = Math.abs(mx) > Math.abs(my)
 
         if (isHorizontal) {

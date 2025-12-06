@@ -6,7 +6,7 @@ import { VISUALIZATION_SYSTEM_PROMPT, createVisualizationPrompt } from '@/lib/re
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient()
@@ -18,7 +18,8 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const outfitId = params.id
+    const { id } = await params
+    const outfitId = id
 
     // Get outfit and verify ownership
     const { data: outfit, error: outfitError } = await supabase

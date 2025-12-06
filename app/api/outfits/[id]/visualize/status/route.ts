@@ -4,7 +4,7 @@ import { replicate } from '@/lib/replicate/client'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient()
@@ -16,7 +16,8 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const outfitId = params.id
+    const { id } = await params
+    const outfitId = id
 
     // Get outfit and verify ownership
     const { data: outfit, error: outfitError } = await supabase

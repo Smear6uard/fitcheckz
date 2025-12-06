@@ -2,10 +2,10 @@
 
 import { useState } from "react"
 import { animated } from "@react-spring/web"
-import { Card, type CardProps } from "./card"
+import { Card } from "./card"
 import { useHoverLift, useSlideUp } from "@/lib/animations/variants"
 
-interface AnimatedCardProps extends CardProps {
+interface AnimatedCardProps extends React.ComponentProps<typeof Card> {
   children: React.ReactNode
   enableHover?: boolean
   enableSlideUp?: boolean

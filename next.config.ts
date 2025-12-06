@@ -84,20 +84,6 @@ const pwaConfig = withPWA({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
   register: true,
-  skipWaiting: true,
-  runtimeCaching: [
-    {
-      urlPattern: /^https:\/\/ldfnbklxxeqhughckeus\.supabase\.co\/storage\/.*/i,
-      handler: 'CacheFirst',
-      options: {
-        cacheName: 'wardrobe-images',
-        expiration: {
-          maxEntries: 200,
-          maxAgeSeconds: 7 * 24 * 60 * 60, // 1 week
-        },
-      },
-    },
-  ],
 });
 
 export default withBundleAnalyzer(pwaConfig(nextConfig));

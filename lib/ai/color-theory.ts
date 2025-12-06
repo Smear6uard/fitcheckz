@@ -248,8 +248,8 @@ export function isSeasonAppropriate(colors: Color[], season: string): boolean {
   const seasonalColors: Record<string, ColorFamily[]> = {
     spring: ['pink', 'yellow', 'green', 'blue', 'white', 'cream'],
     summer: ['white', 'blue', 'yellow', 'pink', 'beige', 'cream'],
-    fall: ['orange', 'brown', 'red', 'yellow', 'green', 'burgundy'],
-    autumn: ['orange', 'brown', 'red', 'yellow', 'green', 'burgundy'],
+    fall: ['orange', 'brown', 'red', 'yellow', 'green', 'beige'],
+    autumn: ['orange', 'brown', 'red', 'yellow', 'green', 'beige'],
     winter: ['black', 'white', 'gray', 'blue', 'red', 'purple'],
   }
 

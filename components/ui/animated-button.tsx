@@ -2,10 +2,10 @@
 
 import { useState } from "react"
 import { animated } from "@react-spring/web"
-import { Button, type ButtonProps } from "./button"
+import { Button } from "./button"
 import { useSpring, config } from "@react-spring/web"
 
-interface AnimatedButtonProps extends ButtonProps {
+interface AnimatedButtonProps extends React.ComponentProps<typeof Button> {
   children: React.ReactNode
 }
 
