@@ -31,7 +31,7 @@ export default function OutfitsPage() {
         throw await parseApiError(res)
       }
       const data = await res.json()
-      setHistory(data)
+      setHistory(data.outfits || [])
     } catch (error) {
       handleApiError(error, "Fetch History")
     } finally {
