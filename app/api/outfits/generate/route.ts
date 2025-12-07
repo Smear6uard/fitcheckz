@@ -144,7 +144,16 @@ export async function POST(request: Request) {
         .filter(Boolean)
 
       // Calculate outfit score
-      const scoredOutfit = scoreOutfit(outfitItems, occasion, season)
+      let scoredOutfit
+      try {
+        scoredOutfit = scoreOutfit(outfitItems, occasion, season)
+      } catch (error) {
+        console.error('Outfit scoring error:', error)
+        return NextResponse.json(
+          { error: `Failed to score outfit: ${error instanceof Error ? error.message : 'Unknown error'}` },
+          { status: 500 }
+        )
+      }
 
       const { data: savedOutfit, error: saveError } = await supabase
         .from('outfit_suggestions')

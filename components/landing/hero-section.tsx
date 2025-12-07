@@ -108,8 +108,8 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Subtle scroll cue at bottom of hero */}
-      <div className="absolute inset-x-0 bottom-6 flex justify-center">
+      {/* Subtle scroll cue at bottom of hero - hidden on mobile */}
+      <div className="absolute inset-x-0 bottom-6 hidden md:flex justify-center">
         <div className="flex flex-col items-center gap-1 text-xs text-muted-foreground/80">
           <span>Scroll</span>
           <div className="h-8 w-px bg-muted-foreground/40 animate-[bounce_2s_infinite] rounded-full" />

@@ -50,19 +50,16 @@ export function UserMenu() {
     router.refresh()
   }
 
-  if (loading) {
+  if (loading || !user) {
     return (
-      <Button variant="ghost" asChild>
-        <Link href="/login">Sign In</Link>
-      </Button>
-    )
-  }
-
-  if (!user) {
-    return (
-      <Button variant="ghost" asChild>
-        <Link href="/login">Sign In</Link>
-      </Button>
+      <div className="flex items-center gap-2">
+        <Button variant="ghost" asChild>
+          <Link href="/login">Sign In</Link>
+        </Button>
+        <Button asChild>
+          <Link href="/signup">Get Started</Link>
+        </Button>
+      </div>
     )
   }
 
