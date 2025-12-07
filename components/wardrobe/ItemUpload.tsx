@@ -32,14 +32,6 @@ export function ItemUpload() {
   const [formData, setFormData] = useState({
     item_name: "",
     category: "",
-    primary_color: "",
-    fabric_type: "",
-    brand: "",
-    size: "",
-    cost: "",
-    purchase_date: "",
-    condition: "",
-    removeBg: false,
   })
 
   useEffect(() => {
@@ -93,7 +85,6 @@ export function ItemUpload() {
       // Upload image
       const uploadFormData = new FormData()
       uploadFormData.append("file", compressedFile)
-      uploadFormData.append("removeBg", formData.removeBg.toString())
 
       const uploadRes = await fetch("/api/wardrobe/upload", {
         method: "POST",
@@ -110,13 +101,6 @@ export function ItemUpload() {
         item_name: formData.item_name,
         photo_url: url,
         category: formData.category,
-        primary_color: formData.primary_color || null,
-        fabric_type: formData.fabric_type || null,
-        brand: formData.brand || null,
-        size: formData.size || null,
-        cost: formData.cost ? parseFloat(formData.cost) : null,
-        purchase_date: formData.purchase_date || null,
-        condition: formData.condition || null,
       }
 
       const res = await fetch("/api/wardrobe", {
@@ -219,23 +203,9 @@ export function ItemUpload() {
               disabled={uploading}
             />
           </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="removeBg"
-            checked={formData.removeBg}
-            onChange={(e) =>
-              setFormData({ ...formData, removeBg: e.target.checked })
-            }
-            className="rounded"
-          />
-          <Label htmlFor="removeBg" className="text-sm">
-            Remove background (uses remove.bg API)
-          </Label>
         </div>
-      </div>
 
-      <div className="space-y-2">
+        <div className="space-y-2">
         <Label htmlFor="item_name">Item Name *</Label>
         <Input
           id="item_name"
@@ -271,100 +241,6 @@ export function ItemUpload() {
             <SelectItem value="outerwear">Outerwear</SelectItem>
           </SelectContent>
         </Select>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="brand">Brand</Label>
-          <Input
-            id="brand"
-            value={formData.brand}
-            onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-            disabled={uploading}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="size">Size</Label>
-          <Input
-            id="size"
-            value={formData.size}
-            onChange={(e) => setFormData({ ...formData, size: e.target.value })}
-            disabled={uploading}
-          />
-        </div>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="primary_color">Primary Color</Label>
-          <Input
-            id="primary_color"
-            type="color"
-            value={formData.primary_color}
-            onChange={(e) =>
-              setFormData({ ...formData, primary_color: e.target.value })
-            }
-            disabled={uploading}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="cost">Cost ($)</Label>
-          <Input
-            id="cost"
-            type="number"
-            step="0.01"
-            value={formData.cost}
-            onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
-            disabled={uploading}
-          />
-        </div>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="fabric_type">Fabric Type</Label>
-          <Input
-            id="fabric_type"
-            value={formData.fabric_type}
-            onChange={(e) =>
-              setFormData({ ...formData, fabric_type: e.target.value })
-            }
-            disabled={uploading}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="condition">Condition</Label>
-          <Select
-            value={formData.condition}
-            onValueChange={(value) =>
-              setFormData({ ...formData, condition: value })
-            }
-            disabled={uploading}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select condition" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="new">New</SelectItem>
-              <SelectItem value="excellent">Excellent</SelectItem>
-              <SelectItem value="good">Good</SelectItem>
-              <SelectItem value="worn">Worn</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="purchase_date">Purchase Date</Label>
-        <Input
-          id="purchase_date"
-          type="date"
-          value={formData.purchase_date}
-          onChange={(e) =>
-            setFormData({ ...formData, purchase_date: e.target.value })
-          }
-          disabled={uploading}
-        />
       </div>
 
       <Button type="submit" disabled={uploading} className="w-full touch-target">
