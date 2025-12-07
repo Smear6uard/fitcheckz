@@ -51,7 +51,7 @@ export function OutfitFeedback({ outfitId, onSubmitted }: OutfitFeedbackProps) {
       if (onSubmitted) {
         onSubmitted()
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(error.message || "Failed to submit feedback")
     } finally {
       setLoading(false)

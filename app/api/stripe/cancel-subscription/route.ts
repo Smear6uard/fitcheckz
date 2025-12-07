@@ -29,7 +29,7 @@ export async function POST() {
     await stripe.subscriptions.cancel(subscription.stripe_subscription_id)
 
     return NextResponse.json({ success: true })
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

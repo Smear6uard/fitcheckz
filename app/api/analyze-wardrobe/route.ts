@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { openrouter, MODELS } from '@/lib/openrouter/client'
 import { createClient } from '@/lib/supabase/server'
+import { getErrorMessage } from '@/lib/utils/error-handling'
 
 export async function POST(request: NextRequest) {
   try {
@@ -67,10 +68,10 @@ Be specific and accurate in your analysis.`
     const analysis = JSON.parse(responseContent)
 
     return NextResponse.json({ success: true, analysis })
-  } catch (error: any) {
-    console.error('Wardrobe analysis error:', error)
+  } catch (error: unknown) {
+    // TODO: Add proper logging service (Sentry/Winston)
     return NextResponse.json(
-      { error: error.message || 'Failed to analyze wardrobe item' },
+      { error: getErrorMessage(error) || 'Failed to analyze wardrobe item' },
       { status: 500 }
     )
   }

@@ -141,7 +141,7 @@ export async function POST(
       prediction_id: prediction.id,
       status: 'processing',
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Visualization generation error:', error)
     return NextResponse.json(
       { error: error.message || 'Failed to generate visualization' },

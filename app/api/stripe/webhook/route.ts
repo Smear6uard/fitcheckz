@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
 import Stripe from 'stripe'
+import { getErrorMessage } from '@/lib/utils/error-handling'
 
 export async function POST(request: Request) {
   const body = await request.text()
@@ -120,9 +121,9 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ received: true })
-  } catch (error: any) {
-    console.error('Webhook error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  } catch (error: unknown) {
+    // TODO: Add proper logging service (Sentry/Winston)
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 })
   }
 }
 

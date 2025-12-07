@@ -34,7 +34,7 @@ export default function WardrobeItemPage() {
         toast.error("Item not found")
         router.push("/wardrobe")
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(error.message || "Failed to load item")
     } finally {
       setLoading(false)
@@ -53,7 +53,7 @@ export default function WardrobeItemPage() {
 
       toast.success("Item deleted")
       router.push("/wardrobe")
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(error.message || "Failed to delete item")
     }
   }

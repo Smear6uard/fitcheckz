@@ -114,7 +114,7 @@ export function ItemUpload() {
       setCompressionProgress(100)
       toast.success("Item added to wardrobe!")
       router.push("/wardrobe")
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(error.message || "Failed to upload item")
     } finally {
       setUploading(false)

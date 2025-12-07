@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { getErrorMessage } from '@/lib/utils/error-handling'
 
 export async function POST(request: Request) {
   try {
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
       })
 
     if (uploadError) {
-      console.error('Upload error:', uploadError)
+      // TODO: Add proper logging service (Sentry/Winston)
       throw uploadError
     }
 
@@ -78,14 +79,14 @@ export async function POST(request: Request) {
           }
         }
       } catch (error) {
-        console.error('Background removal failed:', error)
+        // TODO: Add proper logging service (Sentry/Winston)
         // Continue with original image if removal fails
       }
     }
 
     return NextResponse.json({ url: processedUrl })
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  } catch (error: unknown) {
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 })
   }
 }
 

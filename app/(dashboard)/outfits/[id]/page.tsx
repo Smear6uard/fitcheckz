@@ -33,7 +33,7 @@ export default function OutfitDetailPage() {
         toast.error("Outfit not found")
         router.push("/outfits")
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(error.message || "Failed to load outfit")
     } finally {
       setLoading(false)
@@ -52,7 +52,7 @@ export default function OutfitDetailPage() {
 
       toast.success("Outfit marked as worn!")
       fetchOutfit(outfit.id)
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(error.message || "Failed to mark outfit")
     }
   }

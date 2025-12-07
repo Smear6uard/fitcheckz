@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import {
@@ -16,6 +17,7 @@ import { GenerationProgress } from "./GenerationProgress"
 import { fetchWithRetry, handleApiError, parseApiError } from "@/lib/utils/api-error-handler"
 
 export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) => void }) {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [progressStage, setProgressStage] = useState(0)
   const [params, setParams] = useState({
@@ -71,9 +73,13 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
       }
 
       const data = await res.json()
-      onGenerate(data.outfits)
+
+      // Redirect to swipe page with outfits
+      const outfitsParam = encodeURIComponent(JSON.stringify(data.outfits))
+      router.push(`/outfits/swipe?outfits=${outfitsParam}`)
+
       toast.success("Outfits generated!")
-    } catch (error: any) {
+    } catch (error: unknown) {
       handleApiError(error, "Outfit Generation")
     } finally {
       setLoading(false)

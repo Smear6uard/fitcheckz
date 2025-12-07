@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { openrouter, MODELS } from '@/lib/openrouter/client'
 import { SYSTEM_PROMPT, createUserPrompt } from '@/lib/openai/prompts'
 import { scoreOutfit } from '@/lib/ai/outfit-scorer'
+import { getErrorMessage } from '@/lib/utils/error-handling'
 
 export async function POST(request: Request) {
   try {
@@ -136,7 +137,9 @@ export async function POST(request: Request) {
         })
         .filter(Boolean)
 
-      if (itemIds.length === 0) continue
+      if (itemIds.length === 0) {
+        continue
+      }
 
       // Get full items for scoring
       const outfitItems = itemIds
@@ -148,7 +151,6 @@ export async function POST(request: Request) {
       try {
         scoredOutfit = scoreOutfit(outfitItems, occasion, season)
       } catch (error) {
-        console.error('Outfit scoring error:', error)
         return NextResponse.json(
           { error: `Failed to score outfit: ${error instanceof Error ? error.message : 'Unknown error'}` },
           { status: 500 }
@@ -200,11 +202,18 @@ export async function POST(request: Request) {
       })
     }
 
+    // Error if no outfits were matched
+    if (savedOutfits.length === 0) {
+      return NextResponse.json(
+        { error: 'Could not match AI suggestions with your wardrobe items. Please try generating again.' },
+        { status: 400 }
+      )
+    }
+
     return NextResponse.json({ outfits: savedOutfits })
-  } catch (error: any) {
-    console.error('Outfit generation error:', error)
+  } catch (error: unknown) {
     return NextResponse.json(
-      { error: error.message || 'Failed to generate outfits' },
+      { error: getErrorMessage(error) || 'Failed to generate outfits' },
       { status: 500 }
     )
   }

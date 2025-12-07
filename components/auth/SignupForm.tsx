@@ -35,7 +35,7 @@ export function SignupForm() {
 
       toast.success("Account created! Check your email to verify.")
       router.push("/login")
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(error.message || "Failed to create account")
     } finally {
       setLoading(false)

@@ -53,7 +53,7 @@ export function ProfileForm() {
         skin_tone: data.skin_tone || "",
         aesthetic_preference: data.aesthetic_preference || "",
       })
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(error.message || "Failed to load profile")
     } finally {
       setLoading(false)
@@ -84,7 +84,7 @@ export function ProfileForm() {
 
       toast.success("Profile updated!")
       await fetchProfile()
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(error.message || "Failed to update profile")
     } finally {
       setSaving(false)

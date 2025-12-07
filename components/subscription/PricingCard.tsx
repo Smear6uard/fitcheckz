@@ -47,7 +47,7 @@ export function PricingCard({
 
       const { url } = await res.json()
       window.location.href = url
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(error.message || "Failed to start checkout")
     } finally {
       setLoading(false)

@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { getErrorMessage } from '@/lib/utils/error-handling'
 
 export async function POST(request: Request) {
   try {
@@ -51,10 +52,10 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ success: true, data }, { status: 201 })
-  } catch (error: any) {
-    console.error('Waitlist signup error:', error)
+  } catch (error: unknown) {
+    // TODO: Add proper logging service (Sentry/Winston)
     return NextResponse.json(
-      { error: error.message || 'Failed to add email to waitlist' },
+      { error: getErrorMessage(error) || 'Failed to add email to waitlist' },
       { status: 500 }
     )
   }

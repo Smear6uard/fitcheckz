@@ -56,7 +56,7 @@ export function VisualizationButton({
 
       setStatus('polling')
       setPollingStartTime(Date.now())
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Visualization generation error:', error)
       setError(error.message)
       setStatus('failed')
@@ -92,7 +92,7 @@ export function VisualizationButton({
           description: data.error || 'Please try again',
         })
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Status check error:', error)
       setError(error.message)
       setStatus('failed')

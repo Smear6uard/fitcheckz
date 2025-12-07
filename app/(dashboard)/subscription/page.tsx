@@ -52,7 +52,7 @@ export default function SubscriptionPage() {
 
       toast.success("Subscription canceled")
       fetchSubscription()
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(error.message || "Failed to cancel subscription")
     }
   }

@@ -32,7 +32,7 @@ export function LoginForm() {
       const redirect = searchParams.get("redirect") || "/dashboard"
       router.push(redirect)
       router.refresh()
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(error.message || "Failed to sign in")
     } finally {
       setLoading(false)

@@ -167,7 +167,7 @@ export async function GET(
         message: 'Visualization is still being generated',
       })
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Visualization status check error:', error)
     return NextResponse.json(
       { error: error.message || 'Failed to check visualization status' },

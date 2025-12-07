@@ -42,7 +42,7 @@ export function EmailCaptureSection() {
       setSubmitted(true)
       toast.success("You're on the list! We'll notify you when new features drop.")
       setEmail("")
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(error.message || "Something went wrong. Please try again.")
     } finally {
       setLoading(false)

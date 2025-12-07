@@ -21,7 +21,7 @@ export async function GET() {
     if (error && error.code !== 'PGRST116') throw error
 
     return NextResponse.json(data || { tier: 'free', status: 'active' })
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
