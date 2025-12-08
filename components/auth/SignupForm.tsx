@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
+import { getErrorMessage } from "@/lib/utils/error-handling"
+import { SocialAuthButtons, AuthDivider } from "./SocialAuthButtons"
 
 export function SignupForm() {
   const router = useRouter()
@@ -36,58 +38,67 @@ export function SignupForm() {
       toast.success("Account created! Check your email to verify.")
       router.push("/login")
     } catch (error: unknown) {
-      toast.error(error.message || "Failed to create account")
+      toast.error(getErrorMessage(error) || "Failed to create account")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="username">Username</Label>
-        <Input
-          id="username"
-          type="text"
-          placeholder="yourusername"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-          disabled={loading}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="you@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          disabled={loading}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          placeholder="••••••••"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          minLength={6}
-          disabled={loading}
-        />
-        <p className="text-xs text-muted-foreground">
-          Must be at least 6 characters
-        </p>
-      </div>
-      <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? "Creating account..." : "Create account"}
-      </Button>
-    </form>
+    <div className="space-y-6">
+      {/* Social Auth Buttons */}
+      <SocialAuthButtons mode="signup" />
+
+      {/* Divider */}
+      <AuthDivider />
+
+      {/* Email/Password Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="username">Username</Label>
+          <Input
+            id="username"
+            type="text"
+            placeholder="yourusername"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            disabled={loading}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            disabled={loading}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={6}
+            disabled={loading}
+          />
+          <p className="text-xs text-muted-foreground">
+            Must be at least 6 characters
+          </p>
+        </div>
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? "Creating account..." : "Create account"}
+        </Button>
+      </form>
+    </div>
   )
 }
 

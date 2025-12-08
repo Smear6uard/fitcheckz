@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { getErrorMessage } from '@/lib/utils/error-handling'
+import { profileUpdateSchema } from '@/lib/validations/schemas'
 
 export async function GET() {
   try {
@@ -22,7 +24,7 @@ export async function GET() {
 
     return NextResponse.json(data)
   } catch (error: unknown) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 })
   }
 }
 
@@ -39,9 +41,19 @@ export async function PUT(request: Request) {
 
     const body = await request.json()
 
+    // Validate request body with Zod
+    const validation = profileUpdateSchema.safeParse(body)
+    if (!validation.success) {
+      const firstError = validation.error.errors[0]
+      return NextResponse.json(
+        { error: firstError.message || 'Invalid profile data' },
+        { status: 400 }
+      )
+    }
+
     const { data, error } = await supabase
       .from('profiles')
-      .update(body)
+      .update(validation.data)
       .eq('user_id', user.id)
       .select()
       .single()
@@ -50,7 +62,7 @@ export async function PUT(request: Request) {
 
     return NextResponse.json(data)
   } catch (error: unknown) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 })
   }
 }
 

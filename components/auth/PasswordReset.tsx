@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
+import { getErrorMessage } from "@/lib/utils/error-handling"
 
 export function PasswordReset() {
   const [email, setEmail] = useState("")
@@ -27,7 +28,7 @@ export function PasswordReset() {
       setSent(true)
       toast.success("Password reset email sent!")
     } catch (error: unknown) {
-      toast.error(error.message || "Failed to send reset email")
+      toast.error(getErrorMessage(error) || "Failed to send reset email")
     } finally {
       setLoading(false)
     }

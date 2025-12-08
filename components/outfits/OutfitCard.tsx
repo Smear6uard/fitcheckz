@@ -1,20 +1,23 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { animated } from "@react-spring/web"
+import { animated, useSpring, config } from "@react-spring/web"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Heart, ExternalLink, ThumbsDown } from "lucide-react"
+import { ExternalLink, Sparkles } from "lucide-react"
 import type { WardrobeItem } from "@/types/wardrobe"
 import type { OutfitScores } from "@/lib/ai/outfit-scorer"
 import { VisualizationButton } from "./VisualizationButton"
 import { OutfitScoreCard } from "./OutfitScoreCard"
 import { ShareButton } from "@/components/social/ShareButton"
+import { PublicToggle } from "@/components/social/PublicToggle"
+import { QuickReactions, type ReactionType } from "./QuickReactions"
 import { useSwipeGesture } from "@/lib/hooks/useSwipeGesture"
-import { toast } from "sonner"
+import { toast } from "@/lib/utils/toast-personality"
+import { cn } from "@/lib/utils"
 
 interface OutfitCardProps {
   outfit: {
@@ -25,35 +28,65 @@ interface OutfitCardProps {
     risk_level?: number
     occasion?: string
     liked?: boolean
+    reaction?: ReactionType
     visualization_url?: string | null
     scores?: OutfitScores
     overall_score?: number
+    is_public?: boolean
   }
   onLike?: (id: string, liked: boolean) => void
+  onReaction?: (id: string, reaction: ReactionType) => void
+  showPublicToggle?: boolean
 }
 
-export function OutfitCard({ outfit, onLike }: OutfitCardProps) {
+export function OutfitCard({ outfit, onLike, onReaction, showPublicToggle = false }: OutfitCardProps) {
   const [visualizationUrl, setVisualizationUrl] = useState(outfit.visualization_url)
+  const [currentReaction, setCurrentReaction] = useState<ReactionType>(outfit.reaction || null)
+  const [isHovered, setIsHovered] = useState(false)
 
-  const handleLike = async () => {
-    if (onLike) {
-      onLike(outfit.id, !outfit.liked)
-    }
-  }
+  // Card hover animation
+  const cardSpring = useSpring({
+    transform: isHovered ? "translateY(-4px)" : "translateY(0px)",
+    boxShadow: isHovered
+      ? "0 12px 28px -8px rgba(32, 200, 168, 0.15), 0 8px 16px -4px rgba(0, 0, 0, 0.08)"
+      : "0 2px 8px -2px rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.04)",
+    config: config.gentle,
+  })
+
+  const handleReaction = useCallback(
+    (reaction: ReactionType) => {
+      setCurrentReaction(reaction)
+
+      // Also handle the like state for backwards compatibility
+      if (onLike) {
+        onLike(outfit.id, reaction === "love")
+      }
+
+      if (onReaction) {
+        onReaction(outfit.id, reaction)
+      }
+
+      // Show appropriate toast
+      if (reaction === "love") {
+        toast.success("Outfit saved to favorites!")
+      } else if (reaction === "maybe") {
+        toast.info("Saved for later consideration")
+      } else if (reaction === "nope") {
+        toast.info("Got it, we'll show you different styles")
+      }
+    },
+    [outfit.id, onLike, onReaction]
+  )
 
   const handleSwipeRight = () => {
-    if (!outfit.liked) {
-      handleLike()
-      toast.success("Added to favorites!")
+    if (currentReaction !== "love") {
+      handleReaction("love")
     }
   }
 
   const handleSwipeLeft = () => {
-    if (outfit.liked) {
-      handleLike()
-      toast("Removed from favorites")
-    } else {
-      toast("Not interested in this outfit")
+    if (currentReaction !== "nope") {
+      handleReaction("nope")
     }
   }
 
@@ -66,34 +99,54 @@ export function OutfitCard({ outfit, onLike }: OutfitCardProps) {
   const AnimatedCard = animated(Card)
 
   return (
-    <AnimatedCard {...bind()} style={style}>
-      <CardHeader>
+    <AnimatedCard
+      {...bind()}
+      style={{ ...style, ...cardSpring }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="card-enhanced overflow-hidden"
+    >
+      <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div>
-            <CardTitle className="text-lg">Outfit Suggestion</CardTitle>
-            <CardDescription>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Sparkles className="h-4 w-4 text-brand-lime" />
+              Outfit Suggestion
+            </CardTitle>
+            <CardDescription className="mt-1">
               {outfit.occasion && (
-                <Badge variant="secondary" className="mr-2">
+                <Badge
+                  variant="secondary"
+                  className="mr-2 bg-gradient-to-r from-brand-lavender/30 to-brand-teal/20"
+                >
                   {outfit.occasion}
                 </Badge>
               )}
               {outfit.risk_level && (
                 <span className="text-xs text-muted-foreground">
-                  Boldness: {outfit.risk_level}/5
+                  Boldness: {"🔥".repeat(Math.min(outfit.risk_level, 5))}
                 </span>
               )}
             </CardDescription>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleLike}
-            className={`touch-target ${outfit.liked ? "text-red-500" : ""}`}
-          >
-            <Heart
-              className={`h-4 w-4 ${outfit.liked ? "fill-current" : ""}`}
-            />
-          </Button>
+
+          <div className="flex items-center gap-3">
+            {/* Public toggle */}
+            {showPublicToggle && (
+              <PublicToggle
+                outfitId={outfit.id}
+                initialIsPublic={outfit.is_public}
+                showLabel={false}
+              />
+            )}
+
+            {/* Overall score badge */}
+            {outfit.overall_score && (
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-lime to-brand-teal text-sm font-bold text-brand-charcoal">
+                {outfit.overall_score}
+              </div>
+            )}
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -142,6 +195,16 @@ export function OutfitCard({ outfit, onLike }: OutfitCardProps) {
           </div>
         )}
 
+        {/* Quick Reactions */}
+        <div className="mb-4 flex justify-center">
+          <QuickReactions
+            outfitId={outfit.id}
+            currentReaction={currentReaction}
+            onReaction={handleReaction}
+            size="md"
+          />
+        </div>
+
         <div className="space-y-2">
           <VisualizationButton
             outfitId={outfit.id}
@@ -164,16 +227,11 @@ export function OutfitCard({ outfit, onLike }: OutfitCardProps) {
           </div>
         </div>
 
-        {/* Swipe gesture hint */}
-        <div className="flex items-center justify-center gap-4 mt-4 text-xs text-muted-foreground md:hidden">
-          <div className="flex items-center gap-1">
-            <Heart className="h-3 w-3" />
-            <span>Swipe right</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <ThumbsDown className="h-3 w-3" />
-            <span>Swipe left</span>
-          </div>
+        {/* Swipe gesture hint - mobile only */}
+        <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground md:hidden">
+          <span className="rounded-full bg-brand-lavender/20 px-2 py-1">
+            👈 Swipe to react 👉
+          </span>
         </div>
       </CardContent>
     </AnimatedCard>

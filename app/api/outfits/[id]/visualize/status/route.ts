@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import { replicate } from '@/lib/replicate/client'
+import { getErrorMessage } from '@/lib/utils/error-handling'
 
 export async function GET(
   request: NextRequest,
@@ -170,7 +171,7 @@ export async function GET(
   } catch (error: unknown) {
     console.error('Visualization status check error:', error)
     return NextResponse.json(
-      { error: error.message || 'Failed to check visualization status' },
+      { error: getErrorMessage(error) || 'Failed to check visualization status' },
       { status: 500 }
     )
   }

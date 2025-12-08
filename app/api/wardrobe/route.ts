@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { getErrorMessage } from '@/lib/utils/error-handling'
+import { createWardrobeItemSchema } from '@/lib/validations/schemas'
 
 export async function GET(request: Request) {
   try {
@@ -47,7 +49,7 @@ export async function GET(request: Request) {
       totalPages: Math.ceil((count || 0) / limit),
     })
   } catch (error: unknown) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 })
   }
 }
 
@@ -63,41 +65,22 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const {
-      item_name,
-      photo_url,
-      category,
-      primary_color,
-      secondary_colors,
-      fabric_type,
-      brand,
-      size,
-      cost,
-      purchase_date,
-      seasons,
-      occasions,
-      condition,
-      custom_tags,
-    } = body
+
+    // Validate request body with Zod
+    const validation = createWardrobeItemSchema.safeParse(body)
+    if (!validation.success) {
+      const firstError = validation.error.errors[0]
+      return NextResponse.json(
+        { error: firstError.message || 'Invalid wardrobe item data' },
+        { status: 400 }
+      )
+    }
 
     const { data, error } = await supabase
       .from('wardrobe_items')
       .insert({
         user_id: user.id,
-        item_name,
-        photo_url,
-        category,
-        primary_color,
-        secondary_colors,
-        fabric_type,
-        brand,
-        size,
-        cost,
-        purchase_date,
-        seasons,
-        occasions,
-        condition,
-        custom_tags,
+        ...validation.data,
       })
       .select()
       .single()
@@ -106,7 +89,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(data, { status: 201 })
   } catch (error: unknown) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 })
   }
 }
 

@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
+import { getErrorMessage } from "@/lib/utils/error-handling"
 import { Mail, Check, Sparkles } from "lucide-react"
 
 export function EmailCaptureSection() {
@@ -43,7 +44,7 @@ export function EmailCaptureSection() {
       toast.success("You're on the list! We'll notify you when new features drop.")
       setEmail("")
     } catch (error: unknown) {
-      toast.error(error.message || "Something went wrong. Please try again.")
+      toast.error(getErrorMessage(error) || "Something went wrong. Please try again.")
     } finally {
       setLoading(false)
     }

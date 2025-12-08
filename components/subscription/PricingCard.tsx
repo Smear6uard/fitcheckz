@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Check } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
+import { getErrorMessage } from "@/lib/utils/error-handling"
 
 interface PricingCardProps {
   name: string
@@ -48,7 +49,7 @@ export function PricingCard({
       const { url } = await res.json()
       window.location.href = url
     } catch (error: unknown) {
-      toast.error(error.message || "Failed to start checkout")
+      toast.error(getErrorMessage(error) || "Failed to start checkout")
     } finally {
       setLoading(false)
     }

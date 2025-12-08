@@ -7,6 +7,7 @@ import { PricingCard } from "@/components/subscription/PricingCard"
 import { SubscriptionBadge } from "@/components/subscription/SubscriptionBadge"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { getErrorMessage } from "@/lib/utils/error-handling"
 
 export default function SubscriptionPage() {
   const router = useRouter()
@@ -53,7 +54,7 @@ export default function SubscriptionPage() {
       toast.success("Subscription canceled")
       fetchSubscription()
     } catch (error: unknown) {
-      toast.error(error.message || "Failed to cancel subscription")
+      toast.error(getErrorMessage(error) || "Failed to cancel subscription")
     }
   }
 

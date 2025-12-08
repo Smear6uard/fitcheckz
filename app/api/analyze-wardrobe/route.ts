@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { openrouter, MODELS } from '@/lib/openrouter/client'
 import { createClient } from '@/lib/supabase/server'
 import { getErrorMessage } from '@/lib/utils/error-handling'
+import { analyzeWardrobeRequestSchema } from '@/lib/validations/schemas'
+import { ZodError } from 'zod'
+import { logError } from '@/lib/logging'
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,15 +17,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { image } = await request.json()
+    const body = await request.json()
 
-    // Validate inputs
-    if (!image) {
+    // Validate request body with Zod
+    const validation = analyzeWardrobeRequestSchema.safeParse(body)
+    if (!validation.success) {
+      const firstError = validation.error.errors[0]
       return NextResponse.json(
-        { error: 'Missing image data' },
+        { error: firstError.message || 'Invalid request data' },
         { status: 400 }
       )
     }
+
+    const { image } = validation.data
 
     // Analyze image with GPT-4o-mini (vision model)
     const completion = await openrouter.chat.completions.create({
@@ -69,7 +76,7 @@ Be specific and accurate in your analysis.`
 
     return NextResponse.json({ success: true, analysis })
   } catch (error: unknown) {
-    // TODO: Add proper logging service (Sentry/Winston)
+    logError(error, { action: 'analyze-wardrobe' })
     return NextResponse.json(
       { error: getErrorMessage(error) || 'Failed to analyze wardrobe item' },
       { status: 500 }

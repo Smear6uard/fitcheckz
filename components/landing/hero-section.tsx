@@ -72,10 +72,6 @@ export function HeroSection() {
                 <Shield className="h-4 w-4 text-primary" />
                 <span>Privacy-first approach</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-primary" />
-                <span>No credit card required</span>
-              </div>
             </div>
           </div>
 
@@ -94,12 +90,12 @@ export function HeroSection() {
                   </div>
                   <div className="flex-1 text-center text-sm text-muted-foreground">fitcheckz.app</div>
                 </div>
-                {/* PLACEHOLDER: Hero product demo GIF - upload item → AI outfit flow */}
+                {/* Product demo area */}
                 <div className="aspect-video bg-gradient-to-br from-secondary/50 via-primary/5 to-secondary/30 flex items-center justify-center">
                   <div className="text-center p-6">
-                    <Sparkles className="h-12 w-12 text-primary/30 mx-auto mb-4" />
-                    <p className="text-sm text-muted-foreground font-medium">Product Demo GIF</p>
-                    <p className="text-xs text-muted-foreground/70 mt-1">Coming soon</p>
+                    <Sparkles className="h-12 w-12 text-primary mx-auto mb-4 animate-pulse" />
+                    <p className="text-lg text-foreground font-semibold">AI-Powered Outfit Matching</p>
+                    <p className="text-sm text-muted-foreground mt-2">Upload your wardrobe, get personalized looks</p>
                   </div>
                 </div>
               </div>

@@ -152,6 +152,7 @@ export default function OutfitsPage() {
                   key={outfit.id}
                   outfit={outfit}
                   onLike={handleLike}
+                  showPublicToggle
                 />
               ))}
             </div>
@@ -177,6 +178,7 @@ export default function OutfitsPage() {
                   key={outfit.id}
                   outfit={outfit}
                   onLike={handleLike}
+                  showPublicToggle
                 />
               ))}
             </div>

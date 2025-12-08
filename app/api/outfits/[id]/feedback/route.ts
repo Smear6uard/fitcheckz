@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { getErrorMessage } from '@/lib/utils/error-handling'
+import { outfitFeedbackSchema } from '@/lib/validations/schemas'
 
 export async function POST(
   request: Request,
@@ -18,16 +20,22 @@ export async function POST(
     const { id } = await params
     const body = await request.json()
 
+    // Validate request body with Zod
+    const validation = outfitFeedbackSchema.safeParse(body)
+    if (!validation.success) {
+      const firstError = validation.error.errors[0]
+      return NextResponse.json(
+        { error: firstError.message || 'Invalid feedback data' },
+        { status: 400 }
+      )
+    }
+
     const { data, error } = await supabase
       .from('outfit_feedback')
       .insert({
         user_id: user.id,
         outfit_id: id,
-        rating: body.rating,
-        feedback_text: body.feedback_text,
-        actually_worn: body.actually_worn || false,
-        compliments: body.compliments || 0,
-        comfort_level: body.comfort_level,
+        ...validation.data,
       })
       .select()
       .single()
@@ -36,7 +44,7 @@ export async function POST(
 
     return NextResponse.json(data, { status: 201 })
   } catch (error: unknown) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 })
   }
 }
 

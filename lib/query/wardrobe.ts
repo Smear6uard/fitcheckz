@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import type { WardrobeItem } from '@/types/wardrobe'
 
 export const wardrobeKeys = {
@@ -8,6 +8,8 @@ export const wardrobeKeys = {
   lists: () => [...wardrobeKeys.all, 'list'] as const,
   list: (filters: { page?: number; category?: string; limit?: number }) =>
     [...wardrobeKeys.lists(), filters] as const,
+  infinite: (filters: { category?: string; limit?: number }) =>
+    [...wardrobeKeys.lists(), 'infinite', filters] as const,
   details: () => [...wardrobeKeys.all, 'detail'] as const,
   detail: (id: string) => [...wardrobeKeys.details(), id] as const,
 }
@@ -66,6 +68,19 @@ export function useWardrobe(filters: WardrobeFilters = {}) {
   return useQuery({
     queryKey: wardrobeKeys.list(filters),
     queryFn: () => fetchWardrobeItems(filters),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
+// Hook for infinite scroll wardrobe
+export function useInfiniteWardrobe(filters: Omit<WardrobeFilters, 'page'> = {}) {
+  return useInfiniteQuery({
+    queryKey: wardrobeKeys.infinite(filters),
+    queryFn: ({ pageParam = 1 }) => fetchWardrobeItems({ ...filters, page: pageParam }),
+    getNextPageParam: (lastPage) => {
+      return lastPage.page < lastPage.totalPages ? lastPage.page + 1 : undefined
+    },
+    initialPageParam: 1,
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }

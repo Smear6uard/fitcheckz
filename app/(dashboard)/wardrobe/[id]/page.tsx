@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import type { WardrobeItem } from "@/types/wardrobe"
 import { toast } from "sonner"
 import { ArrowLeft, Trash2 } from "lucide-react"
+import { getErrorMessage } from "@/lib/utils/error-handling"
 
 export default function WardrobeItemPage() {
   const params = useParams()
@@ -35,7 +36,7 @@ export default function WardrobeItemPage() {
         router.push("/wardrobe")
       }
     } catch (error: unknown) {
-      toast.error(error.message || "Failed to load item")
+      toast.error(getErrorMessage(error) || "Failed to load item")
     } finally {
       setLoading(false)
     }
@@ -54,7 +55,7 @@ export default function WardrobeItemPage() {
       toast.success("Item deleted")
       router.push("/wardrobe")
     } catch (error: unknown) {
-      toast.error(error.message || "Failed to delete item")
+      toast.error(getErrorMessage(error) || "Failed to delete item")
     }
   }
 

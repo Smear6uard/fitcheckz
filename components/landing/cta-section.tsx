@@ -16,7 +16,7 @@ export function CTASection() {
             Ready to get your fit checked?
           </h2>
           <p className="mt-6 text-lg leading-8 text-primary-foreground/80">
-            Start free. No credit card required.
+            Start free.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             {/* Enhanced button hover with scale */}

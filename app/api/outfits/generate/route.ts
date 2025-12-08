@@ -4,6 +4,7 @@ import { openrouter, MODELS } from '@/lib/openrouter/client'
 import { SYSTEM_PROMPT, createUserPrompt } from '@/lib/openai/prompts'
 import { scoreOutfit } from '@/lib/ai/outfit-scorer'
 import { getErrorMessage } from '@/lib/utils/error-handling'
+import { outfitGenerationParamsSchema } from '@/lib/validations/schemas'
 
 export async function POST(request: Request) {
   try {
@@ -15,6 +16,20 @@ export async function POST(request: Request) {
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    const body = await request.json()
+
+    // Validate request body with Zod
+    const validation = outfitGenerationParamsSchema.safeParse(body)
+    if (!validation.success) {
+      const firstError = validation.error.errors[0]
+      return NextResponse.json(
+        { error: firstError.message || 'Invalid request parameters' },
+        { status: 400 }
+      )
+    }
+
+    const { occasion, season, mood, timeOfDay, weather } = validation.data
 
     // Check usage limits for free tier
     const { data: subscription } = await supabase
@@ -45,9 +60,6 @@ export async function POST(request: Request) {
       }
     }
 
-    const body = await request.json()
-    const { occasion, season, mood, timeOfDay } = body
-
     // Get user profile
     const { data: profile } = await supabase
       .from('profiles')
@@ -76,6 +88,7 @@ export async function POST(request: Request) {
       season,
       mood,
       timeOfDay,
+      weather,
     })
 
     const completion = await openrouter.chat.completions.create({
@@ -149,7 +162,7 @@ export async function POST(request: Request) {
       // Calculate outfit score
       let scoredOutfit
       try {
-        scoredOutfit = scoreOutfit(outfitItems, occasion, season)
+        scoredOutfit = scoreOutfit(outfitItems, (occasion as any) || 'casual', (season as any) || 'all-season')
       } catch (error) {
         return NextResponse.json(
           { error: `Failed to score outfit: ${error instanceof Error ? error.message : 'Unknown error'}` },

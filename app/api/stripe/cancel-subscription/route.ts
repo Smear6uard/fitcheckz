@@ -1,4 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
+import { getErrorMessage } from '@/lib/utils/error-handling'
+
 import { NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
 
@@ -30,7 +32,7 @@ export async function POST() {
 
     return NextResponse.json({ success: true })
   } catch (error: unknown) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 })
   }
 }
 

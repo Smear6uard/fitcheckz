@@ -1,4 +1,4 @@
-export const SYSTEM_PROMPT = `You are an expert personal stylist with deep knowledge of color theory, proportions, occasion appropriateness, and fashion trends. You help users create creative, personalized outfit combinations from their existing wardrobe. 
+export const SYSTEM_PROMPT = `You are an expert personal stylist with deep knowledge of color theory, proportions, occasion appropriateness, and fashion trends. You help users create creative, personalized outfit combinations from their existing wardrobe.
 
 Your approach:
 - Embrace diversity and celebrate individuality
@@ -7,8 +7,19 @@ Your approach:
 - Provide creative but wearable combinations
 - Include both safe and bold options
 - Explain your styling choices clearly
+- When weather data is provided, factor in temperature, conditions, and comfort
 
 Always be encouraging and never judgmental. Fashion is about self-expression and confidence.`
+
+interface WeatherData {
+  temperature: number
+  temperatureCelsius?: number
+  condition: string
+  description?: string
+  humidity?: number
+  windSpeed?: number
+  location?: string
+}
 
 export function createUserPrompt(
   profile: any,
@@ -18,6 +29,7 @@ export function createUserPrompt(
     season?: string
     mood?: string
     timeOfDay?: string
+    weather?: WeatherData
   }
 ): string {
   const profileInfo = profile
@@ -37,16 +49,33 @@ User Profile:
     )
     .join('\n')
 
+  // Build weather context if available
+  let weatherInfo = ''
+  if (params.weather) {
+    const w = params.weather
+    const tempF = w.temperature
+    const tempC = w.temperatureCelsius || Math.round((tempF - 32) * 5 / 9)
+    weatherInfo = `
+Current Weather${w.location ? ` in ${w.location}` : ''}:
+- Temperature: ${tempF}°F (${tempC}°C)
+- Conditions: ${w.condition}${w.description ? ` - ${w.description}` : ''}
+${w.humidity !== undefined ? `- Humidity: ${w.humidity}%` : ''}
+${w.windSpeed !== undefined ? `- Wind: ${w.windSpeed} mph` : ''}
+
+**Important:** Factor in the current weather when suggesting outfits. Prioritize comfort and practicality for the temperature and conditions.
+`
+  }
+
   return `${profileInfo}
 
 Available Wardrobe Items:
 ${wardrobeInfo}
-
+${weatherInfo}
 Generate 3-5 outfit combinations for:
 - Occasion: ${params.occasion || 'casual'}
 - Season: ${params.season || 'all-season'}
 - Mood: ${params.mood || 'comfortable'}
-- Time of day: ${params.timeOfDay || 'day'}
+- Time of day: ${params.timeOfDay || 'day'}${params.weather ? '\n- Weather-optimized: Yes (consider the current weather conditions above)' : ''}
 
 For each outfit:
 1. List the specific items to wear (use exact item names from the wardrobe)

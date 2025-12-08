@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
+import { getErrorMessage } from '@/lib/utils/error-handling'
+import { createCheckoutSessionSchema } from '@/lib/validations/schemas'
 
 export async function POST(request: Request) {
   try {
@@ -14,11 +16,18 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { priceId } = body
 
-    if (!priceId) {
-      return NextResponse.json({ error: 'Price ID required' }, { status: 400 })
+    // Validate request body with Zod
+    const validation = createCheckoutSessionSchema.safeParse(body)
+    if (!validation.success) {
+      const firstError = validation.error.errors[0]
+      return NextResponse.json(
+        { error: firstError.message || 'Invalid checkout data' },
+        { status: 400 }
+      )
     }
+
+    const { priceId } = validation.data
 
     // Get or create Stripe customer
     const { data: subscription } = await supabase
@@ -65,7 +74,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: session.url })
   } catch (error: unknown) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 })
   }
 }
 

@@ -8,6 +8,7 @@ import { OutfitViewer } from "@/components/outfits/OutfitViewer"
 import { OutfitFeedback } from "@/components/outfits/OutfitFeedback"
 import { toast } from "sonner"
 import { ArrowLeft, Check } from "lucide-react"
+import { getErrorMessage } from "@/lib/utils/error-handling"
 
 export default function OutfitDetailPage() {
   const params = useParams()
@@ -34,7 +35,7 @@ export default function OutfitDetailPage() {
         router.push("/outfits")
       }
     } catch (error: unknown) {
-      toast.error(error.message || "Failed to load outfit")
+      toast.error(getErrorMessage(error) || "Failed to load outfit")
     } finally {
       setLoading(false)
     }
@@ -53,7 +54,7 @@ export default function OutfitDetailPage() {
       toast.success("Outfit marked as worn!")
       fetchOutfit(outfit.id)
     } catch (error: unknown) {
-      toast.error(error.message || "Failed to mark outfit")
+      toast.error(getErrorMessage(error) || "Failed to mark outfit")
     }
   }
 

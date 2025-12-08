@@ -1,4 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
+import { getErrorMessage } from '@/lib/utils/error-handling'
+
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
@@ -44,7 +46,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true })
   } catch (error: unknown) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 })
   }
 }
 

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select"
 import { toast } from "sonner"
 import { compressImage } from "@/lib/utils/imageOptimization"
+import { getErrorMessage } from "@/lib/utils/error-handling"
 import { Upload, X, Camera } from "lucide-react"
 import Image from "next/image"
 import { CameraCapture } from "./CameraCapture"
@@ -115,7 +116,7 @@ export function ItemUpload() {
       toast.success("Item added to wardrobe!")
       router.push("/wardrobe")
     } catch (error: unknown) {
-      toast.error(error.message || "Failed to upload item")
+      toast.error(getErrorMessage(error) || "Failed to upload item")
     } finally {
       setUploading(false)
       setCompressionProgress(0)

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Loader2, Image as ImageIcon, AlertCircle, Sparkles } from 'lucide-react'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/utils/error-handling'
 
 interface VisualizationButtonProps {
   outfitId: string
@@ -58,10 +59,11 @@ export function VisualizationButton({
       setPollingStartTime(Date.now())
     } catch (error: unknown) {
       console.error('Visualization generation error:', error)
-      setError(error.message)
+      const errorMsg = getErrorMessage(error)
+      setError(errorMsg)
       setStatus('failed')
       toast.error('Failed to generate visualization', {
-        description: error.message,
+        description: errorMsg,
       })
     }
   }
@@ -94,7 +96,7 @@ export function VisualizationButton({
       }
     } catch (error: unknown) {
       console.error('Status check error:', error)
-      setError(error.message)
+      setError(getErrorMessage(error))
       setStatus('failed')
       setPollingStartTime(null)
     }

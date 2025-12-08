@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { toast } from "sonner"
+import { getErrorMessage } from "@/lib/utils/error-handling"
 
 interface OutfitFeedbackProps {
   outfitId: string
@@ -52,7 +53,7 @@ export function OutfitFeedback({ outfitId, onSubmitted }: OutfitFeedbackProps) {
         onSubmitted()
       }
     } catch (error: unknown) {
-      toast.error(error.message || "Failed to submit feedback")
+      toast.error(getErrorMessage(error) || "Failed to submit feedback")
     } finally {
       setLoading(false)
     }

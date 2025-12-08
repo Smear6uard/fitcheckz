@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { openrouter, MODELS } from '@/lib/openrouter/client'
 import { replicate, FLUX_SCHNELL_MODEL, DEFAULT_FLUX_PARAMS } from '@/lib/replicate/client'
 import { VISUALIZATION_SYSTEM_PROMPT, createVisualizationPrompt } from '@/lib/replicate/prompts'
+import { getErrorMessage } from '@/lib/utils/error-handling'
 
 export async function POST(
   request: NextRequest,
@@ -144,7 +145,7 @@ export async function POST(
   } catch (error: unknown) {
     console.error('Visualization generation error:', error)
     return NextResponse.json(
-      { error: error.message || 'Failed to generate visualization' },
+      { error: getErrorMessage(error) || 'Failed to generate visualization' },
       { status: 500 }
     )
   }

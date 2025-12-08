@@ -4,11 +4,21 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Shirt, Sparkles, TrendingUp } from "lucide-react"
+import { calculateStyleScore, STYLE_LEVELS } from "@/lib/analytics/style-score"
 
-async function getStats(userId: string) {
+interface WardrobeStats {
+  wardrobeCount: number
+  outfitsCount: number
+  styleScore: number
+  styleLevel: { emoji: string; title: string }
+  categoryBreakdown: Record<string, number>
+  colorBreakdown: Record<string, number>
+}
+
+async function getStats(userId: string): Promise<WardrobeStats> {
   const supabase = await createClient()
-  
-  const [wardrobeResult, outfitsResult] = await Promise.all([
+
+  const [wardrobeResult, outfitsResult, itemsResult, feedbackResult] = await Promise.all([
     supabase
       .from("wardrobe_items")
       .select("id", { count: "exact", head: true })
@@ -17,11 +27,54 @@ async function getStats(userId: string) {
       .from("outfit_suggestions")
       .select("id", { count: "exact", head: true })
       .eq("user_id", userId),
+    supabase
+      .from("wardrobe_items")
+      .select("category, primary_color")
+      .eq("user_id", userId),
+    supabase
+      .from("outfit_feedback")
+      .select("outfit_id, actually_worn, rating")
+      .eq("user_id", userId),
   ])
+
+  const items = itemsResult.data || []
+  const feedback = feedbackResult.data || []
+
+  // Calculate breakdowns
+  const categoryBreakdown = items.reduce((acc, item) => {
+    if (item.category) acc[item.category] = (acc[item.category] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
+
+  const colorBreakdown = items.reduce((acc, item) => {
+    if (item.primary_color) acc[item.primary_color] = (acc[item.primary_color] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
+
+  // Calculate activity metrics
+  const outfitsGenerated = outfitsResult.count || 0
+  const outfitsWorn = feedback.filter(f => f.actually_worn).length
+  const avgOutfitScore = feedback.length
+    ? feedback.reduce((sum, f) => sum + (f.rating || 0), 0) / feedback.length * 20
+    : undefined
+
+  // Calculate style score
+  const scoreResult = calculateStyleScore({
+    totalItems: items.length,
+    categoryBreakdown,
+    colorBreakdown,
+    outfitsGenerated,
+    outfitsWorn,
+    avgOutfitScore,
+  })
 
   return {
     wardrobeCount: wardrobeResult.count || 0,
     outfitsCount: outfitsResult.count || 0,
+    styleScore: scoreResult.score,
+    styleLevel: { emoji: scoreResult.level.emoji, title: scoreResult.level.title },
+    categoryBreakdown,
+    colorBreakdown,
   }
 }
 
@@ -79,9 +132,19 @@ export default async function DashboardPage() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">--</div>
+            <div className="text-2xl font-bold">
+              {stats.wardrobeCount < 3 ? (
+                <span className="text-muted-foreground">--</span>
+              ) : (
+                <span>{stats.styleScore}</span>
+              )}
+            </div>
             <p className="text-xs text-muted-foreground">
-              Coming soon
+              {stats.wardrobeCount < 3 ? (
+                "Add 3+ items to unlock"
+              ) : (
+                <span>{stats.styleLevel.emoji} {stats.styleLevel.title}</span>
+              )}
             </p>
           </CardContent>
         </Card>

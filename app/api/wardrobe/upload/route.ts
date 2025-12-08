@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { getErrorMessage } from '@/lib/utils/error-handling'
+import { logError } from '@/lib/logging'
 
 export async function POST(request: Request) {
   try {
@@ -38,7 +39,7 @@ export async function POST(request: Request) {
       })
 
     if (uploadError) {
-      // TODO: Add proper logging service (Sentry/Winston)
+      logError(uploadError, { action: 'wardrobe-upload', userId: user.id })
       throw uploadError
     }
 
@@ -79,7 +80,7 @@ export async function POST(request: Request) {
           }
         }
       } catch (error) {
-        // TODO: Add proper logging service (Sentry/Winston)
+        logError(error, { action: 'remove-bg', userId: user.id })
         // Continue with original image if removal fails
       }
     }

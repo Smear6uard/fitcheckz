@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
 import Stripe from 'stripe'
 import { getErrorMessage } from '@/lib/utils/error-handling'
+import { logError } from '@/lib/logging'
 
 export async function POST(request: Request) {
   const body = await request.text()
@@ -122,7 +123,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ received: true })
   } catch (error: unknown) {
-    // TODO: Add proper logging service (Sentry/Winston)
+    logError(error, { action: 'stripe-webhook' })
     return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 })
   }
 }

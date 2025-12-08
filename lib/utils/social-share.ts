@@ -29,9 +29,9 @@ export async function shareNative(data: ShareData): Promise<boolean> {
       url: data.url,
     })
     return true
-  } catch (error: unknown) {
+  } catch (error) {
     // User cancelled or share failed
-    if (error.name !== 'AbortError') {
+    if (error instanceof Error && error.name !== 'AbortError') {
       console.error('Share failed:', error)
     }
     return false

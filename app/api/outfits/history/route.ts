@@ -1,4 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
+import { getErrorMessage } from '@/lib/utils/error-handling'
+
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
@@ -54,7 +56,7 @@ export async function GET(request: Request) {
       totalPages: Math.ceil((count || 0) / limit),
     })
   } catch (error: unknown) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 })
   }
 }
 
