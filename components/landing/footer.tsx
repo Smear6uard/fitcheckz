@@ -109,7 +109,7 @@ export function Footer() {
               Made for style-seekers everywhere
             </p>
             <p className="text-xs text-muted-foreground">
-              &copy; {new Date().getFullYear()} FitCheckz. All rights reserved.
+              &copy; {new Date().getFullYear()} Sameer Studios LLC. All rights reserved.
             </p>
           </div>
         </div>

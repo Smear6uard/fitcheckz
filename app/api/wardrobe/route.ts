@@ -66,6 +66,30 @@ export async function POST(request: Request) {
 
     const body = await request.json()
 
+    // Check subscription tier and limits
+    const { data: subscription } = await supabase
+      .from('subscriptions')
+      .select('tier')
+      .eq('user_id', user.id)
+      .single()
+
+    const tier = subscription?.tier || 'free'
+
+    // Check wardrobe limit for free tier
+    if (tier === 'free') {
+      const { count: currentCount } = await supabase
+        .from('wardrobe_items')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+
+      if ((currentCount || 0) >= 50) {
+        return NextResponse.json(
+          { error: 'Wardrobe limit reached. Upgrade to Pro for unlimited items.' },
+          { status: 403 }
+        )
+      }
+    }
+
     // Validate request body with Zod
     const validation = createWardrobeItemSchema.safeParse(body)
     if (!validation.success) {
@@ -87,7 +111,16 @@ export async function POST(request: Request) {
 
     if (error) throw error
 
-    return NextResponse.json(data, { status: 201 })
+    // Get total wardrobe count for milestone detection
+    const { count } = await supabase
+      .from('wardrobe_items')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+
+    return NextResponse.json({ 
+      ...data, 
+      totalCount: count || 0 
+    }, { status: 201 })
   } catch (error: unknown) {
     return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 })
   }

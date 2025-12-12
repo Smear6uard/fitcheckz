@@ -11,6 +11,7 @@ import { StyleConfidenceMeter } from "./StyleConfidenceMeter"
 import { fetchWithRetry, handleApiError, parseApiError } from "@/lib/utils/api-error-handler"
 import { animated, useSpring, config } from "@react-spring/web"
 import { CelebrationAnimation } from "@/components/ui/celebration-animation"
+import { UpgradePrompt } from "@/components/subscription/UpgradePrompt"
 
 // Chip definitions with emojis and icons
 const OCCASION_CHIPS: StyleChip[] = [
@@ -51,6 +52,8 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
   const [isRandomizing, setIsRandomizing] = useState(false)
   const [showCelebration, setShowCelebration] = useState(false)
   const [wardrobeSize, setWardrobeSize] = useState(0)
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false)
+  const [usageInfo, setUsageInfo] = useState<{ current: number; limit: number } | null>(null)
   const [params, setParams] = useState({
     occasion: "",
     season: "",
@@ -58,20 +61,31 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
     timeOfDay: "",
   })
 
-  // Fetch wardrobe size for confidence meter
+  // Fetch wardrobe size and usage limits
   useEffect(() => {
-    async function fetchWardrobeSize() {
+    async function fetchData() {
       try {
-        const res = await fetch("/api/wardrobe/stats")
-        if (res.ok) {
-          const data = await res.json()
+        const [wardrobeRes, usageRes] = await Promise.all([
+          fetch("/api/wardrobe/stats"),
+          fetch("/api/usage/check?type=outfit"),
+        ])
+
+        if (wardrobeRes.ok) {
+          const data = await wardrobeRes.json()
           setWardrobeSize(data.totalItems || 0)
         }
+
+        if (usageRes.ok) {
+          const usage = await usageRes.json()
+          if (!usage.allowed && usage.remaining === 0) {
+            setUsageInfo({ current: usage.current, limit: usage.limit })
+          }
+        }
       } catch (e) {
-        // Silently fail - meter will show 0
+        // Silently fail
       }
     }
-    fetchWardrobeSize()
+    fetchData()
   }, [])
 
   // Progress stage advancement while loading
@@ -156,14 +170,34 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
       )
 
       if (!res.ok) {
-        throw await parseApiError(res)
+        const error = await parseApiError(res)
+        // Check if it's a limit error
+        if (res.status === 403 && error.message?.includes("limit")) {
+          // Fetch current usage to show in prompt
+          const usageRes = await fetch("/api/usage/check?type=outfit")
+          if (usageRes.ok) {
+            const usage = await usageRes.json()
+            setUsageInfo({ current: usage.current, limit: usage.limit })
+            setShowUpgradePrompt(true)
+          } else {
+            handleApiError(error, "Outfit Generation")
+          }
+        } else if (res.status === 400 && error.message?.includes("at least 2 items")) {
+          // Wardrobe too small - show helpful message
+          toast.error("Wardrobe too small", {
+            description: "Please add at least 2 items to your wardrobe before generating outfits.",
+          })
+        } else {
+          handleApiError(error, "Outfit Generation")
+        }
+        return
       }
 
       const data = await res.json()
 
-      // Redirect to swipe page with outfits
-      const outfitsParam = encodeURIComponent(JSON.stringify(data.outfits))
-      router.push(`/outfits/swipe?outfits=${outfitsParam}`)
+      // Redirect to swipe page with outfit IDs only (avoid URL length issues)
+      const outfitIds = data.outfits.map((o: { id: string }) => o.id).join(',')
+      router.push(`/outfits/swipe?ids=${outfitIds}`)
 
       toast.success("Your outfits are ready!")
     } catch (error: unknown) {
@@ -181,11 +215,20 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Celebration animation overlay */}
-      <div className="relative">
-        <CelebrationAnimation trigger={showCelebration} size="sm" />
-      </div>
+    <>
+      <UpgradePrompt
+        open={showUpgradePrompt}
+        onOpenChange={setShowUpgradePrompt}
+        type="outfit"
+        current={usageInfo?.current}
+        limit={usageInfo?.limit}
+      />
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Celebration animation overlay */}
+        <div className="relative">
+          <CelebrationAnimation trigger={showCelebration} size="sm" />
+        </div>
 
       {/* Occasion */}
       <StyleChipSelector
@@ -272,6 +315,7 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
         </p>
       )}
     </form>
+    </>
   )
 }
 

@@ -1,21 +1,44 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { OutfitGenerator } from "@/components/outfits/OutfitGenerator"
 import { OutfitCard } from "@/components/outfits/OutfitCard"
 import { OutfitCardSkeleton } from "@/components/outfits/OutfitCardSkeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { EmptyState } from "@/components/ui/empty-state"
-import { History, Heart } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { History, Heart, Shirt, Plus, ArrowRight } from "lucide-react"
 import { fetchWithRetry, handleApiError, parseApiError } from "@/lib/utils/api-error-handler"
+import Link from "next/link"
 
 export default function OutfitsPage() {
+  const router = useRouter()
   const [generatedOutfits, setGeneratedOutfits] = useState<any[]>([])
   const [history, setHistory] = useState<any[]>([])
   const [favorites, setFavorites] = useState<any[]>([])
   const [loadingHistory, setLoadingHistory] = useState(false)
   const [loadingFavorites, setLoadingFavorites] = useState(false)
+  const [wardrobeItemCount, setWardrobeItemCount] = useState<number | null>(null)
+  const [checkingWardrobe, setCheckingWardrobe] = useState(true)
+
+  useEffect(() => {
+    const checkWardrobe = async () => {
+      try {
+        const res = await fetch("/api/wardrobe/stats")
+        if (res.ok) {
+          const data = await res.json()
+          setWardrobeItemCount(data.totalItems || 0)
+        }
+      } catch (error) {
+        console.error("Failed to check wardrobe:", error)
+      } finally {
+        setCheckingWardrobe(false)
+      }
+    }
+    checkWardrobe()
+  }, [])
 
   const handleGenerate = (outfits: any[]) => {
     setGeneratedOutfits(outfits)
@@ -105,17 +128,54 @@ export default function OutfitsPage() {
         </TabsList>
 
         <TabsContent value="generate" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Generate New Outfits</CardTitle>
-              <CardDescription>
-                Select your preferences and let AI create outfit combinations
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <OutfitGenerator onGenerate={handleGenerate} />
-            </CardContent>
-          </Card>
+          {checkingWardrobe ? (
+            <Card>
+              <CardContent className="py-12">
+                <div className="flex items-center justify-center">
+                  <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                </div>
+              </CardContent>
+            </Card>
+          ) : wardrobeItemCount !== null && wardrobeItemCount < 2 ? (
+            <Card className="border-2 border-dashed border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+              <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                <div className="rounded-full bg-primary/10 p-4 mb-4">
+                  <Shirt className="h-10 w-10 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Build Your Wardrobe First</h3>
+                <p className="text-sm text-muted-foreground mb-6 max-w-md">
+                  You need at least 2 items in your wardrobe to generate AI-powered outfit recommendations. 
+                  Add your clothing items to unlock the magic of personalized styling!
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button asChild size="lg" className="gap-2">
+                    <Link href="/wardrobe/upload">
+                      <Plus className="h-4 w-4" />
+                      Add Items to Wardrobe
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="gap-2">
+                    <Link href="/wardrobe">
+                      View Your Wardrobe
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle>Generate New Outfits</CardTitle>
+                <CardDescription>
+                  Select your preferences and let AI create outfit combinations
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <OutfitGenerator onGenerate={handleGenerate} />
+              </CardContent>
+            </Card>
+          )}
 
           {generatedOutfits.length > 0 && (
             <div className="space-y-4">

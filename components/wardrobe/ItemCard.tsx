@@ -40,6 +40,8 @@ export function ItemCard({ item }: ItemCardProps) {
                 className="w-4 h-4 rounded-full border border-border"
                 style={{ backgroundColor: item.primary_color }}
                 title={item.primary_color}
+                aria-label={`Color: ${item.primary_color}`}
+                role="img"
               />
             )}
           </div>

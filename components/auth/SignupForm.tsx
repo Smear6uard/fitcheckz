@@ -2,10 +2,12 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
 import { getErrorMessage } from "@/lib/utils/error-handling"
 import { SocialAuthButtons, AuthDivider } from "./SocialAuthButtons"
@@ -15,6 +17,7 @@ export function SignupForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [username, setUsername] = useState("")
+  const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [loading, setLoading] = useState(false)
   const supabase = createClient()
 
@@ -94,7 +97,26 @@ export function SignupForm() {
             Must be at least 6 characters
           </p>
         </div>
-        <Button type="submit" className="w-full" disabled={loading}>
+        <div className="flex items-start space-x-3">
+          <Checkbox
+            id="terms"
+            checked={agreedToTerms}
+            onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+            disabled={loading}
+            className="mt-0.5"
+          />
+          <Label htmlFor="terms" className="text-sm text-muted-foreground leading-tight cursor-pointer">
+            I agree to the{" "}
+            <Link href="/terms" className="text-primary hover:underline" target="_blank">
+              Terms of Service
+            </Link>
+            {" "}and{" "}
+            <Link href="/privacy" className="text-primary hover:underline" target="_blank">
+              Privacy Policy
+            </Link>
+          </Label>
+        </div>
+        <Button type="submit" className="w-full" disabled={loading || !agreedToTerms}>
           {loading ? "Creating account..." : "Create account"}
         </Button>
       </form>

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { animated, useSpring, config } from "@react-spring/web"
 import { Button } from "@/components/ui/button"
 import { UserMenu } from "@/components/auth/UserMenu"
-import { Sparkles, LayoutDashboard, Shirt, ShirtIcon, User, CreditCard, BarChart3, Compass, ShoppingBag, Trophy } from "lucide-react"
+import { Sparkles, LayoutDashboard, Shirt, ShirtIcon, User, CreditCard, BarChart3, Compass, ShoppingBag, Trophy, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navigation = [
@@ -24,6 +24,7 @@ export function Navbar() {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Track scroll position
   useEffect(() => {
@@ -110,7 +111,19 @@ export function Navbar() {
               })}
             </div>
           </div>
-          <UserMenu />
+          <div className="flex items-center gap-4">
+            <div className="flex md:hidden">
+              <button
+                type="button"
+                className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-foreground"
+                onClick={() => setMobileMenuOpen(true)}
+              >
+                <span className="sr-only">Open main menu</span>
+                <Menu className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </div>
+            <UserMenu />
+          </div>
         </div>
       </div>
 
@@ -122,6 +135,61 @@ export function Navbar() {
           scrolled ? "opacity-100" : "opacity-0"
         )}
       />
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-50">
+          <div 
+            className="fixed inset-0 bg-foreground/20 backdrop-blur-sm" 
+            onClick={() => setMobileMenuOpen(false)} 
+          />
+          <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-background px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-border">
+            <div className="flex items-center justify-between">
+              <Link href="/" className="flex items-center gap-2 -m-1.5 p-1.5" onClick={() => setMobileMenuOpen(false)}>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
+                  <Sparkles className="h-5 w-5 text-primary-foreground" />
+                </div>
+                <span className="text-xl font-bold text-foreground">Fitcheckz</span>
+              </Link>
+              <button
+                type="button"
+                className="-m-2.5 rounded-md p-2.5 text-foreground"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span className="sr-only">Close menu</span>
+                <X className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </div>
+            <div className="mt-6 flow-root">
+              <div className="-my-6 divide-y divide-border">
+                <div className="space-y-2 py-6">
+                  {navigation.map((item) => {
+                    const Icon = item.icon
+                    const isActive = pathname === item.href || pathname?.startsWith(item.href + "/")
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={cn(
+                          "-mx-3 flex items-center gap-3 rounded-lg px-3 py-2 text-base font-semibold transition-colors",
+                          isActive 
+                            ? "bg-secondary text-foreground" 
+                            : "text-foreground hover:bg-secondary"
+                        )}
+                        aria-current={isActive ? "page" : undefined}
+                      >
+                        <Icon className="h-5 w-5" aria-hidden="true" />
+                        {item.name}
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </animated.nav>
   )
 }

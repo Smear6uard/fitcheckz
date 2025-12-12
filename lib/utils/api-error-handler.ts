@@ -21,6 +21,7 @@ interface RetryOptions {
 const DEFAULT_RETRY_OPTIONS: Required<RetryOptions> = {
   maxRetries: 3,
   retryDelay: 1000,
+  // Only retry on transient errors, not client errors (4xx)
   retryableStatuses: [408, 429, 500, 502, 503, 504],
   onRetry: () => {},
 }
@@ -40,8 +41,18 @@ export async function fetchWithRetry(
     try {
       const response = await fetch(url, options)
 
-      // If response is OK or not retryable, return it
-      if (response.ok || !opts.retryableStatuses.includes(response.status)) {
+      // If response is OK, return it
+      if (response.ok) {
+        return response
+      }
+
+      // Don't retry on client errors (4xx) - these are not transient
+      if (response.status >= 400 && response.status < 500) {
+        return response
+      }
+
+      // Only retry on server errors (5xx) or specific retryable statuses
+      if (!opts.retryableStatuses.includes(response.status)) {
         return response
       }
 

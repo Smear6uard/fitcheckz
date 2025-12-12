@@ -66,6 +66,7 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    // First try to get onboarding columns, but gracefully handle if they don't exist
     const { data, error } = await supabase
       .from("profiles")
       .select(
@@ -74,7 +75,22 @@ export async function GET() {
       .eq("user_id", user.id)
       .single()
 
+    // If columns don't exist (42703 error), treat as completed to skip onboarding
     if (error) {
+      if (error.code === "42703") {
+        // Column doesn't exist - onboarding columns not migrated yet
+        // Return completed: true to skip onboarding until migration is run
+        console.warn("Onboarding columns not found in profiles table. Skipping onboarding check.")
+        return NextResponse.json({
+          completed: true,
+          preferences: {
+            style_vibes: [],
+            typical_occasions: [],
+            favorite_colors: [],
+            fashion_goals: [],
+          },
+        })
+      }
       console.error("Failed to fetch onboarding status:", error)
       return NextResponse.json(
         { error: "Failed to fetch status" },

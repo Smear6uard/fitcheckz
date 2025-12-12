@@ -6,6 +6,17 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import type { WardrobeItem } from "@/types/wardrobe"
 import { toast } from "sonner"
 import { ArrowLeft, Trash2 } from "lucide-react"
@@ -16,6 +27,7 @@ export default function WardrobeItemPage() {
   const router = useRouter()
   const [item, setItem] = useState<WardrobeItem | null>(null)
   const [loading, setLoading] = useState(true)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   useEffect(() => {
     if (params.id) {
@@ -43,7 +55,7 @@ export default function WardrobeItemPage() {
   }
 
   const handleDelete = async () => {
-    if (!item || !confirm("Are you sure you want to delete this item?")) return
+    if (!item) return
 
     try {
       const res = await fetch(`/api/wardrobe/${item.id}`, {
@@ -53,6 +65,7 @@ export default function WardrobeItemPage() {
       if (!res.ok) throw new Error("Failed to delete item")
 
       toast.success("Item deleted")
+      setShowDeleteDialog(false)
       router.push("/wardrobe")
     } catch (error: unknown) {
       toast.error(getErrorMessage(error) || "Failed to delete item")
@@ -60,7 +73,33 @@ export default function WardrobeItemPage() {
   }
 
   if (loading) {
-    return <div className="text-center py-8">Loading...</div>
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-10 w-20" />
+          <Skeleton className="h-10 w-24" />
+        </div>
+        <div className="grid gap-8 md:grid-cols-2">
+          <Card>
+            <Skeleton className="aspect-square w-full rounded-t-lg" />
+          </Card>
+          <Card>
+            <CardContent className="p-6 space-y-4">
+              <Skeleton className="h-8 w-3/4" />
+              <div className="flex gap-2">
+                <Skeleton className="h-6 w-16" />
+                <Skeleton className="h-6 w-20" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
   }
 
   if (!item) {
@@ -74,11 +113,31 @@ export default function WardrobeItemPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
-        <Button variant="destructive" onClick={handleDelete}>
+        <Button variant="destructive" onClick={() => setShowDeleteDialog(true)}>
           <Trash2 className="mr-2 h-4 w-4" />
           Delete
         </Button>
       </div>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Wardrobe Item</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{item.item_name}"? This action cannot be undone and the item will be permanently removed from your wardrobe.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <div className="grid gap-8 md:grid-cols-2">
         <Card>

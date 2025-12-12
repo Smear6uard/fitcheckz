@@ -19,6 +19,9 @@ import { Upload, X, Camera } from "lucide-react"
 import Image from "next/image"
 import { CameraCapture } from "./CameraCapture"
 import { isMobileDevice, hasCamera } from "@/lib/utils/deviceDetection"
+import { CelebrationAnimation } from "@/components/ui/celebration-animation"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { UpgradePrompt } from "@/components/subscription/UpgradePrompt"
 
 export function ItemUpload() {
   const router = useRouter()
@@ -30,6 +33,10 @@ export function ItemUpload() {
   const [showCamera, setShowCamera] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [cameraAvailable, setCameraAvailable] = useState(false)
+  const [showCelebration, setShowCelebration] = useState(false)
+  const [milestone, setMilestone] = useState<string | null>(null)
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     item_name: "",
     category: "",
@@ -70,12 +77,15 @@ export function ItemUpload() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!file) {
-      toast.error("Please select an image")
+    if (!file || isSubmitting || uploading) {
+      if (!file) {
+        toast.error("Please select an image")
+      }
       return
     }
 
     setUploading(true)
+    setIsSubmitting(true)
 
     try {
       // Compress image with progress
@@ -110,21 +120,138 @@ export function ItemUpload() {
         body: JSON.stringify(itemData),
       })
 
-      if (!res.ok) throw new Error("Failed to create item")
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}))
+        // Check if it's a limit error
+        if (res.status === 403 && errorData.error?.includes("limit")) {
+          setShowUpgradePrompt(true)
+          return
+        }
+        throw new Error(errorData.error || "Failed to create item")
+      }
+
+      const result = await res.json()
+      const totalCount = result.totalCount || 1
 
       setCompressionProgress(100)
-      toast.success("Item added to wardrobe!")
-      router.push("/wardrobe")
+
+      // Check for milestones
+      if (totalCount === 1) {
+        setMilestone("first")
+        setShowCelebration(true)
+        toast.success("🎉 Your first item! Welcome to FitCheckz!")
+        // Reset form but keep submitting state until dialog closes
+        setFormData({ item_name: "", category: "" })
+        setFile(null)
+        setPreview(null)
+      } else if (totalCount === 3) {
+        setMilestone("style-score")
+        setShowCelebration(true)
+        toast.success("✨ Style Score unlocked! Add more items to see your score grow.")
+        setFormData({ item_name: "", category: "" })
+        setFile(null)
+        setPreview(null)
+      } else if (totalCount === 10) {
+        setMilestone("collection")
+        setShowCelebration(true)
+        toast.success("🌟 Amazing! You've built a solid wardrobe collection!")
+        setFormData({ item_name: "", category: "" })
+        setFile(null)
+        setPreview(null)
+      } else {
+        toast.success("Item added to wardrobe!")
+        // Reset form and navigate
+        setFormData({ item_name: "", category: "" })
+        setFile(null)
+        setPreview(null)
+        setIsSubmitting(false)
+        setUploading(false)
+        router.push("/wardrobe")
+      }
     } catch (error: unknown) {
       toast.error(getErrorMessage(error) || "Failed to upload item")
+      setIsSubmitting(false)
     } finally {
-      setUploading(false)
+      if (!showCelebration) {
+        setUploading(false)
+        setIsSubmitting(false)
+      }
       setCompressionProgress(0)
     }
   }
 
+  const handleCelebrationComplete = () => {
+    setShowCelebration(false)
+    setMilestone(null)
+    setIsSubmitting(false)
+    setUploading(false)
+    router.push("/wardrobe")
+  }
+
+  const getMilestoneMessage = () => {
+    switch (milestone) {
+      case "first":
+        return {
+          title: "🎉 Welcome to FitCheckz!",
+          description: "You've added your first item! Keep adding more to unlock AI-powered outfit recommendations.",
+        }
+      case "style-score":
+        return {
+          title: "✨ Style Score Unlocked!",
+          description: "You've added 3 items! Your personalized style score is now available. Check your dashboard to see it!",
+        }
+      case "collection":
+        return {
+          title: "🌟 Wardrobe Collection Growing!",
+          description: "You've added 10 items! Your wardrobe is getting impressive. Generate some outfits to see the magic!",
+        }
+      default:
+        return { title: "", description: "" }
+    }
+  }
+
+  const milestoneMsg = getMilestoneMessage()
+
   return (
     <>
+      <UpgradePrompt
+        open={showUpgradePrompt}
+        onOpenChange={setShowUpgradePrompt}
+        type="wardrobe"
+        current={50}
+        limit={50}
+      />
+
+      <Dialog open={showCelebration} onOpenChange={() => {}}>
+        <DialogContent className="relative overflow-hidden z-[100] max-w-lg mx-auto p-0 border-0 shadow-2xl">
+          {/* Celebration Animation Background */}
+          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+            <CelebrationAnimation trigger={showCelebration} size="lg" />
+          </div>
+          
+          {/* Content */}
+          <div className="relative z-10 bg-gradient-to-br from-primary/10 via-background to-primary/5 p-8 rounded-lg">
+            <DialogHeader className="relative z-10 text-center">
+              <DialogTitle className="text-3xl font-bold text-center mb-4 bg-gradient-to-r from-primary to-brand-lime bg-clip-text text-transparent">
+                {milestoneMsg.title}
+              </DialogTitle>
+              <DialogDescription className="text-base pt-2 text-center text-foreground/90 max-w-md mx-auto">
+                {milestoneMsg.description}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-center pt-8 pb-2 relative z-10">
+              <Button 
+                onClick={handleCelebrationComplete} 
+                size="lg"
+                className="bg-gradient-to-r from-brand-teal to-brand-lime text-brand-charcoal font-semibold hover:from-brand-teal/90 hover:to-brand-lime/90 shadow-lg px-8"
+              >
+                Continue
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {showCamera && (
         <CameraCapture
           onCapture={handleCameraCapture}
@@ -153,8 +280,9 @@ export function ItemUpload() {
                     setPreview(null)
                     setFile(null)
                   }}
+                  aria-label="Remove image"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </div>
             ) : (
@@ -186,7 +314,7 @@ export function ItemUpload() {
                       variant="outline"
                       className="w-full touch-target"
                       onClick={() => setShowCamera(true)}
-                      disabled={uploading}
+                      disabled={uploading || isSubmitting || showCelebration}
                     >
                       <Camera className="mr-2 h-4 w-4" />
                       Take Photo
@@ -201,7 +329,7 @@ export function ItemUpload() {
               accept="image/*"
               onChange={handleFileChange}
               className="hidden"
-              disabled={uploading}
+              disabled={uploading || isSubmitting || showCelebration}
             />
           </div>
         </div>
@@ -215,7 +343,7 @@ export function ItemUpload() {
             setFormData({ ...formData, item_name: e.target.value })
           }
           required
-          disabled={uploading}
+          disabled={uploading || isSubmitting || showCelebration}
         />
       </div>
 
@@ -227,7 +355,7 @@ export function ItemUpload() {
             setFormData({ ...formData, category: value })
           }
           required
-          disabled={uploading}
+          disabled={uploading || isSubmitting || showCelebration}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select category" />
@@ -244,7 +372,7 @@ export function ItemUpload() {
         </Select>
       </div>
 
-      <Button type="submit" disabled={uploading} className="w-full touch-target">
+      <Button type="submit" disabled={uploading || isSubmitting || showCelebration} className="w-full touch-target">
         {uploading
           ? compressionProgress > 0
             ? `Processing... ${compressionProgress}%`

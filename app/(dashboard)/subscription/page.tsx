@@ -3,8 +3,19 @@
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { PricingCard } from "@/components/subscription/PricingCard"
 import { SubscriptionBadge } from "@/components/subscription/SubscriptionBadge"
+import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { getErrorMessage } from "@/lib/utils/error-handling"
@@ -13,6 +24,7 @@ export default function SubscriptionPage() {
   const router = useRouter()
   const [subscription, setSubscription] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [showCancelDialog, setShowCancelDialog] = useState(false)
 
   useEffect(() => {
     fetchSubscription()
@@ -42,8 +54,6 @@ export default function SubscriptionPage() {
   }
 
   const handleCancel = async () => {
-    if (!confirm("Are you sure you want to cancel your subscription?")) return
-
     try {
       const res = await fetch("/api/stripe/cancel-subscription", {
         method: "POST",
@@ -52,6 +62,7 @@ export default function SubscriptionPage() {
       if (!res.ok) throw new Error("Failed to cancel subscription")
 
       toast.success("Subscription canceled")
+      setShowCancelDialog(false)
       fetchSubscription()
     } catch (error: unknown) {
       toast.error(getErrorMessage(error) || "Failed to cancel subscription")
@@ -59,7 +70,25 @@ export default function SubscriptionPage() {
   }
 
   if (loading) {
-    return <div className="text-center py-8">Loading...</div>
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-9 w-48" />
+            <Skeleton className="h-5 w-64" />
+          </div>
+          <Skeleton className="h-6 w-20" />
+        </div>
+        <Skeleton className="h-64 w-full" />
+        <div>
+          <Skeleton className="h-8 w-32 mb-4" />
+          <div className="grid gap-6 md:grid-cols-2">
+            <Skeleton className="h-96 w-full" />
+            <Skeleton className="h-96 w-full" />
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const currentTier = subscription?.tier || "free"
@@ -91,12 +120,32 @@ export default function SubscriptionPage() {
                 {new Date(subscription.current_period_end).toLocaleDateString()}
               </p>
             )}
-            <Button variant="destructive" onClick={handleCancel}>
+            <Button variant="destructive" onClick={() => setShowCancelDialog(true)}>
               Cancel Subscription
             </Button>
           </CardContent>
         </Card>
       )}
+
+      <AlertDialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancel Subscription</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to cancel your Pro subscription? You'll lose access to unlimited outfit suggestions, unlimited wardrobe items, and all Pro features at the end of your current billing period.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Keep Subscription</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleCancel}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Cancel Subscription
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <div>
         <h2 className="text-2xl font-semibold mb-4">Plans</h2>

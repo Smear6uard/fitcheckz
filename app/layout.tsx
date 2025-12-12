@@ -4,6 +4,7 @@ import { Inter, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Toaster } from "sonner"
 import { QueryProvider } from "@/lib/query/provider"
+import { CookieConsent } from "@/components/ui/cookie-consent"
 import "./globals.css"
 
 const _inter = Inter({ subsets: ["latin"] })
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     "Get your fit checked. Dress with confidence. AI-powered outfit recommendations from your digital wardrobe.",
   generator: "v0.app",
   keywords: ["AI stylist", "outfit recommendations", "fashion", "wardrobe", "personal styling"],
-  authors: [{ name: "FitCheckz" }],
+  authors: [{ name: "Sameer Studios LLC" }],
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -49,8 +50,9 @@ export default function RootLayout({
       <body className={`font-sans antialiased`}>
         <QueryProvider>
           {children}
-          <Toaster />
+          <Toaster position="top-center" />
           <Analytics />
+          <CookieConsent />
         </QueryProvider>
       </body>
     </html>

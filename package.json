@@ -1,6 +1,9 @@
 {
-  "name": "my-v0-project",
-  "version": "0.1.0",
+  "name": "fitcheckz",
+  "version": "1.0.0",
+  "description": "AI-powered outfit recommendations from your digital wardrobe",
+  "author": "Sameer Studios LLC",
+  "license": "UNLICENSED",
   "private": true,
   "scripts": {
     "dev": "next dev",

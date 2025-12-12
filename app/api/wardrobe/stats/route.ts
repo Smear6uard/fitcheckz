@@ -17,7 +17,7 @@ export async function GET() {
     // Fetch wardrobe items
     const { data: items, error: itemsError } = await supabase
       .from('wardrobe_items')
-      .select('id, name, category, primary_color, cost, image_url, last_worn')
+      .select('id, item_name, category, primary_color, cost, photo_url, last_worn')
       .eq('user_id', user.id)
 
     if (itemsError) throw itemsError
@@ -63,9 +63,9 @@ export async function GET() {
       .slice(0, 8)
       .map(item => ({
         id: item.id,
-        name: item.name,
+        name: item.item_name,
         category: item.category,
-        image_url: item.image_url,
+        image_url: item.photo_url,
         worn_count: item.worn_count,
       }))
 

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import { OutfitViewer } from "@/components/outfits/OutfitViewer"
 import { OutfitFeedback } from "@/components/outfits/OutfitFeedback"
 import { toast } from "sonner"
@@ -59,7 +60,28 @@ export default function OutfitDetailPage() {
   }
 
   if (loading) {
-    return <div className="text-center py-8">Loading...</div>
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-10 w-20" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+        <Skeleton className="h-96 w-full" />
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-32 mb-2" />
+            <Skeleton className="h-4 w-64" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   if (!outfit) {
