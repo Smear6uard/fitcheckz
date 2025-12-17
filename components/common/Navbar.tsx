@@ -26,6 +26,18 @@ export function Navbar() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [mobileMenuOpen])
+
   // Track scroll position
   useEffect(() => {
     const handleScroll = () => {
@@ -115,8 +127,13 @@ export function Navbar() {
             <div className="flex md:hidden">
               <button
                 type="button"
-                className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-foreground"
-                onClick={() => setMobileMenuOpen(true)}
+                className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-foreground hover:bg-secondary transition-colors touch-target"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setMobileMenuOpen(true)
+                }}
+                aria-label="Open main menu"
+                aria-expanded={mobileMenuOpen}
               >
                 <span className="sr-only">Open main menu</span>
                 <Menu className="h-6 w-6" aria-hidden="true" />
@@ -138,54 +155,77 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-50">
+        <div className="md:hidden fixed inset-0 z-[100]">
+          {/* Backdrop */}
           <div 
-            className="fixed inset-0 bg-foreground/20 backdrop-blur-sm" 
-            onClick={() => setMobileMenuOpen(false)} 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+            onClick={(e) => {
+              e.stopPropagation()
+              setMobileMenuOpen(false)
+            }}
+            aria-hidden="true"
           />
-          <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-background px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-border">
-            <div className="flex items-center justify-between">
-              <Link href="/" className="flex items-center gap-2 -m-1.5 p-1.5" onClick={() => setMobileMenuOpen(false)}>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-                  <Sparkles className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <span className="text-xl font-bold text-foreground">Fitcheckz</span>
-              </Link>
-              <button
-                type="button"
-                className="-m-2.5 rounded-md p-2.5 text-foreground"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <span className="sr-only">Close menu</span>
-                <X className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </div>
-            <div className="mt-6 flow-root">
-              <div className="-my-6 divide-y divide-border">
-                <div className="space-y-2 py-6">
-                  {navigation.map((item) => {
-                    const Icon = item.icon
-                    const isActive = pathname === item.href || pathname?.startsWith(item.href + "/")
-                    return (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={cn(
-                          "-mx-3 flex items-center gap-3 rounded-lg px-3 py-2 text-base font-semibold transition-colors",
-                          isActive 
-                            ? "bg-secondary text-foreground" 
-                            : "text-foreground hover:bg-secondary"
-                        )}
-                        aria-current={isActive ? "page" : undefined}
-                      >
-                        <Icon className="h-5 w-5" aria-hidden="true" />
-                        {item.name}
-                      </Link>
-                    )
-                  })}
-                </div>
+          {/* Menu Panel */}
+          <div 
+            className={cn(
+              "fixed inset-y-0 right-0 z-[101] w-full max-w-sm overflow-y-auto bg-background shadow-xl transform transition-transform duration-300 ease-out",
+              mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+            )}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-6 py-6">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <Link 
+                  href="/" 
+                  className="flex items-center gap-2 -m-1.5 p-1.5" 
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
+                    <Sparkles className="h-5 w-5 text-primary-foreground" />
+                  </div>
+                  <span className="text-xl font-bold text-foreground">Fitcheckz</span>
+                </Link>
+                <button
+                  type="button"
+                  className="-m-2.5 rounded-md p-2.5 text-foreground hover:bg-secondary transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setMobileMenuOpen(false)
+                  }}
+                  aria-label="Close menu"
+                >
+                  <X className="h-6 w-6" aria-hidden="true" />
+                </button>
               </div>
+              
+              {/* Navigation Items */}
+              <nav className="space-y-1">
+                {navigation.map((item) => {
+                  const Icon = item.icon
+                  const isActive = pathname === item.href || pathname?.startsWith(item.href + "/")
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setMobileMenuOpen(false)
+                      }}
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg px-3 py-3 text-base font-semibold transition-colors touch-target",
+                        isActive 
+                          ? "bg-secondary text-foreground" 
+                          : "text-foreground hover:bg-secondary active:bg-secondary/80"
+                      )}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                      <span>{item.name}</span>
+                    </Link>
+                  )
+                })}
+              </nav>
             </div>
           </div>
         </div>

@@ -6,7 +6,7 @@ import { animated, useSpring } from "@react-spring/web"
 import { useDrag } from "@use-gesture/react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Heart, X } from "lucide-react"
+import { Heart, X, ArrowLeft, ArrowRight } from "lucide-react"
 import type { WardrobeItem } from "@/types/wardrobe"
 import type { OutfitScores } from "@/lib/ai/outfit-scorer"
 import { OutfitScoreCard } from "./OutfitScoreCard"
@@ -61,6 +61,7 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
     y: 0,
     rotateZ: 0,
     scale: 1,
+    config: { tension: 400, friction: 25 },
   }))
 
   const bind = useDrag(
@@ -91,9 +92,10 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
           rotateZ: exitRotation,
           scale: 0.8,
           config: { 
-            friction: 30, 
-            tension: 300,
-            velocity: absVx * 0.5 // Use velocity for smoother exit
+            friction: 25, 
+            tension: 400,
+            velocity: absVx * 0.3, // Reduced multiplier for smoother motion
+            precision: 0.01, // Higher precision for smoother animation
           },
           onRest: () => {
             if (dir > 0) {
@@ -117,7 +119,7 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
           rotateZ: rotation,
           scale: currentScale,
           immediate: true,
-          config: { friction: 50, tension: 800 },
+          config: { friction: 50, tension: 1000 }, // Higher tension for more responsive feel
         })
       } else {
         // Release without threshold - snap back smoothly
@@ -126,7 +128,7 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
           y: 0,
           rotateZ: 0,
           scale: 1,
-          config: { friction: 40, tension: 400 },
+          config: { friction: 30, tension: 500, precision: 0.01 }, // Smoother snap back
         })
       }
     },
@@ -139,6 +141,8 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
       rubberband: true,
       preventScrollAxis: "y",
       filterTaps: true,
+      threshold: [5, 5], // Lower threshold for more responsive feel
+      swipe: { velocity: 0.3 }, // Lower velocity threshold for easier swiping
     }
   )
 
@@ -191,7 +195,7 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
         opacity,
         touchAction: "none",
         cursor: "grab",
-        willChange: "transform",
+        willChange: "transform, opacity",
       }}
       className="relative w-full max-w-md mx-auto select-none z-50"
     >
@@ -294,8 +298,16 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
       </Card>
 
       {/* Swipe Instructions */}
-      <div className="mt-4 text-center text-xs text-muted-foreground" role="status" aria-live="polite">
-        Swipe right to like, left to pass
+      <div className="mt-6 flex items-center justify-center gap-3 px-4 py-3 bg-primary/10 rounded-lg border border-primary/20" role="status" aria-live="polite">
+        <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+          <ArrowLeft className="h-4 w-4 text-muted-foreground" />
+          <span className="text-muted-foreground">Swipe left to pass</span>
+        </div>
+        <div className="h-4 w-px bg-border" />
+        <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+          <span className="text-muted-foreground">Swipe right to like</span>
+          <Heart className="h-4 w-4 text-red-500" />
+        </div>
       </div>
     </animated.div>
   )

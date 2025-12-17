@@ -180,13 +180,14 @@ export default function OutfitsPage() {
           {generatedOutfits.length > 0 && (
             <div className="space-y-4">
               <h2 className="text-2xl font-semibold">Generated Outfits</h2>
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-2 place-items-center">
                 {generatedOutfits.map((outfit) => (
-                  <OutfitCard
-                    key={outfit.id}
-                    outfit={outfit}
-                    onLike={handleLike}
-                  />
+                  <div key={outfit.id} className="w-full max-w-md mx-auto">
+                    <OutfitCard
+                      outfit={outfit}
+                      onLike={handleLike}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -206,14 +207,15 @@ export default function OutfitsPage() {
               description="Generate your first outfit to see it here. Your AI-powered style recommendations will appear in this tab."
             />
           ) : (
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 place-items-center">
               {history.map((outfit) => (
-                <OutfitCard
-                  key={outfit.id}
-                  outfit={outfit}
-                  onLike={handleLike}
-                  showPublicToggle
-                />
+                <div key={outfit.id} className="w-full max-w-md mx-auto">
+                  <OutfitCard
+                    outfit={outfit}
+                    onLike={handleLike}
+                    showPublicToggle
+                  />
+                </div>
               ))}
             </div>
           )}
@@ -232,14 +234,15 @@ export default function OutfitsPage() {
               description="Like outfits you love by clicking the heart icon. Your favorites will be saved here for easy access."
             />
           ) : (
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 place-items-center">
               {favorites.map((outfit) => (
-                <OutfitCard
-                  key={outfit.id}
-                  outfit={outfit}
-                  onLike={handleLike}
-                  showPublicToggle
-                />
+                <div key={outfit.id} className="w-full max-w-md mx-auto">
+                  <OutfitCard
+                    outfit={outfit}
+                    onLike={handleLike}
+                    showPublicToggle
+                  />
+                </div>
               ))}
             </div>
           )}
