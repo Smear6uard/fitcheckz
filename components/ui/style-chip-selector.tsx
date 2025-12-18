@@ -11,6 +11,7 @@ export interface StyleChip {
   icon?: LucideIcon
   emoji?: string
   color?: string
+  gradient?: string // Tailwind gradient classes e.g. "from-rose-900/40 via-pink-900/30 to-rose-900/40"
 }
 
 interface StyleChipSelectorProps {

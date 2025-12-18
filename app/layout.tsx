@@ -53,7 +53,20 @@ export default function RootLayout({
       <body className="font-sans bg-background text-foreground antialiased">
         <QueryProvider>
           {children}
-          <Toaster position="top-center" theme="dark" />
+          <Toaster
+            position="top-center"
+            theme="dark"
+            offset={16}
+            toastOptions={{
+              className: "z-[9999]",
+              style: {
+                background: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
+                color: 'hsl(var(--foreground))',
+              }
+            }}
+            containerAriaLabel="Notifications"
+          />
           <Analytics />
           <CookieConsent />
         </QueryProvider>

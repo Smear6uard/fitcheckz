@@ -50,11 +50,11 @@ export function StreakDisplay() {
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div 
+            <div
               className={cn(
                 "rounded-full p-2",
-                streak.currentStreak > 0 
-                  ? "bg-orange-500/20 text-orange-500" 
+                streak.currentStreak > 0
+                  ? "bg-gradient-to-br from-rose-500/20 to-orange-500/20 text-orange-500"
                   : "bg-muted text-muted-foreground"
               )}
               aria-hidden="true"

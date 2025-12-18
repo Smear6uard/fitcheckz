@@ -3,55 +3,65 @@
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { StyleChipSelector, type StyleChip } from "@/components/ui/style-chip-selector"
+import { HorizontalChipScroller } from "@/components/ui/horizontal-chip-scroller"
+import { SelectionSummary } from "./SelectionSummary"
+import type { StyleChip } from "@/components/ui/style-chip-selector"
 import { toast } from "@/lib/utils/toast-personality"
-import { Sparkles, Shuffle, Coffee, Briefcase, Heart, PartyPopper, Dumbbell, Plane, Sun, Snowflake, Leaf, Cloud, Zap, Shield, TrendingUp, Crown, Armchair, Clock } from "lucide-react"
+import { Shuffle } from "lucide-react"
 import { GenerationProgress } from "./GenerationProgress"
-import { StyleConfidenceMeter } from "./StyleConfidenceMeter"
 import { fetchWithRetry, handleApiError, parseApiError } from "@/lib/utils/api-error-handler"
-import { animated, useSpring, config } from "@react-spring/web"
+import { animated, useSpring, useTransition, config } from "@react-spring/web"
 import { CelebrationAnimation } from "@/components/ui/celebration-animation"
 import { UpgradePrompt } from "@/components/subscription/UpgradePrompt"
+import { cn } from "@/lib/utils"
 
-// Chip definitions with emojis and icons
+// Chip definitions with gradients for all categories
 const OCCASION_CHIPS: StyleChip[] = [
-  { value: "casual", label: "Casual", emoji: "☕", color: "#F5F3EE" },
-  { value: "work", label: "Work", emoji: "💼", color: "#D8E8E5" },
-  { value: "date", label: "Date", emoji: "💕", color: "#E8D5C8" },
-  { value: "formal", label: "Formal", emoji: "✨", color: "#589991" },
-  { value: "gym", label: "Gym", emoji: "💪", color: "#C8A46A" },
-  { value: "travel", label: "Travel", emoji: "✈️", color: "#589991" },
+  { value: "casual", label: "Casual", gradient: "from-slate-700/50 via-gray-800/40 to-slate-700/50" },
+  { value: "work", label: "Work", gradient: "from-blue-900/50 via-slate-900/40 to-blue-900/50" },
+  { value: "date", label: "Date", gradient: "from-rose-900/50 via-pink-900/40 to-rose-900/50" },
+  { value: "formal", label: "Formal", gradient: "from-purple-900/50 via-indigo-900/40 to-purple-900/50" },
+  { value: "gym", label: "Gym", gradient: "from-orange-900/40 via-red-900/30 to-orange-900/40" },
+  { value: "travel", label: "Travel", gradient: "from-cyan-900/50 via-blue-900/40 to-cyan-900/50" },
 ]
 
 const SEASON_CHIPS: StyleChip[] = [
-  { value: "spring", label: "Spring", emoji: "🌸" },
-  { value: "summer", label: "Summer", emoji: "☀️" },
-  { value: "fall", label: "Fall", emoji: "🍂" },
-  { value: "winter", label: "Winter", emoji: "❄️" },
-  { value: "all-season", label: "Any", emoji: "🌈" },
+  { value: "spring", label: "Spring", gradient: "from-pink-800/50 to-rose-900/50" },
+  { value: "summer", label: "Summer", gradient: "from-yellow-800/40 to-amber-900/40" },
+  { value: "fall", label: "Fall", gradient: "from-orange-800/40 to-amber-900/40" },
+  { value: "winter", label: "Winter", gradient: "from-blue-900/50 to-cyan-900/50" },
+  { value: "all-season", label: "Any", gradient: "from-slate-700/50 to-gray-800/50" },
 ]
 
 const MOOD_CHIPS: StyleChip[] = [
-  { value: "bold", label: "Bold", emoji: "🔥" },
-  { value: "safe", label: "Safe", emoji: "🛡️" },
-  { value: "trendy", label: "Trendy", emoji: "📈" },
-  { value: "classic", label: "Classic", emoji: "👑" },
-  { value: "comfortable", label: "Comfy", emoji: "🛋️" },
+  { value: "bold", label: "Bold", gradient: "from-red-900/40 via-orange-900/30 to-red-900/40" },
+  { value: "safe", label: "Safe", gradient: "from-emerald-900/50 via-green-900/40 to-emerald-900/50" },
+  { value: "trendy", label: "Trendy", gradient: "from-violet-900/50 via-purple-900/40 to-violet-900/50" },
+  { value: "classic", label: "Classic", gradient: "from-amber-900/40 via-yellow-900/30 to-amber-900/40" },
+  { value: "comfortable", label: "Comfy", gradient: "from-teal-900/50 via-cyan-900/40 to-teal-900/50" },
 ]
 
 const TIME_CHIPS: StyleChip[] = [
-  { value: "morning", label: "Morning", emoji: "🌅" },
-  { value: "afternoon", label: "Afternoon", emoji: "☀️" },
-  { value: "evening", label: "Evening", emoji: "🌙" },
+  { value: "morning", label: "Morning", gradient: "from-amber-800/40 via-orange-900/30 to-amber-800/40" },
+  { value: "afternoon", label: "Afternoon", gradient: "from-yellow-700/40 via-amber-800/30 to-yellow-700/40" },
+  { value: "evening", label: "Evening", gradient: "from-indigo-900/50 via-purple-900/40 to-indigo-900/50" },
 ]
+
+// Helper to get chip properties
+function getChipInfo(chips: StyleChip[], value: string) {
+  const chip = chips.find((c) => c.value === value)
+  return {
+    emoji: chip?.emoji || "",
+    gradient: chip?.gradient || "",
+    label: chip?.label || value,
+  }
+}
 
 export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) => void }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [progressStage, setProgressStage] = useState(0)
   const [isRandomizing, setIsRandomizing] = useState(false)
   const [showCelebration, setShowCelebration] = useState(false)
-  const [wardrobeSize, setWardrobeSize] = useState(0)
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false)
   const [usageInfo, setUsageInfo] = useState<{ current: number; limit: number } | null>(null)
   const [params, setParams] = useState({
@@ -61,58 +71,45 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
     timeOfDay: "",
   })
 
-  // Fetch wardrobe size and usage limits
+  // Progressive disclosure step
+  const [currentStep, setCurrentStep] = useState(0)
+
+  // Auto-advance steps when selections are made
+  useEffect(() => {
+    if (params.occasion && currentStep === 0) {
+      setTimeout(() => setCurrentStep(1), 300)
+    }
+    if (params.season && params.timeOfDay && currentStep === 1) {
+      setTimeout(() => setCurrentStep(2), 300)
+    }
+    if (params.mood && currentStep === 2) {
+      setTimeout(() => setCurrentStep(3), 300)
+    }
+  }, [params.occasion, params.season, params.timeOfDay, params.mood, currentStep])
+
+  // Fetch usage limits
   useEffect(() => {
     async function fetchData() {
       try {
-        const [wardrobeRes, usageRes] = await Promise.all([
-          fetch("/api/wardrobe/stats"),
-          fetch("/api/usage/check?type=outfit"),
-        ])
-
-        if (wardrobeRes.ok) {
-          const data = await wardrobeRes.json()
-          setWardrobeSize(data.totalItems || 0)
-        }
-
+        const usageRes = await fetch("/api/usage/check?type=outfit")
         if (usageRes.ok) {
           const usage = await usageRes.json()
           if (!usage.allowed && usage.remaining === 0) {
             setUsageInfo({ current: usage.current, limit: usage.limit })
           }
         }
-      } catch (e) {
+      } catch {
         // Silently fail
       }
     }
     fetchData()
   }, [])
 
-  // Progress stage advancement while loading
-  useEffect(() => {
-    if (!loading) {
-      setProgressStage(0)
-      return
-    }
-
-    // Stage 0: Analyzing wardrobe (0s)
-    // Stage 1: Finding combinations (3s)
-    // Stage 2: Finalizing outfits (6s)
-    // Stage 3: Almost ready (9s)
-    const timers = [
-      setTimeout(() => setProgressStage(1), 3000),
-      setTimeout(() => setProgressStage(2), 6000),
-      setTimeout(() => setProgressStage(3), 9000),
-    ]
-
-    return () => timers.forEach(clearTimeout)
-  }, [loading])
 
   // Surprise Me randomizer
   const handleSurpriseMe = useCallback(async () => {
     setIsRandomizing(true)
 
-    // Get random values
     const randomOccasion = OCCASION_CHIPS[Math.floor(Math.random() * OCCASION_CHIPS.length)].value
     const randomSeason = SEASON_CHIPS[Math.floor(Math.random() * SEASON_CHIPS.length)].value
     const randomMood = MOOD_CHIPS[Math.floor(Math.random() * MOOD_CHIPS.length)].value
@@ -121,25 +118,58 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
     // Animate selections with staggered timing
     await new Promise((resolve) => setTimeout(resolve, 100))
     setParams((prev) => ({ ...prev, occasion: randomOccasion }))
+    setCurrentStep(1)
 
-    await new Promise((resolve) => setTimeout(resolve, 150))
-    setParams((prev) => ({ ...prev, season: randomSeason }))
+    await new Promise((resolve) => setTimeout(resolve, 200))
+    setParams((prev) => ({ ...prev, season: randomSeason, timeOfDay: randomTime }))
+    setCurrentStep(2)
 
-    await new Promise((resolve) => setTimeout(resolve, 150))
+    await new Promise((resolve) => setTimeout(resolve, 200))
     setParams((prev) => ({ ...prev, mood: randomMood }))
-
-    await new Promise((resolve) => setTimeout(resolve, 150))
-    setParams((prev) => ({ ...prev, timeOfDay: randomTime }))
+    setCurrentStep(3)
 
     setIsRandomizing(false)
     setShowCelebration(true)
     setTimeout(() => setShowCelebration(false), 1000)
   }, [])
 
-  // Button spring animation
+  // Clear a selection
+  const handleClearSelection = (key: string) => {
+    setParams((prev) => ({ ...prev, [key]: "" }))
+    // Reset step if needed
+    if (key === "occasion") setCurrentStep(0)
+    else if (key === "season" || key === "timeOfDay") {
+      if (!params.season || !params.timeOfDay) setCurrentStep(1)
+    }
+    else if (key === "mood") setCurrentStep(2)
+  }
+
+  // Build selections array for summary
+  const selections = [
+    params.occasion && { key: "occasion", value: params.occasion, ...getChipInfo(OCCASION_CHIPS, params.occasion) },
+    params.timeOfDay && { key: "timeOfDay", value: params.timeOfDay, ...getChipInfo(TIME_CHIPS, params.timeOfDay) },
+    params.season && { key: "season", value: params.season, ...getChipInfo(SEASON_CHIPS, params.season) },
+    params.mood && { key: "mood", value: params.mood, ...getChipInfo(MOOD_CHIPS, params.mood) },
+  ].filter(Boolean) as { key: string; value: string; label: string; emoji?: string; gradient?: string }[]
+
+  // Section reveal transitions
+  const step1Transition = useTransition(currentStep >= 1, {
+    from: { opacity: 0, y: 20 },
+    enter: { opacity: 1, y: 0 },
+    config: config.gentle,
+  })
+
+  const step2Transition = useTransition(currentStep >= 2, {
+    from: { opacity: 0, y: 20 },
+    enter: { opacity: 1, y: 0 },
+    config: config.gentle,
+  })
+
+  // Floating generate button spring
   const buttonSpring = useSpring({
-    scale: loading ? 0.98 : 1,
-    config: config.wobbly,
+    opacity: currentStep >= 3 ? 1 : 0,
+    y: currentStep >= 3 ? 0 : 20,
+    config: config.gentle,
   })
 
   // Surprise button spring
@@ -151,7 +181,6 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    setProgressStage(0)
 
     try {
       const res = await fetchWithRetry(
@@ -171,9 +200,7 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
 
       if (!res.ok) {
         const error = await parseApiError(res)
-        // Check if it's a limit error
         if (res.status === 403 && error.message?.includes("limit")) {
-          // Fetch current usage to show in prompt
           const usageRes = await fetch("/api/usage/check?type=outfit")
           if (usageRes.ok) {
             const usage = await usageRes.json()
@@ -183,7 +210,6 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
             handleApiError(error, "Outfit Generation")
           }
         } else if (res.status === 400 && error.message?.includes("at least 2 items")) {
-          // Wardrobe too small - show helpful message
           toast.error("Wardrobe too small", {
             description: "Please add at least 2 items to your wardrobe before generating outfits.",
           })
@@ -194,11 +220,8 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
       }
 
       const data = await res.json()
-
-      // Redirect to swipe page with outfit IDs only (avoid URL length issues)
-      const outfitIds = data.outfits.map((o: { id: string }) => o.id).join(',')
+      const outfitIds = data.outfits.map((o: { id: string }) => o.id).join(",")
       router.push(`/outfits/swipe?ids=${outfitIds}`)
-
       toast.success("Your outfits are ready!")
     } catch (error: unknown) {
       handleApiError(error, "Outfit Generation")
@@ -207,11 +230,10 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
     }
   }
 
-  // Check if form is complete
   const isFormComplete = params.occasion && params.season && params.mood && params.timeOfDay
 
   if (loading) {
-    return <GenerationProgress stage={progressStage} />
+    return <GenerationProgress />
   }
 
   return (
@@ -224,98 +246,128 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
         limit={usageInfo?.limit}
       />
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-8 pb-24">
         {/* Celebration animation overlay */}
         <div className="relative">
           <CelebrationAnimation trigger={showCelebration} size="sm" />
         </div>
 
-      {/* Occasion */}
-      <StyleChipSelector
-        label="What's the occasion?"
-        chips={OCCASION_CHIPS}
-        value={params.occasion}
-        onChange={(value) => setParams({ ...params, occasion: value })}
-        disabled={loading || isRandomizing}
-        columns={3}
-      />
+        {/* Selection Summary - shows what's been picked */}
+        {selections.length > 0 && (
+          <SelectionSummary
+            selections={selections}
+            onRemove={handleClearSelection}
+            className="pb-2"
+          />
+        )}
 
-      {/* Season */}
-      <StyleChipSelector
-        label="What season?"
-        chips={SEASON_CHIPS}
-        value={params.season}
-        onChange={(value) => setParams({ ...params, season: value })}
-        disabled={loading || isRandomizing}
-        columns={3}
-      />
+        {/* Step 1: Occasion - Always visible */}
+        <section className="space-y-4">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+              Let&apos;s Get You Dressed
+            </h2>
+            {/* Surprise Me button */}
+            <animated.button
+              type="button"
+              onClick={handleSurpriseMe}
+              disabled={loading || isRandomizing}
+              style={{
+                transform: surpriseSpring.rotate.to((r) => `rotate(${r}deg)`),
+              }}
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-violet-600/80 to-fuchsia-600/80 text-white shadow-lg shadow-violet-500/25 hover:shadow-xl hover:shadow-violet-500/40 hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50"
+            >
+              <Shuffle className="h-4 w-4" />
+              <span>Surprise Me</span>
+            </animated.button>
+          </div>
+          <HorizontalChipScroller
+            chips={OCCASION_CHIPS}
+            value={params.occasion}
+            onChange={(value) => setParams({ ...params, occasion: value })}
+            disabled={loading || isRandomizing}
+          />
+        </section>
 
-      {/* Mood */}
-      <StyleChipSelector
-        label="What's the vibe?"
-        chips={MOOD_CHIPS}
-        value={params.mood}
-        onChange={(value) => setParams({ ...params, mood: value })}
-        disabled={loading || isRandomizing}
-        columns={3}
-      />
+        {/* Step 2: When - Time + Season */}
+        {step1Transition((style, show) =>
+          show && (
+            <animated.section style={style} className="space-y-6">
+              {/* Time of Day */}
+              <div className="space-y-3">
+                <h2 className="text-xl md:text-2xl font-bold tracking-tight">
+                  When are you heading out?
+                </h2>
+                <HorizontalChipScroller
+                  chips={TIME_CHIPS}
+                  value={params.timeOfDay}
+                  onChange={(value) => setParams({ ...params, timeOfDay: value })}
+                  disabled={loading || isRandomizing}
+                />
+              </div>
 
-      {/* Time of Day */}
-      <StyleChipSelector
-        label="What time of day?"
-        chips={TIME_CHIPS}
-        value={params.timeOfDay}
-        onChange={(value) => setParams({ ...params, timeOfDay: value })}
-        disabled={loading || isRandomizing}
-        columns={3}
-      />
+              {/* Season */}
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-muted-foreground">
+                  What season?
+                </h3>
+                <HorizontalChipScroller
+                  chips={SEASON_CHIPS}
+                  value={params.season}
+                  onChange={(value) => setParams({ ...params, season: value })}
+                  disabled={loading || isRandomizing}
+                />
+              </div>
+            </animated.section>
+          )
+        )}
 
-      {/* Style Confidence Meter */}
-      <StyleConfidenceMeter
-        occasion={params.occasion}
-        season={params.season}
-        style={params.mood}
-        formality={params.timeOfDay}
-        wardrobeSize={wardrobeSize}
-      />
+        {/* Step 3: Mood */}
+        {step2Transition((style, show) =>
+          show && (
+            <animated.section style={style} className="space-y-4">
+              <h2 className="text-xl md:text-2xl font-bold tracking-tight">
+                How bold are we going?
+              </h2>
+              <HorizontalChipScroller
+                chips={MOOD_CHIPS}
+                value={params.mood}
+                onChange={(value) => setParams({ ...params, mood: value })}
+                disabled={loading || isRandomizing}
+              />
+            </animated.section>
+          )
+        )}
 
-      {/* Action Buttons */}
-      <div className="flex gap-3 pt-2">
-        {/* Surprise Me Button */}
-        <animated.button
-          type="button"
-          onClick={handleSurpriseMe}
-          disabled={loading || isRandomizing}
+        {/* Floating Generate Button */}
+        <animated.div
           style={{
-            transform: surpriseSpring.rotate.to((r) => `rotate(${r}deg)`),
+            opacity: buttonSpring.opacity,
+            transform: buttonSpring.y.to((y) => `translateY(${y}px)`),
           }}
-          className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-accent bg-accent/10 px-4 py-3 font-medium text-foreground transition-all hover:border-[#C8A46A] hover:bg-[#C8A46A]/10 disabled:opacity-50"
+          className={cn(
+            "fixed bottom-6 left-1/2 -translate-x-1/2 z-50",
+            currentStep < 3 && "pointer-events-none"
+          )}
         >
-          <Shuffle className="h-5 w-5" />
-          <span className="hidden sm:inline">Surprise Me!</span>
-        </animated.button>
-
-        {/* Generate Button */}
-        <animated.div style={buttonSpring} className="flex-1">
           <Button
             type="submit"
             disabled={loading || !isFormComplete}
-            className="btn-glow h-12 w-full bg-gradient-to-r from-primary to-primary text-lg font-semibold shadow-lg transition-all hover:from-primary hover:to-[#4A9F7E] disabled:opacity-50"
+            className="h-14 px-8 rounded-full bg-gradient-to-r from-primary via-[#4ADE80] to-primary shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:scale-105 active:scale-95 transition-all duration-200 text-lg font-semibold"
           >
-            <Sparkles className="mr-2 h-5 w-5" />
-            Generate Outfits
+            Create Fits
           </Button>
         </animated.div>
-      </div>
 
-      {/* Helper text */}
-      {!isFormComplete && (
-        <p className="text-center text-sm text-muted-foreground">
-          Select all options to generate your perfect outfit
-        </p>
-      )}
-    </form>
+        {/* Helper text when not complete */}
+        {currentStep < 3 && (
+          <p className="text-center text-sm text-muted-foreground pt-4">
+            {currentStep === 0 && "Select an occasion to get started"}
+            {currentStep === 1 && "Choose when you're going"}
+            {currentStep === 2 && "Pick your style vibe"}
+          </p>
+        )}
+      </form>
     </>
   )
 }
-

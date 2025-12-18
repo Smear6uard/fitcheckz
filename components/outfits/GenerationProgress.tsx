@@ -1,181 +1,172 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Progress } from "@/components/ui/progress"
-import { Sparkles, Shirt, Glasses, Crown } from "lucide-react"
-import { animated, useSpring, config } from "@react-spring/web"
+import { useState, useEffect, useRef, useCallback } from "react"
 
 interface GenerationProgressProps {
-  stage: number
+  stage?: number
   onComplete?: () => void
 }
 
-// Stage definitions with progress and multiple witty messages
-const STAGES = [
-  {
-    progress: 10,
-    messages: [
-      "Consulting the fashion gods...",
-      "Scanning your closet vibes...",
-      "Channeling main character energy...",
-    ],
-    icon: Sparkles,
-  },
-  {
-    progress: 40,
-    messages: [
-      "Finding fire combinations...",
-      "Mixing and matching magic...",
-      "Creating looks that hit different...",
-    ],
-    icon: Shirt,
-  },
-  {
-    progress: 70,
-    messages: [
-      "Adding the finishing touches...",
-      "Making sure it's giving what it's supposed to give...",
-      "Polishing your next slay...",
-    ],
-    icon: Glasses,
-  },
-  {
-    progress: 95,
-    messages: [
-      "Almost ready to serve...",
-      "Your fits are loading...",
-      "Prepare to be iconic...",
-    ],
-    icon: Crown,
-  },
+// Gradient colors to shuffle through (from chip definitions)
+const SHUFFLE_GRADIENTS = [
+  "from-slate-700/50 via-gray-800/40 to-slate-700/50",
+  "from-blue-900/50 via-slate-900/40 to-blue-900/50",
+  "from-rose-900/50 via-pink-900/40 to-rose-900/50",
+  "from-purple-900/50 via-indigo-900/40 to-purple-900/50",
+  "from-orange-900/40 via-red-900/30 to-orange-900/40",
+  "from-cyan-900/50 via-blue-900/40 to-cyan-900/50",
+  "from-violet-900/50 via-purple-900/40 to-violet-900/50",
+  "from-emerald-900/50 via-green-900/40 to-emerald-900/50",
+  "from-amber-900/40 via-yellow-900/30 to-amber-900/40",
 ]
 
-// Subtext messages that cycle
-const SUBTEXT_MESSAGES = [
-  "Good things take a sec",
-  "Trust the process bestie",
-  "Worth the wait fr fr",
-  "Manifesting your best looks",
-  "The algorithm is thinking",
+// 3-phase timing intervals (ms) - progressively slower for premium feel
+const SHUFFLE_INTERVALS = [
+  // Phase 1: Initial shuffle - "searching" (4 flips, ~1s)
+  250, 250, 250, 250,
+  // Phase 2: Deceleration - "narrowing down" (4 flips, ~2s)
+  300, 400, 550, 750,
+  // Phase 3: Final settle - "found it" (1 flip, ~1s)
+  1000,
 ]
 
-export function GenerationProgress({ stage, onComplete }: GenerationProgressProps) {
-  const currentStageData = STAGES[Math.min(stage, STAGES.length - 1)]
-  const [messageIndex, setMessageIndex] = useState(0)
-  const [subtextIndex, setSubtextIndex] = useState(0)
+export function GenerationProgress({ onComplete }: GenerationProgressProps) {
+  const [isShuffling, setIsShuffling] = useState(true)
+  const [isDecelerating, setIsDecelerating] = useState(false)
+  const [cardGradients, setCardGradients] = useState([0, 3, 6])
+  const flipIndexRef = useRef(0)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Rotate through messages for each stage
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMessageIndex((prev) => (prev + 1) % currentStageData.messages.length)
-    }, 2500)
-    return () => clearInterval(interval)
-  }, [currentStageData.messages.length])
+  // Shuffle with deceleration effect
+  const doFlip = useCallback(() => {
+    const currentIndex = flipIndexRef.current
 
-  // Rotate subtext
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSubtextIndex((prev) => (prev + 1) % SUBTEXT_MESSAGES.length)
-    }, 3500)
-    return () => clearInterval(interval)
+    // Check if we've completed all flips
+    if (currentIndex >= SHUFFLE_INTERVALS.length) {
+      setIsShuffling(false)
+      setIsDecelerating(false)
+      // Final settled gradients
+      setCardGradients([0, 4, 7])
+      return
+    }
+
+    // Flip to random gradients
+    setCardGradients(prev => prev.map(() =>
+      Math.floor(Math.random() * SHUFFLE_GRADIENTS.length)
+    ))
+
+    // Mark deceleration phase (after first 4 flips)
+    if (currentIndex >= 4) {
+      setIsDecelerating(true)
+    }
+
+    // Schedule next flip with progressive delay
+    const delay = SHUFFLE_INTERVALS[currentIndex]
+    flipIndexRef.current = currentIndex + 1
+
+    timeoutRef.current = setTimeout(doFlip, delay)
   }, [])
 
-  // Spring animation for progress bar
-  const progressSpring = useSpring({
-    value: currentStageData.progress,
-    config: { tension: 50, friction: 20 },
-  })
+  useEffect(() => {
+    // Start the shuffle sequence
+    timeoutRef.current = setTimeout(doFlip, 250)
 
-  // Icon animation
-  const iconSpring = useSpring({
-    from: { scale: 0.8, rotate: -10 },
-    to: async (next) => {
-      while (true) {
-        await next({ scale: 1.1, rotate: 10 })
-        await next({ scale: 0.9, rotate: -10 })
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
       }
-    },
-    config: config.gentle,
-    loop: true,
-  })
-
-  // Message fade animation
-  const messageSpring = useSpring({
-    from: { opacity: 0, y: 10 },
-    to: { opacity: 1, y: 0 },
-    reset: true,
-    config: config.gentle,
-  })
-
-  const IconComponent = currentStageData.icon
+    }
+  }, [doFlip])
 
   return (
-    <div className="space-y-6 py-10">
-      {/* Animated Icon */}
-      <div className="flex justify-center">
-        <animated.div
-          style={{
-            transform: iconSpring.scale.to((s) => `scale(${s})`),
-          }}
-          className="relative"
-        >
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-brand-lime/20 via-brand-teal/20 to-brand-lavender/20">
-            <IconComponent className="h-10 w-10 text-brand-teal" />
-          </div>
-          {/* Pulsing ring */}
-          <div className="absolute inset-0 animate-ping rounded-full bg-brand-teal/20" style={{ animationDuration: "2s" }} />
-        </animated.div>
-      </div>
+    <div className="flex flex-col items-center py-8 space-y-8">
+      {/* Header text - changes based on phase */}
+      <h3 className={`text-lg font-semibold text-foreground transition-all duration-500 ${isShuffling && !isDecelerating ? 'animate-pulse' : ''}`}>
+        {!isShuffling
+          ? "Creating your fits..."
+          : isDecelerating
+            ? "Almost there..."
+            : "Shuffling your wardrobe..."}
+      </h3>
 
-      {/* Animated Message */}
-      <animated.div
-        style={messageSpring}
-        className="text-center"
-        key={`${stage}-${messageIndex}`}
-      >
-        <p className="text-xl font-semibold text-foreground">
-          {currentStageData.messages[messageIndex]}
-        </p>
-      </animated.div>
-
-      {/* Enhanced Progress Bar */}
-      <div className="mx-auto max-w-md space-y-2">
-        <div className="relative h-3 overflow-hidden rounded-full bg-muted">
-          <animated.div
-            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-brand-teal via-brand-lime to-brand-teal"
-            style={{
-              width: progressSpring.value.to((v) => `${v}%`),
-              backgroundSize: "200% 100%",
-              animation: "shimmer 2s linear infinite",
-            }}
-          />
-        </div>
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>Analyzing</span>
-          <span>Matching</span>
-          <span>Finalizing</span>
-          <span>Ready!</span>
-        </div>
-      </div>
-
-      {/* Subtext with personality */}
-      <p
-        className="text-center text-sm text-muted-foreground transition-opacity duration-300"
-        key={subtextIndex}
-      >
-        {SUBTEXT_MESSAGES[subtextIndex]}
-      </p>
-
-      {/* Outfit assembly animation hint */}
-      <div className="flex justify-center gap-4 pt-2">
+      {/* Outfit cards - horizontal scroll on mobile, centered on desktop */}
+      <div className="flex gap-4 overflow-x-auto pb-4 px-4 w-full max-w-4xl scrollbar-hide justify-start md:justify-center">
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className="h-2 w-2 rounded-full bg-brand-teal"
+            className={`shrink-0 w-72 rounded-xl border overflow-hidden shadow-lg transition-all ${
+              !isShuffling
+                ? 'border-border/50 animate-settle-card duration-500'
+                : isDecelerating
+                  ? 'border-primary/20 duration-500'
+                  : 'animate-shuffle-card border-primary/30 duration-300'
+            }`}
             style={{
-              animation: `pulse 1.5s ease-in-out infinite`,
-              animationDelay: `${i * 0.3}s`,
+              animationDelay: `${i * 100}ms`,
             }}
+          >
+            {/* 2x2 outfit items grid with gradient shuffle */}
+            <div className={`grid grid-cols-2 gap-2 p-4 bg-gradient-to-br ${
+              isDecelerating ? 'transition-all duration-500' : 'transition-all duration-200'
+            } ${SHUFFLE_GRADIENTS[cardGradients[i]]}`}>
+              {[0, 1, 2, 3].map((j) => (
+                <div
+                  key={j}
+                  className={`aspect-square rounded-lg transition-all ${
+                    isShuffling
+                      ? isDecelerating
+                        ? 'bg-white/15 backdrop-blur-sm duration-400'
+                        : 'bg-white/10 backdrop-blur-sm duration-150'
+                      : 'bg-muted duration-300'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Details section */}
+            <div className="p-4 space-y-3 bg-card">
+              {/* Badges */}
+              <div className="flex gap-2">
+                <div className={`h-6 w-16 rounded-full transition-all duration-300 ${
+                  isShuffling ? 'bg-primary/20' : 'bg-muted'
+                } ${isShuffling && !isDecelerating ? 'animate-pulse' : ''}`} />
+                <div className={`h-6 w-20 rounded-full transition-all duration-300 ${
+                  isShuffling ? 'bg-primary/15' : 'bg-muted'
+                } ${isShuffling && !isDecelerating ? 'animate-pulse' : ''}`} />
+              </div>
+
+              {/* Description lines */}
+              <div className="space-y-2">
+                <div className={`h-4 w-full rounded transition-all duration-300 ${
+                  isShuffling ? 'bg-muted/70' : 'bg-muted'
+                } ${isShuffling && !isDecelerating ? 'animate-pulse' : ''}`} />
+                <div className={`h-4 w-4/5 rounded transition-all duration-300 ${
+                  isShuffling ? 'bg-muted/50' : 'bg-muted'
+                } ${isShuffling && !isDecelerating ? 'animate-pulse' : ''}`} />
+              </div>
+
+              {/* Score bar */}
+              <div className={`h-8 w-full rounded transition-all duration-300 ${
+                isShuffling ? 'bg-primary/10' : 'bg-muted'
+              } ${isShuffling && !isDecelerating ? 'animate-pulse' : ''}`} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Progress indicator dots */}
+      <div className="flex gap-2">
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className={`w-2 h-2 rounded-full transition-all duration-500 ${
+              !isShuffling
+                ? 'bg-primary/50'
+                : isDecelerating
+                  ? 'bg-primary/70'
+                  : 'bg-primary animate-bounce'
+            }`}
+            style={{ animationDelay: `${i * 150}ms` }}
           />
         ))}
       </div>

@@ -93,27 +93,38 @@ function SwipePageContent() {
     setTimeout(() => router.push('/outfits?tab=favorites'), 1500)
   }
 
-  const handleSwipeRight = async () => {
+  const handleSwipeRight = () => {
     const outfit = outfits[currentIndex]
     if (!outfit) return
 
-    try {
-      await fetchWithRetry(`/api/outfits/${outfit.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ liked: true }),
-      })
+    // Show feedback IMMEDIATELY - don't wait for API
+    setLikedCount(prev => prev + 1)
+    toast.success("💚 We'll recommend more like this!")
+    moveToNext()
 
-      setLikedCount(likedCount + 1)
-      toast.success("Added to favorites!")
-      moveToNext()
-    } catch (error) {
-      handleApiError(error, "Like Outfit")
-    }
+    // Fire API in background (don't await)
+    fetchWithRetry(`/api/outfits/${outfit.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ liked: true }),
+    }).catch(err => console.error("Failed to save like:", err))
   }
 
   const handleSwipeLeft = () => {
+    const outfit = outfits[currentIndex]
+
+    // Show feedback IMMEDIATELY
+    toast("👋 We'll show less like this", { icon: "🔀" })
     moveToNext()
+
+    // Fire API in background to track dislike (optional)
+    if (outfit) {
+      fetchWithRetry(`/api/outfits/${outfit.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ liked: false }),
+      }).catch(err => console.error("Failed to save dislike:", err))
+    }
   }
 
   // Loading state
@@ -168,7 +179,7 @@ function SwipePageContent() {
         bottom: 0,
         width: '100vw',
         height: '100vh',
-        zIndex: 99999,
+        zIndex: 50,
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -186,13 +197,15 @@ function SwipePageContent() {
         <div className="w-16" />
       </div>
 
-      {/* Swipe Card Container */}
-      <div className="flex-1 flex items-center justify-center p-4 overflow-auto">
-        <SwipeCard
+      {/* Swipe Card Container - properly centered */}
+      <div className="flex-1 flex items-center justify-center w-full p-4 overflow-auto">
+        <div className="w-full max-w-md mx-auto">
+          <SwipeCard
           outfit={currentOutfit}
           onSwipeRight={handleSwipeRight}
           onSwipeLeft={handleSwipeLeft}
-        />
+          />
+        </div>
       </div>
 
       {/* Bottom Actions */}

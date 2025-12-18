@@ -349,6 +349,55 @@
     }
   }
 
+  /* Shuffle card animation - cards wobble/shake during shuffle */
+  @keyframes shuffle-card {
+    0%, 100% {
+      transform: translateX(0) rotateY(0deg);
+    }
+    25% {
+      transform: translateX(-2px) rotateY(-5deg);
+    }
+    50% {
+      transform: translateX(2px) rotateY(5deg);
+    }
+    75% {
+      transform: translateX(-1px) rotateY(-3deg);
+    }
+  }
+
+  .animate-shuffle-card {
+    animation: shuffle-card 0.3s ease-in-out infinite;
+    transform-style: preserve-3d;
+  }
+
+  /* Settle card animation - cards smoothly settle into place */
+  @keyframes settle-card {
+    0% {
+      transform: scale(1.02) translateY(-5px);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1) translateY(2px);
+    }
+    100% {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-settle-card {
+    animation: settle-card 0.4s ease-out forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-shuffle-card,
+    .animate-settle-card {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   /* Enhanced card styling for premium dark feel */
   .card-enhanced {
     background: linear-gradient(
@@ -423,6 +472,24 @@
   .toast-error-custom {
     background: linear-gradient(135deg, #18181B, #27272A) !important;
     border: 1px solid #F87171 !important;
+  }
+
+  /* Ensure sonner toaster is positioned top-center */
+  [data-sonner-toaster] {
+    --offset: 16px !important;
+    top: var(--offset) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    right: auto !important;
+    bottom: auto !important;
+  }
+
+  [data-sonner-toaster][data-position="top-center"] {
+    top: var(--offset) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    right: auto !important;
+    bottom: auto !important;
   }
 
   /* Accent glow shadow */

@@ -43,6 +43,7 @@ export function OutfitCard({ outfit, onLike, onReaction, showPublicToggle = fals
   const [visualizationUrl, setVisualizationUrl] = useState(outfit.visualization_url)
   const [currentReaction, setCurrentReaction] = useState<ReactionType>(outfit.reaction || null)
   const [isHovered, setIsHovered] = useState(false)
+  const [isFlipped, setIsFlipped] = useState(false)
 
   // Card hover animation
   const cardSpring = useSpring({
@@ -150,37 +151,86 @@ export function OutfitCard({ outfit, onLike, onReaction, showPublicToggle = fals
         </div>
       </CardHeader>
       <CardContent>
-        {visualizationUrl && (
-          <div className="mb-4">
-            <div className="aspect-[3/4] relative rounded-lg overflow-hidden bg-muted">
-              <Image
-                src={visualizationUrl}
-                alt="Outfit visualization"
-                fill
-                className="object-cover transition-opacity duration-300"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                placeholder="blur"
-                blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cfilter id='b' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='20'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23808080' filter='url(%23b)'/%3E%3C/svg%3E"
-                loading="lazy"
-              />
+        {/* 3D Flip Card: Tap to flip between visualization and items */}
+        <div
+          onClick={() => visualizationUrl && setIsFlipped(!isFlipped)}
+          className={cn(
+            "mb-4 relative",
+            visualizationUrl && "cursor-pointer"
+          )}
+          style={{ perspective: "1000px" }}
+        >
+          {visualizationUrl ? (
+            // 3D Flip card when visualization exists
+            <div
+              className="relative w-full transition-transform duration-500 ease-out"
+              style={{
+                transformStyle: "preserve-3d",
+                transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+              }}
+            >
+              {/* Front face - Visualization */}
+              <div
+                className="aspect-[3/4] relative rounded-lg overflow-hidden bg-muted"
+                style={{ backfaceVisibility: "hidden" }}
+              >
+                <Image
+                  src={visualizationUrl}
+                  alt="Outfit visualization"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  placeholder="blur"
+                  blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cfilter id='b' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='20'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23808080' filter='url(%23b)'/%3E%3C/svg%3E"
+                  loading="lazy"
+                />
+              </div>
+
+              {/* Back face - Items grid */}
+              <div
+                className="absolute inset-0 aspect-[3/4] rounded-lg overflow-hidden bg-muted p-2"
+                style={{
+                  backfaceVisibility: "hidden",
+                  transform: "rotateY(180deg)",
+                }}
+              >
+                <div className="grid grid-cols-2 gap-2 h-full">
+                  {outfit.items?.slice(0, 4).map((item) => (
+                    <div key={item.id} className="relative rounded-lg overflow-hidden bg-background">
+                      <Image
+                        src={item.photo_url}
+                        alt={item.item_name}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                        placeholder="blur"
+                        blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cfilter id='b' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='20'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23808080' filter='url(%23b)'/%3E%3C/svg%3E"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        )}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
-          {outfit.items?.slice(0, 4).map((item) => (
-            <div key={item.id} className="aspect-square relative rounded-lg overflow-hidden bg-muted">
-              <Image
-                src={item.photo_url}
-                alt={item.item_name}
-                fill
-                className="object-cover transition-opacity duration-300"
-                sizes="(max-width: 768px) 50vw, 25vw"
-                placeholder="blur"
-                blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cfilter id='b' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='20'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23808080' filter='url(%23b)'/%3E%3C/svg%3E"
-                loading="lazy"
-              />
+          ) : (
+            // No visualization - just show items grid
+            <div className="grid grid-cols-2 gap-2">
+              {outfit.items?.slice(0, 4).map((item) => (
+                <div key={item.id} className="aspect-square relative rounded-lg overflow-hidden bg-muted">
+                  <Image
+                    src={item.photo_url}
+                    alt={item.item_name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    placeholder="blur"
+                    blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cfilter id='b' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='20'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23808080' filter='url(%23b)'/%3E%3C/svg%3E"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </div>
         {outfit.ai_explanation && (
           <p className="text-sm text-muted-foreground mb-4">

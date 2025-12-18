@@ -372,7 +372,7 @@ export function ItemUpload() {
         </Select>
       </div>
 
-      <Button type="submit" disabled={uploading || isSubmitting || showCelebration} className="w-full touch-target">
+      <Button type="submit" disabled={uploading || isSubmitting || showCelebration} className="w-full touch-target active:scale-95 transition-transform">
         {uploading
           ? compressionProgress > 0
             ? `Processing... ${compressionProgress}%`

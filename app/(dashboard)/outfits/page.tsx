@@ -180,9 +180,9 @@ export default function OutfitsPage() {
           {generatedOutfits.length > 0 && (
             <div className="space-y-4">
               <h2 className="text-2xl font-semibold">Generated Outfits</h2>
-              <div className="grid gap-4 md:grid-cols-2 place-items-center">
+              <div className="grid gap-6 md:grid-cols-2 justify-items-center">
                 {generatedOutfits.map((outfit) => (
-                  <div key={outfit.id} className="w-full max-w-md mx-auto">
+                  <div key={outfit.id} className="w-full max-w-md">
                     <OutfitCard
                       outfit={outfit}
                       onLike={handleLike}
@@ -207,9 +207,9 @@ export default function OutfitsPage() {
               description="Generate your first outfit to see it here. Your AI-powered style recommendations will appear in this tab."
             />
           ) : (
-            <div className="grid gap-4 md:grid-cols-2 place-items-center">
+            <div className="grid gap-6 md:grid-cols-2 justify-items-center">
               {history.map((outfit) => (
-                <div key={outfit.id} className="w-full max-w-md mx-auto">
+                <div key={outfit.id} className="w-full max-w-md">
                   <OutfitCard
                     outfit={outfit}
                     onLike={handleLike}
@@ -234,9 +234,9 @@ export default function OutfitsPage() {
               description="Like outfits you love by clicking the heart icon. Your favorites will be saved here for easy access."
             />
           ) : (
-            <div className="grid gap-4 md:grid-cols-2 place-items-center">
+            <div className="grid gap-6 md:grid-cols-2 justify-items-center">
               {favorites.map((outfit) => (
-                <div key={outfit.id} className="w-full max-w-md mx-auto">
+                <div key={outfit.id} className="w-full max-w-md">
                   <OutfitCard
                     outfit={outfit}
                     onLike={handleLike}

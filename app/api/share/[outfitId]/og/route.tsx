@@ -26,7 +26,7 @@ export async function GET(
     // Fetch wardrobe items for this outfit
     const { data: items, error: itemsError } = await supabase
       .from("wardrobe_items")
-      .select("id, name, category, image_url, primary_color")
+      .select("id, item_name, category, photo_url, primary_color")
       .in("id", outfit.wardrobe_item_ids || [])
 
     if (itemsError) {
@@ -104,10 +104,10 @@ export async function GET(
                   overflow: "hidden",
                 }}
               >
-                {item.image_url ? (
+                {item.photo_url ? (
                   <img
-                    src={item.image_url}
-                    alt={item.name}
+                    src={item.photo_url}
+                    alt={item.item_name}
                     style={{
                       width: "100%",
                       height: 160,
@@ -157,7 +157,7 @@ export async function GET(
                       maxWidth: "100%",
                     }}
                   >
-                    {item.name}
+                    {item.item_name}
                   </span>
                   <span
                     style={{

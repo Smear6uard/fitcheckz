@@ -28,10 +28,10 @@ interface SwipeCardProps {
   onSwipeLeft: () => void
 }
 
-// Dynamic threshold based on screen size (minimum 80px, scales with viewport)
+// Dynamic threshold based on screen size (lower threshold = easier swiping)
 const getSwipeThreshold = () => {
-  if (typeof window === "undefined") return 100
-  return Math.max(80, window.innerWidth * 0.2)
+  if (typeof window === "undefined") return 80
+  return Math.max(50, window.innerWidth * 0.15)
 }
 
 // Get exit distance (viewport width + padding to ensure card fully exits)
@@ -61,7 +61,7 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
     y: 0,
     rotateZ: 0,
     scale: 1,
-    config: { tension: 400, friction: 25 },
+    config: { tension: 200, friction: 30 }, // Smoother motion (was tension: 400, friction: 25)
   }))
 
   const bind = useDrag(
@@ -71,8 +71,8 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
       const absVx = Math.abs(vx)
       const absMx = Math.abs(mx)
       
-      // Velocity threshold for fast flicks (pixels per second)
-      const VELOCITY_THRESHOLD = 0.5
+      // Velocity threshold for fast flicks (lower = easier to trigger)
+      const VELOCITY_THRESHOLD = 0.3
       // Distance threshold
       const distanceTrigger = absMx > swipeThreshold
       // Velocity trigger - fast flick even if distance is small
@@ -91,11 +91,11 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
           x: exitX,
           rotateZ: exitRotation,
           scale: 0.8,
-          config: { 
-            friction: 25, 
-            tension: 400,
-            velocity: absVx * 0.3, // Reduced multiplier for smoother motion
-            precision: 0.01, // Higher precision for smoother animation
+          config: {
+            friction: 30,
+            tension: 200, // Smoother exit animation
+            velocity: absVx * 0.2,
+            precision: 0.01,
           },
           onRest: () => {
             if (dir > 0) {
@@ -119,7 +119,7 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
           rotateZ: rotation,
           scale: currentScale,
           immediate: true,
-          config: { friction: 50, tension: 1000 }, // Higher tension for more responsive feel
+          config: { friction: 40, tension: 300 }, // Balanced responsiveness
         })
       } else {
         // Release without threshold - snap back smoothly
@@ -185,26 +185,27 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
   }
 
   return (
-    <animated.div
-      {...bind()}
-      style={{
-        x,
-        y,
-        rotateZ,
-        scale,
-        opacity,
-        touchAction: "none",
-        cursor: "grab",
-        willChange: "transform, opacity",
-      }}
-      className="relative w-full max-w-md mx-auto select-none z-50"
-    >
-      <Card className="overflow-hidden shadow-2xl">
+    <div className="flex flex-col items-center w-full">
+      <animated.div
+        {...bind()}
+        style={{
+          x,
+          y,
+          rotateZ,
+          scale,
+          opacity,
+          touchAction: "none",
+          cursor: "grab",
+          willChange: "transform, opacity",
+        }}
+        className="relative w-full select-none"
+      >
+        <Card className="overflow-hidden shadow-2xl">
         <CardContent className="p-0">
           {/* Swipe Indicators */}
           <animated.div
             style={{ opacity: likeOpacity }}
-            className="absolute top-8 right-8 z-10 bg-green-500 text-white px-6 py-3 rounded-lg font-bold text-2xl rotate-12 border-4 border-green-600"
+            className="absolute top-8 right-8 z-10 bg-rose-500 text-white px-6 py-3 rounded-lg font-bold text-2xl rotate-12 border-4 border-rose-600"
             role="status"
             aria-live="polite"
             aria-label="Like indicator"
@@ -296,9 +297,10 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
           </div>
         </CardContent>
       </Card>
+      </animated.div>
 
-      {/* Swipe Instructions */}
-      <div className="mt-6 flex items-center justify-center gap-3 px-4 py-3 bg-primary/10 rounded-lg border border-primary/20" role="status" aria-live="polite">
+      {/* Swipe Instructions - outside animated div for proper centering */}
+      <div className="mt-4 flex items-center justify-center gap-3 px-4 py-3 bg-primary/10 rounded-lg border border-primary/20" role="status" aria-live="polite">
         <div className="flex items-center gap-2 text-sm font-medium text-foreground">
           <ArrowLeft className="h-4 w-4 text-muted-foreground" />
           <span className="text-muted-foreground">Swipe left to pass</span>
@@ -309,6 +311,6 @@ export function SwipeCard({ outfit, onSwipeRight, onSwipeLeft }: SwipeCardProps)
           <Heart className="h-4 w-4 text-red-500" />
         </div>
       </div>
-    </animated.div>
+    </div>
   )
 }
