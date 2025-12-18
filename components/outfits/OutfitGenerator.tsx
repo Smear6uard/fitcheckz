@@ -15,12 +15,12 @@ import { UpgradePrompt } from "@/components/subscription/UpgradePrompt"
 
 // Chip definitions with emojis and icons
 const OCCASION_CHIPS: StyleChip[] = [
-  { value: "casual", label: "Casual", emoji: "☕", color: "#F8F5F0" },
-  { value: "work", label: "Work", emoji: "💼", color: "#E0D5FF" },
-  { value: "date", label: "Date", emoji: "💕", color: "#FFD6E7" },
-  { value: "formal", label: "Formal", emoji: "✨", color: "#20C8A8" },
-  { value: "gym", label: "Gym", emoji: "💪", color: "#CCFF00" },
-  { value: "travel", label: "Travel", emoji: "✈️", color: "#20C8A8" },
+  { value: "casual", label: "Casual", emoji: "☕", color: "#F5F3EE" },
+  { value: "work", label: "Work", emoji: "💼", color: "#D8E8E5" },
+  { value: "date", label: "Date", emoji: "💕", color: "#E8D5C8" },
+  { value: "formal", label: "Formal", emoji: "✨", color: "#589991" },
+  { value: "gym", label: "Gym", emoji: "💪", color: "#C8A46A" },
+  { value: "travel", label: "Travel", emoji: "✈️", color: "#589991" },
 ]
 
 const SEASON_CHIPS: StyleChip[] = [
@@ -289,7 +289,7 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
           style={{
             transform: surpriseSpring.rotate.to((r) => `rotate(${r}deg)`),
           }}
-          className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-brand-lavender bg-brand-lavender/10 px-4 py-3 font-medium text-brand-charcoal transition-all hover:border-brand-lime hover:bg-brand-lime/10 disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-accent bg-accent/10 px-4 py-3 font-medium text-foreground transition-all hover:border-[#C8A46A] hover:bg-[#C8A46A]/10 disabled:opacity-50"
         >
           <Shuffle className="h-5 w-5" />
           <span className="hidden sm:inline">Surprise Me!</span>
@@ -300,7 +300,7 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
           <Button
             type="submit"
             disabled={loading || !isFormComplete}
-            className="btn-glow h-12 w-full bg-gradient-to-r from-brand-teal to-brand-teal text-lg font-semibold shadow-lg transition-all hover:from-brand-teal hover:to-brand-lime disabled:opacity-50"
+            className="btn-glow h-12 w-full bg-gradient-to-r from-primary to-primary text-lg font-semibold shadow-lg transition-all hover:from-primary hover:to-[#4A9F7E] disabled:opacity-50"
           >
             <Sparkles className="mr-2 h-5 w-5" />
             Generate Outfits

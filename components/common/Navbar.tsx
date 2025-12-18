@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { animated, useSpring, config } from "@react-spring/web"
 import { Button } from "@/components/ui/button"
 import { UserMenu } from "@/components/auth/UserMenu"
-import { Sparkles, LayoutDashboard, Shirt, ShirtIcon, User, CreditCard, BarChart3, Compass, ShoppingBag, Trophy, Menu, X } from "lucide-react"
+import { LayoutDashboard, Shirt, ShirtIcon, User, CreditCard, BarChart3, Compass, ShoppingBag, Trophy, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navigation = [
@@ -55,8 +55,6 @@ export function Navbar() {
   // Animate navbar properties based on scroll
   const navSpring = useSpring({
     backdropBlur: scrolled ? 16 : 8,
-    backgroundColor: scrolled ? "rgba(var(--background-rgb), 0.85)" : "rgba(var(--background-rgb), 0.6)",
-    borderOpacity: scrolled ? 1 : 0.5,
     shadow: scrolled ? 8 : 0,
     config: { tension: 300, friction: 30 },
   })
@@ -73,31 +71,26 @@ export function Navbar() {
         backdropFilter: navSpring.backdropBlur.to((v) => `blur(${v}px) saturate(180%)`),
         WebkitBackdropFilter: navSpring.backdropBlur.to((v) => `blur(${v}px) saturate(180%)`),
         boxShadow: navSpring.shadow.to(
-          (s) => `0 ${s / 2}px ${s}px -${s / 4}px rgba(0,0,0,0.1), 0 ${s / 4}px ${s / 2}px -${s / 4}px rgba(0,0,0,0.06)`
+          (s) => `0 ${s / 2}px ${s}px -${s / 4}px rgba(0,0,0,0.3), 0 ${s / 4}px ${s / 2}px -${s / 4}px rgba(0,0,0,0.2)`
         ),
       }}
       className={cn(
         "sticky top-0 z-50 safe-area-top transition-colors duration-300",
         scrolled
-          ? "bg-background/85 border-b border-border"
-          : "bg-background/60 border-b border-transparent"
+          ? "bg-[#0A0A0A]/85 border-b border-[#2A2A2A]"
+          : "bg-[#0A0A0A]/60 border-b border-transparent"
       )}
     >
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-8">
+            {/* Styleum logo */}
             <Link href="/" className="flex items-center gap-2 touch-target">
-              <animated.div
-                style={{ scale: logoSpring.scale }}
-                className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-lg shadow-primary/25"
-              >
-                <Sparkles className="h-4 w-4 text-primary-foreground" />
-              </animated.div>
               <animated.span
                 style={{ scale: logoSpring.scale }}
-                className="text-lg font-bold origin-left"
+                className="font-serif text-lg text-white origin-left"
               >
-                Fitcheckz
+                Styleum<span className="text-primary">.</span>
               </animated.span>
             </Link>
             <div className="hidden md:flex gap-1">
@@ -111,7 +104,7 @@ export function Navbar() {
                     asChild
                     className={cn(
                       "gap-2 touch-target transition-all duration-200",
-                      isActive && "bg-secondary shadow-sm"
+                      isActive && "bg-[#1A1A1A] text-white"
                     )}
                   >
                     <Link href={item.href}>
@@ -127,7 +120,7 @@ export function Navbar() {
             <div className="flex md:hidden">
               <button
                 type="button"
-                className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-foreground hover:bg-secondary transition-colors touch-target"
+                className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-white hover:bg-[#1A1A1A] transition-colors touch-target"
                 onClick={(e) => {
                   e.stopPropagation()
                   setMobileMenuOpen(true)
@@ -148,7 +141,7 @@ export function Navbar() {
       <div
         className={cn(
           "absolute bottom-0 left-0 right-0 h-px transition-opacity duration-300",
-          "bg-gradient-to-r from-transparent via-brand-teal/50 to-transparent",
+          "bg-gradient-to-r from-transparent via-primary/50 to-transparent",
           scrolled ? "opacity-100" : "opacity-0"
         )}
       />
@@ -157,8 +150,8 @@ export function Navbar() {
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-[100]">
           {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
             onClick={(e) => {
               e.stopPropagation()
               setMobileMenuOpen(false)
@@ -166,9 +159,9 @@ export function Navbar() {
             aria-hidden="true"
           />
           {/* Menu Panel */}
-          <div 
+          <div
             className={cn(
-              "fixed inset-y-0 right-0 z-[101] w-full max-w-sm overflow-y-auto bg-background shadow-xl transform transition-transform duration-300 ease-out",
+              "fixed inset-y-0 right-0 z-[101] w-full max-w-sm overflow-y-auto bg-[#0A0A0A] shadow-xl transform transition-transform duration-300 ease-out",
               mobileMenuOpen ? "translate-x-0" : "translate-x-full"
             )}
             onClick={(e) => e.stopPropagation()}
@@ -176,19 +169,18 @@ export function Navbar() {
             <div className="px-6 py-6">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
-                <Link 
-                  href="/" 
-                  className="flex items-center gap-2 -m-1.5 p-1.5" 
+                <Link
+                  href="/"
+                  className="flex items-center gap-2 -m-1.5 p-1.5"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-                    <Sparkles className="h-5 w-5 text-primary-foreground" />
-                  </div>
-                  <span className="text-xl font-bold text-foreground">Fitcheckz</span>
+                  <span className="font-serif text-xl text-white">
+                    Styleum<span className="text-primary">.</span>
+                  </span>
                 </Link>
                 <button
                   type="button"
-                  className="-m-2.5 rounded-md p-2.5 text-foreground hover:bg-secondary transition-colors"
+                  className="-m-2.5 rounded-md p-2.5 text-white hover:bg-[#1A1A1A] transition-colors"
                   onClick={(e) => {
                     e.stopPropagation()
                     setMobileMenuOpen(false)
@@ -198,7 +190,7 @@ export function Navbar() {
                   <X className="h-6 w-6" aria-hidden="true" />
                 </button>
               </div>
-              
+
               {/* Navigation Items */}
               <nav className="space-y-1">
                 {navigation.map((item) => {
@@ -214,13 +206,13 @@ export function Navbar() {
                       }}
                       className={cn(
                         "flex items-center gap-3 rounded-lg px-3 py-3 text-base font-semibold transition-colors touch-target",
-                        isActive 
-                          ? "bg-secondary text-foreground" 
-                          : "text-foreground hover:bg-secondary active:bg-secondary/80"
+                        isActive
+                          ? "bg-[#1A1A1A] text-white"
+                          : "text-[#8A8A8A] hover:bg-[#1A1A1A] hover:text-white active:bg-[#2A2A2A]"
                       )}
                       aria-current={isActive ? "page" : undefined}
                     >
-                      <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                      <Icon className={cn("h-5 w-5 shrink-0", isActive && "text-primary")} aria-hidden="true" />
                       <span>{item.name}</span>
                     </Link>
                   )
@@ -233,4 +225,3 @@ export function Navbar() {
     </animated.nav>
   )
 }
-

@@ -52,19 +52,19 @@ function getMessage(confidence: number): { text: string; emoji: string } {
 
 // Get color based on confidence
 function getColor(confidence: number): string {
-  if (confidence >= 90) return "text-amber-500"
-  if (confidence >= 75) return "text-brand-lime"
-  if (confidence >= 50) return "text-brand-teal"
-  if (confidence >= 25) return "text-blue-500"
+  if (confidence >= 90) return "text-[#C8A46A]"
+  if (confidence >= 75) return "text-[#4A9F7E]"
+  if (confidence >= 50) return "text-primary"
+  if (confidence >= 25) return "text-[#6BA89F]"
   return "text-muted-foreground"
 }
 
 function getGradient(confidence: number): string {
-  if (confidence >= 90) return "from-amber-400 to-orange-500"
-  if (confidence >= 75) return "from-brand-lime to-emerald-500"
-  if (confidence >= 50) return "from-brand-teal to-cyan-500"
-  if (confidence >= 25) return "from-blue-400 to-indigo-500"
-  return "from-gray-400 to-gray-500"
+  if (confidence >= 90) return "from-[#C8A46A] to-[#B8944A]"
+  if (confidence >= 75) return "from-[#4A9F7E] to-[#3F8F6E]"
+  if (confidence >= 50) return "from-primary to-[#4F8A83]"
+  if (confidence >= 25) return "from-[#6BA89F] to-primary"
+  return "from-muted to-muted-foreground/50"
 }
 
 export function StyleConfidenceMeter({
@@ -120,8 +120,8 @@ export function StyleConfidenceMeter({
       style={{ scale: pulseSpring.scale }}
       className={cn(
         "rounded-xl border bg-card p-4 transition-colors duration-300",
-        confidence >= 75 && "border-brand-lime/50 shadow-lg shadow-brand-lime/10",
-        confidence >= 90 && "border-amber-400/50 shadow-lg shadow-amber-400/20",
+        confidence >= 75 && "border-[#4A9F7E]/50 shadow-lg shadow-[#4A9F7E]/10",
+        confidence >= 90 && "border-[#C8A46A]/50 shadow-lg shadow-[#C8A46A]/20",
         className
       )}
     >
@@ -173,7 +173,7 @@ export function StyleConfidenceMeter({
               key={item.label}
               className={cn(
                 "h-2 w-2 rounded-full transition-colors",
-                item.value ? "bg-brand-teal" : "bg-muted"
+                item.value ? "bg-primary" : "bg-muted"
               )}
             />
           ))}

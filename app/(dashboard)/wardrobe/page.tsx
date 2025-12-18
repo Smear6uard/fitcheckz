@@ -16,8 +16,6 @@ export default function WardrobePage() {
   const [filters, setFilters] = useState<FilterState>({
     search: '',
     category: '',
-    brand: '',
-    occasion: '',
   })
 
   // Fetch with server-side pagination and category filter
@@ -35,7 +33,7 @@ export default function WardrobePage() {
     threshold: 80,
   })
 
-  // Client-side filtering for search, brand, and occasion
+  // Client-side filtering for search
   const filteredItems = useMemo(() => {
     if (!data?.items) return []
 
@@ -47,24 +45,8 @@ export default function WardrobePage() {
       )
     }
 
-    if (filters.brand) {
-      filtered = filtered.filter(
-        (item) =>
-          item.brand?.toLowerCase().includes(filters.brand.toLowerCase())
-      )
-    }
-
-    if (filters.occasion) {
-      filtered = filtered.filter(
-        (item) =>
-          item.occasions?.some((occ) =>
-            occ.toLowerCase().includes(filters.occasion.toLowerCase())
-          )
-      )
-    }
-
     return filtered
-  }, [data?.items, filters.search, filters.brand, filters.occasion])
+  }, [data?.items, filters.search])
 
   const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters)

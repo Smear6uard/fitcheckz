@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
 
-const COOKIE_CONSENT_KEY = "fitcheckz-cookie-consent"
+const COOKIE_CONSENT_KEY = "styleum-cookie-consent"
 
 export function CookieConsent() {
   const [showBanner, setShowBanner] = useState(false)
@@ -35,12 +35,12 @@ export function CookieConsent() {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 animate-in slide-in-from-bottom-5 duration-300">
       <div className="mx-auto max-w-4xl">
-        <div className="bg-card border border-border rounded-lg shadow-lg p-4 md:p-6">
+        <div className="bg-[#141414] border border-[#2A2A2A] rounded-lg shadow-lg p-4 md:p-6">
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             <div className="flex-1">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[#8A8A8A]">
                 We use cookies to enhance your experience, analyze site usage, and assist in our marketing efforts.
-                By continuing to use FitCheckz, you consent to our use of cookies.{" "}
+                By continuing to use Styleum, you consent to our use of cookies.{" "}
                 <Link href="/privacy#cookies" className="text-primary hover:underline">
                   Learn more
                 </Link>
@@ -51,7 +51,7 @@ export function CookieConsent() {
                 variant="outline"
                 size="sm"
                 onClick={handleDecline}
-                className="text-muted-foreground"
+                className="text-[#8A8A8A] border-[#2A2A2A] hover:border-[#8A8A8A] bg-transparent"
               >
                 Decline
               </Button>
@@ -63,7 +63,7 @@ export function CookieConsent() {
               </Button>
               <button
                 onClick={handleDecline}
-                className="p-1 text-muted-foreground hover:text-foreground transition-colors md:hidden"
+                className="p-1 text-[#8A8A8A] hover:text-white transition-colors md:hidden"
                 aria-label="Close"
               >
                 <X className="h-4 w-4" />

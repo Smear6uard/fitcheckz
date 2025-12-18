@@ -1,31 +1,49 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
-import { Inter, Geist_Mono } from "next/font/google"
+import { Playfair_Display, DM_Sans, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Toaster } from "sonner"
 import { QueryProvider } from "@/lib/query/provider"
 import { CookieConsent } from "@/components/ui/cookie-consent"
 import "./globals.css"
 
-const _inter = Inter({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-playfair",
+  display: "swap",
+})
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-dm-sans",
+  display: "swap",
+})
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
-  title: "FitCheckz - Your AI Personal Stylist",
+  title: "Styleum - Your AI Personal Stylist",
   description:
-    "Get your fit checked. Dress with confidence. AI-powered outfit recommendations from your digital wardrobe.",
+    "Your wardrobe, elevated. AI-powered outfit recommendations from your real closet.",
   generator: "v0.app",
-  keywords: ["AI stylist", "outfit recommendations", "fashion", "wardrobe", "personal styling"],
+  keywords: ["AI stylist", "outfit recommendations", "fashion", "wardrobe", "personal styling", "Styleum"],
   authors: [{ name: "Sameer Studios LLC" }],
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
-    title: "FitCheckz",
+    statusBarStyle: "black-translucent",
+    title: "Styleum",
   },
   openGraph: {
-    title: "FitCheckz - Your AI Personal Stylist",
-    description: "Get your fit checked. Dress with confidence.",
+    title: "Styleum - Your AI Personal Stylist",
+    description: "Your wardrobe, elevated.",
     type: "website",
   },
   icons: {
@@ -35,7 +53,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#32B8C6",
+  themeColor: "#0A0A0A",
   width: "device-width",
   initialScale: 1,
 }
@@ -46,11 +64,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`}>
+    <html lang="en" className={`${playfair.variable} ${dmSans.variable} ${geistMono.variable}`}>
+      <body className="font-sans bg-background text-foreground antialiased">
         <QueryProvider>
           {children}
-          <Toaster position="top-center" />
+          <Toaster position="top-center" theme="dark" />
           <Analytics />
           <CookieConsent />
         </QueryProvider>

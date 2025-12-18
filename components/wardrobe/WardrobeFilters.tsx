@@ -19,16 +19,12 @@ interface WardrobeFiltersProps {
 export interface FilterState {
   search: string
   category: string
-  occasion: string
-  brand: string
 }
 
 export function WardrobeFilters({ onFilterChange }: WardrobeFiltersProps) {
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     category: "",
-    occasion: "",
-    brand: "",
   })
 
   const updateFilter = (key: keyof FilterState, value: string) => {
@@ -38,7 +34,7 @@ export function WardrobeFilters({ onFilterChange }: WardrobeFiltersProps) {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-2">
       <div className="space-y-2">
         <Label htmlFor="search">Search</Label>
         <Input
@@ -68,24 +64,6 @@ export function WardrobeFilters({ onFilterChange }: WardrobeFiltersProps) {
             <SelectItem value="outerwear">Outerwear</SelectItem>
           </SelectContent>
         </Select>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="occasion">Occasion</Label>
-        <Input
-          id="occasion"
-          placeholder="Filter by occasion..."
-          value={filters.occasion}
-          onChange={(e) => updateFilter("occasion", e.target.value)}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="brand">Brand</Label>
-        <Input
-          id="brand"
-          placeholder="Filter by brand..."
-          value={filters.brand}
-          onChange={(e) => updateFilter("brand", e.target.value)}
-        />
       </div>
     </div>
   )

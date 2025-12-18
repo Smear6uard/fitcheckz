@@ -60,8 +60,8 @@ const categoryConfig: Record<string, CategoryInfo> = {
     icon: Footprints,
     emoji: "👟",
     label: "Shoes",
-    gradient: "from-emerald-500 to-emerald-600",
-    bgColor: "bg-emerald-500/10",
+    gradient: "from-[#4A9F7E] to-[#3F8F6E]",
+    bgColor: "bg-[#4A9F7E]/10",
   },
   accessories: {
     icon: Watch,

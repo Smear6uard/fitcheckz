@@ -12,11 +12,11 @@ interface CelebrationAnimationProps {
 }
 
 const defaultColors = [
-  "#CCFF00", // lime
-  "#20C8A8", // teal
-  "#E0D5FF", // lavender
-  "#FFD6E7", // blush
-  "#F8F5F0", // cream
+  "#C8A46A", // gold accent
+  "#589991", // primary sage teal
+  "#D8E8E5", // primary tint
+  "#E8D5C8", // blush
+  "#F5F3EE", // cream
 ]
 
 const sizeMap = {
@@ -138,7 +138,7 @@ export function SparkleBurst({
       onComplete={onComplete}
       particleCount={8}
       size="sm"
-      colors={["#CCFF00", "#20C8A8", "#E0D5FF"]}
+      colors={["#C8A46A", "#589991", "#D8E8E5"]}
     />
   )
 }
@@ -173,7 +173,7 @@ export function SuccessCelebration({
         size="md"
       />
       <animated.div
-        className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-brand-teal text-white"
+        className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white"
         style={{
           transform: showCheck ? "scale(1)" : "scale(0)",
           opacity: showCheck ? 1 : 0,

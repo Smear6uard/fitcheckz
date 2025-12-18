@@ -72,19 +72,19 @@ export function StyleScore({
   })
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-green-500"
-    if (score >= 60) return "text-brand-lime"
-    if (score >= 40) return "text-amber-500"
-    if (score >= 20) return "text-orange-500"
-    return "text-red-500"
+    if (score >= 80) return "text-[#4A9F7E]"
+    if (score >= 60) return "text-[#C8A46A]"
+    if (score >= 40) return "text-primary"
+    if (score >= 20) return "text-[#6BA89F]"
+    return "text-destructive"
   }
 
   const getScoreGradient = (score: number) => {
-    if (score >= 80) return "from-green-500 to-emerald-500"
-    if (score >= 60) return "from-brand-lime to-brand-teal"
-    if (score >= 40) return "from-amber-500 to-yellow-500"
-    if (score >= 20) return "from-orange-500 to-amber-500"
-    return "from-red-500 to-orange-500"
+    if (score >= 80) return "from-[#4A9F7E] to-[#3F8F6E]"
+    if (score >= 60) return "from-[#C8A46A] to-[#B8944A]"
+    if (score >= 40) return "from-primary to-[#4F8A83]"
+    if (score >= 20) return "from-[#6BA89F] to-primary"
+    return "from-destructive to-[#D06666]"
   }
 
   const breakdownItems = [
@@ -165,8 +165,8 @@ export function StyleScore({
                 {/* Gradient definition */}
                 <defs>
                   <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#a3e635" />
-                    <stop offset="100%" stopColor="#14b8a6" />
+                    <stop offset="0%" stopColor="#C8A46A" />
+                    <stop offset="100%" stopColor="#589991" />
                   </linearGradient>
                 </defs>
               </svg>
@@ -261,13 +261,13 @@ export function StyleScore({
             {result.insights.length > 0 && (
               <div className="mt-4 pt-4 border-t border-border">
                 <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-brand-lime" />
+                  <Sparkles className="h-4 w-4 text-[#C8A46A]" />
                   Tips to improve
                 </h4>
                 <ul className="space-y-1">
                   {result.insights.map((insight, index) => (
                     <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
-                      <span className="text-brand-lime">•</span>
+                      <span className="text-[#C8A46A]">•</span>
                       {insight}
                     </li>
                   ))}
