@@ -75,11 +75,22 @@ export function WeatherBadge({
     navigator.geolocation.getCurrentPosition(
       fetchWeather,
       (err) => {
-        console.error("Geolocation error:", err)
-        if (err.code === err.PERMISSION_DENIED) {
-          setLocationDenied(true)
+        // GeolocationPositionError codes: 1=PERMISSION_DENIED, 2=POSITION_UNAVAILABLE, 3=TIMEOUT
+        const errorMessages: Record<number, string> = {
+          1: "Location permission denied",
+          2: "Location unavailable",
+          3: "Location request timed out",
         }
-        setError("Location access needed")
+        console.warn("Geolocation error:", errorMessages[err.code] || `Unknown error (code: ${err.code})`)
+
+        if (err.code === 1) {
+          setLocationDenied(true)
+          setError("Location access needed")
+        } else if (err.code === 3) {
+          setError("Location timed out")
+        } else {
+          setError("Couldn't get location")
+        }
         setLoading(false)
       },
       { timeout: 10000, maximumAge: 300000 } // 5 min cache
@@ -310,7 +321,15 @@ export function useWeather() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude),
-        () => setError("Location denied")
+        (err) => {
+          const messages: Record<number, string> = {
+            1: "Location denied",
+            2: "Location unavailable",
+            3: "Location timed out",
+          }
+          setError(messages[err.code] || "Couldn't get location")
+        },
+        { timeout: 10000 }
       )
     }
   }

@@ -1,94 +1,101 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Styleum Brand Colors - Dark Luxury with Cherry Red Accent */
-  --brand-black: #0A0A0A;
-  --brand-charcoal: #141414;
-  --brand-dark-gray: #1A1A1A;
-  --brand-medium-gray: #2A2A2A;
-  --brand-light-gray: #8A8A8A;
-  --brand-white: #FFFFFF;
-  --brand-accent: #C4515E;
-  --brand-accent-light: #D4656F;
-  --brand-accent-dark: #A3424D;
-  --brand-accent-subtle: rgba(196, 81, 94, 0.12);
+  /* Styleum Brand Colors - Dark with Cyan Accent (Gen Z) */
+  --brand-black: #09090B;
+  --brand-charcoal: #18181B;
+  --brand-dark-gray: #27272A;
+  --brand-medium-gray: #3F3F46;
+  --brand-light-gray: #71717A;
+  --brand-white: #FAFAFA;
+  --brand-accent: #22D3EE;
+  --brand-accent-light: #67E8F9;
+  --brand-accent-dark: #06B6D4;
+  --brand-accent-subtle: rgba(34, 211, 238, 0.12);
+
+  /* Secondary Accent - Rose (use sparingly) */
+  --brand-accent-secondary: #FB7185;
+  --brand-accent-secondary-light: #FDA4AF;
+  --brand-accent-secondary-subtle: rgba(251, 113, 133, 0.12);
 
   /* Legacy aliases for backwards compatibility */
-  --brand-teal: #C4515E;
-  --brand-lime: #C4515E;
-  --brand-cream: #0A0A0A;
-  --brand-lavender: #2A2A2A;
-  --brand-blush: #1A1A1A;
-  --brand-charcoal-legacy: #0A0A0A;
-  --brand-off-white: #FFFFFF;
-  --brand-success: #4A9F7E;
-  --brand-error: #C45C5C;
+  --brand-teal: #22D3EE;
+  --brand-lime: #22D3EE;
+  --brand-cream: #09090B;
+  --brand-lavender: #3F3F46;
+  --brand-blush: #27272A;
+  --brand-charcoal-legacy: #09090B;
+  --brand-off-white: #FAFAFA;
+  --brand-success: #4ADE80;
+  --brand-error: #F87171;
 
   /* Styleum Theme Variables - Dark by Default */
-  --background: #0A0A0A;
-  --foreground: #FFFFFF;
-  --card: #141414;
-  --card-foreground: #FFFFFF;
-  --popover: #141414;
-  --popover-foreground: #FFFFFF;
-  --primary: #C4515E;
-  --primary-foreground: #FFFFFF;
-  --secondary: #1A1A1A;
-  --secondary-foreground: #FFFFFF;
-  --muted: #1A1A1A;
-  --muted-foreground: #8A8A8A;
-  --accent: #C4515E;
-  --accent-foreground: #FFFFFF;
-  --destructive: #C45C5C;
-  --destructive-foreground: #FFFFFF;
-  --border: #2A2A2A;
-  --input: #1A1A1A;
-  --ring: #C4515E;
-  --chart-1: #C4515E;
-  --chart-2: #D4656F;
-  --chart-3: #A3424D;
-  --chart-4: #8A8A8A;
-  --chart-5: #4A9F7E;
+  --background: #09090B;
+  --foreground: #FAFAFA;
+  --card: #18181B;
+  --card-foreground: #FAFAFA;
+  --popover: #18181B;
+  --popover-foreground: #FAFAFA;
+  --primary: #22D3EE;
+  --primary-foreground: #09090B;
+  --secondary: #27272A;
+  --secondary-foreground: #FAFAFA;
+  --muted: #27272A;
+  --muted-foreground: #A1A1AA;
+  --accent: #22D3EE;
+  --accent-foreground: #09090B;
+  --destructive: #F87171;
+  --destructive-foreground: #FAFAFA;
+  --border: #3F3F46;
+  --input: #27272A;
+  --ring: #22D3EE;
+  --chart-1: #22D3EE;
+  --chart-2: #67E8F9;
+  --chart-3: #06B6D4;
+  --chart-4: #A1A1AA;
+  --chart-5: #4ADE80;
   --radius: 0.75rem;
-  --sidebar: #141414;
-  --sidebar-foreground: #FFFFFF;
-  --sidebar-primary: #C4515E;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #1A1A1A;
-  --sidebar-accent-foreground: #C4515E;
-  --sidebar-border: #2A2A2A;
-  --sidebar-ring: #C4515E;
+  --sidebar: #18181B;
+  --sidebar-foreground: #FAFAFA;
+  --sidebar-primary: #22D3EE;
+  --sidebar-primary-foreground: #09090B;
+  --sidebar-accent: #27272A;
+  --sidebar-accent-foreground: #22D3EE;
+  --sidebar-border: #3F3F46;
+  --sidebar-ring: #22D3EE;
 }
 
 .dark {
   /* Same as root - dark by default */
-  --background: #0A0A0A;
-  --foreground: #FFFFFF;
-  --card: #141414;
-  --card-foreground: #FFFFFF;
-  --popover: #141414;
-  --popover-foreground: #FFFFFF;
-  --primary: #C4515E;
-  --primary-foreground: #FFFFFF;
-  --secondary: #1A1A1A;
-  --secondary-foreground: #FFFFFF;
-  --muted: #1A1A1A;
-  --muted-foreground: #8A8A8A;
-  --accent: #C4515E;
-  --accent-foreground: #FFFFFF;
-  --destructive: #C45C5C;
-  --destructive-foreground: #FFFFFF;
-  --border: #2A2A2A;
-  --input: #1A1A1A;
-  --ring: #C4515E;
+  --background: #09090B;
+  --foreground: #FAFAFA;
+  --card: #18181B;
+  --card-foreground: #FAFAFA;
+  --popover: #18181B;
+  --popover-foreground: #FAFAFA;
+  --primary: #22D3EE;
+  --primary-foreground: #09090B;
+  --secondary: #27272A;
+  --secondary-foreground: #FAFAFA;
+  --muted: #27272A;
+  --muted-foreground: #A1A1AA;
+  --accent: #22D3EE;
+  --accent-foreground: #09090B;
+  --destructive: #F87171;
+  --destructive-foreground: #FAFAFA;
+  --border: #3F3F46;
+  --input: #27272A;
+  --ring: #22D3EE;
 }
 
 @theme inline {
-  --font-sans: "DM Sans", "DM Sans Fallback", system-ui, sans-serif;
-  --font-serif: "Playfair Display", "Playfair Display Fallback", Georgia, serif;
+  --font-sans: "Satoshi", "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-serif: "Satoshi", "Plus Jakarta Sans", system-ui, sans-serif;
   --font-mono: "Geist Mono", "Geist Mono Fallback", monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -128,16 +135,16 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   /* Styleum Colors */
-  --color-brand-black: #0A0A0A;
-  --color-brand-charcoal: #141414;
-  --color-brand-dark-gray: #1A1A1A;
-  --color-brand-medium-gray: #2A2A2A;
-  --color-brand-light-gray: #8A8A8A;
-  --color-brand-accent: #C4515E;
-  --color-brand-accent-light: #D4656F;
-  --color-brand-accent-dark: #A3424D;
-  --color-brand-success: #4A9F7E;
-  --color-brand-error: #C45C5C;
+  --color-brand-black: #09090B;
+  --color-brand-charcoal: #18181B;
+  --color-brand-dark-gray: #27272A;
+  --color-brand-medium-gray: #3F3F46;
+  --color-brand-light-gray: #71717A;
+  --color-brand-accent: #22D3EE;
+  --color-brand-accent-light: #67E8F9;
+  --color-brand-accent-dark: #06B6D4;
+  --color-brand-success: #4ADE80;
+  --color-brand-error: #F87171;
 
   /* Legacy aliases */
   --color-brand-teal: var(--brand-teal);
@@ -204,7 +211,15 @@
   /* Squiggle underline for accent text */
   .squiggle-underline {
     text-decoration: underline;
-    text-decoration-color: #C4515E;
+    text-decoration-color: #22D3EE;
+    text-decoration-style: wavy;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
+  }
+
+  .squiggle-underline-rose {
+    text-decoration: underline;
+    text-decoration-color: #FB7185;
     text-decoration-style: wavy;
     text-underline-offset: 6px;
     text-decoration-thickness: 2px;
@@ -215,13 +230,13 @@
     text-decoration: underline;
     text-decoration-thickness: 2px;
     text-underline-offset: 4px;
-    text-decoration-color: #C4515E;
+    text-decoration-color: #22D3EE;
     text-decoration-style: wavy;
   }
 
   /* Text gradient for accent */
   .text-gradient-accent {
-    background: linear-gradient(135deg, #C4515E, #D4656F);
+    background: linear-gradient(135deg, #22D3EE, #67E8F9);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -233,11 +248,11 @@
   }
 
   .bg-gradient-radial-accent {
-    background: radial-gradient(circle, rgba(196, 81, 94, 0.18) 0%, transparent 55%);
+    background: radial-gradient(circle, rgba(34, 211, 238, 0.18) 0%, transparent 55%);
   }
 
   .bg-gradient-line-accent {
-    background: linear-gradient(90deg, transparent, #C4515E, transparent);
+    background: linear-gradient(90deg, transparent, #22D3EE, transparent);
   }
 
   /* Slide/tilt-in animation for screenshot placeholders */
@@ -315,12 +330,12 @@
   .animate-shimmer {
     background: linear-gradient(
       90deg,
-      #1A1A1A 0%,
-      #2A2A2A 20%,
-      #1A1A1A 40%,
-      #2A2A2A 60%,
-      #1A1A1A 80%,
-      #1A1A1A 100%
+      #27272A 0%,
+      #3F3F46 20%,
+      #27272A 40%,
+      #3F3F46 60%,
+      #27272A 80%,
+      #27272A 100%
     );
     background-size: 200% 100%;
     animation: shimmer 1.8s ease-in-out infinite;
@@ -330,7 +345,7 @@
   @media (prefers-reduced-motion: reduce) {
     .animate-shimmer {
       animation: none;
-      background: #1A1A1A;
+      background: #27272A;
     }
   }
 
@@ -338,10 +353,10 @@
   .card-enhanced {
     background: linear-gradient(
       135deg,
-      #141414 0%,
-      #1A1A1A 100%
+      #18181B 0%,
+      #27272A 100%
     );
-    border: 1px solid #2A2A2A;
+    border: 1px solid #3F3F46;
     box-shadow:
       0 4px 6px rgba(0, 0, 0, 0.3),
       0 10px 20px rgba(0, 0, 0, 0.2);
@@ -351,9 +366,9 @@
   .card-enhanced:hover {
     transform: translateY(-4px);
     box-shadow:
-      0 8px 16px rgba(196, 81, 94, 0.15),
+      0 8px 16px rgba(34, 211, 238, 0.15),
       0 20px 40px rgba(0, 0, 0, 0.3);
-    border-color: #3A3A3A;
+    border-color: #52525B;
   }
 
   /* Premium button glow effect */
@@ -366,7 +381,7 @@
     content: '';
     position: absolute;
     inset: -2px;
-    background: linear-gradient(135deg, #C4515E, #D4656F);
+    background: linear-gradient(135deg, #22D3EE, #67E8F9);
     border-radius: inherit;
     opacity: 0;
     z-index: -1;
@@ -401,22 +416,22 @@
 
   /* Toast personality styling - dark theme */
   .toast-success-custom {
-    background: linear-gradient(135deg, #141414, #1A1A1A) !important;
-    border: 1px solid #4A9F7E !important;
+    background: linear-gradient(135deg, #18181B, #27272A) !important;
+    border: 1px solid #4ADE80 !important;
   }
 
   .toast-error-custom {
-    background: linear-gradient(135deg, #141414, #1A1A1A) !important;
-    border: 1px solid #C45C5C !important;
+    background: linear-gradient(135deg, #18181B, #27272A) !important;
+    border: 1px solid #F87171 !important;
   }
 
   /* Accent glow shadow */
   .shadow-accent-glow {
-    box-shadow: 0 0 80px rgba(196, 81, 94, 0.15);
+    box-shadow: 0 0 80px rgba(34, 211, 238, 0.15);
   }
 
   .shadow-accent-lift {
-    box-shadow: 0 12px 35px rgba(196, 81, 94, 0.35);
+    box-shadow: 0 12px 35px rgba(34, 211, 238, 0.35);
   }
 
   .shadow-card {
@@ -466,7 +481,7 @@
 
   /* Section title */
   .section-title {
-    @apply font-serif text-3xl md:text-4xl lg:text-5xl font-normal mb-4;
+    @apply font-sans text-3xl md:text-4xl lg:text-5xl font-bold mb-4;
   }
 
   /* Section subtitle */

@@ -39,12 +39,12 @@ export function Header() {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0A]/90 backdrop-blur-xl border-b border-white/5">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-zinc-950/90 backdrop-blur-xl border-b border-white/5">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
         <div className="flex lg:flex-1">
           <Link href="/" className="flex items-center gap-2 -m-1.5 p-1.5">
-            <span className="font-serif text-xl md:text-2xl text-white tracking-tight">
-              Styleum<span className="text-primary">.</span>
+            <span className="font-sans text-xl md:text-2xl font-bold text-zinc-100 tracking-tight">
+              Styleum<span className="text-cyan-400">.</span>
             </span>
           </Link>
         </div>
@@ -67,7 +67,7 @@ export function Header() {
               key={item.name}
               href={item.href}
               onClick={(e) => handleNavClick(e, item.href)}
-              className="text-sm font-medium text-[#8A8A8A] hover:text-white transition-colors duration-200"
+              className="text-sm font-medium text-zinc-400 hover:text-zinc-100 transition-colors duration-200"
             >
               {item.name}
             </a>
@@ -83,11 +83,11 @@ export function Header() {
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-50">
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
-          <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-[#0A0A0A] px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
+          <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-zinc-950 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
             <div className="flex items-center justify-between">
               <Link href="/" className="flex items-center gap-2 -m-1.5 p-1.5">
-                <span className="font-serif text-xl text-white tracking-tight">
-                  Styleum<span className="text-primary">.</span>
+                <span className="font-sans text-xl font-bold text-zinc-100 tracking-tight">
+                  Styleum<span className="text-cyan-400">.</span>
                 </span>
               </Link>
               <button

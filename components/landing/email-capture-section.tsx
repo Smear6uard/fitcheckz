@@ -53,10 +53,10 @@ export function EmailCaptureSection() {
   return (
     <section className="relative py-16 lg:py-20 bg-gradient-to-b from-[#0A0A0A] to-[#141414] overflow-hidden">
       {/* Floating decorative elements */}
-      <div className="absolute top-10 left-10 w-3 h-3 rounded-full bg-primary/20 z-0" />
-      <div className="absolute top-20 right-20 w-2 h-2 rounded-full bg-white/10 z-0" />
-      <div className="absolute bottom-20 left-20 w-4 h-4 rounded-full bg-primary/15 z-0" />
-      <div className="absolute bottom-10 right-10 w-2.5 h-2.5 rounded-full bg-white/10 z-0" />
+      <div className="absolute top-10 left-10 w-5 h-5 rounded-full bg-rose-400/30 z-0" />
+      <div className="absolute top-20 right-20 w-3 h-3 rounded-full bg-white/10 z-0" />
+      <div className="absolute bottom-20 left-20 w-4 h-4 rounded-full bg-primary/20 z-0" />
+      <div className="absolute bottom-10 right-10 w-4 h-4 rounded-full bg-rose-400/25 z-0" />
       {/* Large soft orb behind content */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="h-72 w-72 rounded-full bg-primary/15 blur-3xl" />
@@ -70,7 +70,7 @@ export function EmailCaptureSection() {
               <Sparkles className="h-6 w-6 text-primary" />
             </div>
           </div>
-          <h2 className="font-serif text-4xl font-normal tracking-tight text-white sm:text-5xl lg:text-6xl leading-tight text-balance">
+          <h2 className="font-sans text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl leading-tight text-balance">
             Get early access
           </h2>
           <p className="mt-4 text-lg leading-8 text-[#8A8A8A]">
@@ -106,7 +106,7 @@ export function EmailCaptureSection() {
                   ) : (
                     <>
                       <Mail className="mr-2 h-5 w-5" />
-                      Notify Me
+                      Keep me posted
                     </>
                   )}
                 </Button>

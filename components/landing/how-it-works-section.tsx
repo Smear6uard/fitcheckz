@@ -26,21 +26,21 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="py-16 lg:py-20 bg-gradient-to-b from-[#0A0A0A] via-[#141414] to-[#141414] relative overflow-hidden">
+    <section id="how-it-works" className="py-16 lg:py-20 bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-900 relative overflow-hidden">
       {/* Top gradient divider line */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
 
       {/* Ambient glows */}
-      <div className="absolute top-1/2 -right-40 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(196,81,94,0.1)_0%,transparent_60%)] pointer-events-none" />
-      <div className="absolute bottom-0 -left-40 w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(196,81,94,0.08)_0%,transparent_60%)] pointer-events-none" />
+      <div className="absolute top-1/2 -right-40 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(34,211,238,0.06)_0%,transparent_60%)] pointer-events-none" />
+      <div className="absolute bottom-0 -left-40 w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(34,211,238,0.04)_0%,transparent_60%)] pointer-events-none" />
 
       <div className="mx-auto max-w-6xl px-6 relative">
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-xs font-semibold text-primary uppercase tracking-[0.15em] mb-3">HOW IT WORKS</h2>
-          <p className="mt-2 font-serif text-4xl font-normal tracking-tight text-white sm:text-5xl lg:text-6xl leading-tight text-balance">
-            Three steps to effortless style
+          <h2 className="text-xs font-semibold text-cyan-400 uppercase tracking-[0.15em] mb-3">HOW IT WORKS</h2>
+          <p className="mt-2 font-sans text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl lg:text-6xl leading-tight text-balance">
+            Three steps. Zero stress.
           </p>
-          <p className="mt-4 text-base leading-7 text-[#8A8A8A] max-w-xl mx-auto">
+          <p className="mt-4 text-base leading-7 text-zinc-400 max-w-xl mx-auto">
             Get dressed faster. Look better.
           </p>
         </div>
@@ -49,26 +49,26 @@ export function HowItWorksSection() {
           {steps.map((step, index) => (
             <ScrollReveal key={step.name} delay={index * 150}>
               <div
-                className={`relative bg-[#1A1A1A] rounded-2xl p-8 border border-[#2A2A2A] transition-all duration-500 group overflow-hidden ${
+                className={`relative bg-zinc-900 rounded-2xl p-8 border border-zinc-800 transition-all duration-500 group overflow-hidden ${
                   index === 1 ? 'md:-mt-4' : index === 2 ? 'md:mt-4' : ''
-                } hover:shadow-[0_25px_50px_rgba(196,81,94,0.2)] hover:border-primary/40 hover:-translate-y-2`}
+                } hover:shadow-[0_25px_50px_rgba(34,211,238,0.12)] hover:border-cyan-400/30 hover:-translate-y-2`}
               >
                 {/* Animated background gradient on hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                 <div className="relative z-10">
                   <div className="flex items-start gap-4 mb-6">
                     {/* Huge muted step number - lights up on hover */}
-                    <span className="text-7xl font-black text-[#2A2A2A] leading-none transition-colors duration-500 group-hover:text-[#3A3A3A]" style={{ fontFamily: 'system-ui, -apple-system' }}>
+                    <span className="text-7xl font-black text-zinc-800 leading-none transition-colors duration-500 group-hover:text-zinc-700" style={{ fontFamily: 'system-ui, -apple-system' }}>
                       {step.step}
                     </span>
-                    {/* Icon with cherry gradient glow - pulses on hover */}
-                    <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-[#D4656F] text-white mt-2 flex-shrink-0 shadow-accent-glow transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_40px_rgba(196,81,94,0.5)]">
+                    {/* Icon with cyan gradient glow - pulses on hover */}
+                    <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-400 to-cyan-500 text-zinc-950 mt-2 flex-shrink-0 shadow-[0_0_30px_rgba(34,211,238,0.2)] transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_40px_rgba(34,211,238,0.4)]">
                       <step.icon className="h-6 w-6" />
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-3">{step.name}</h3>
-                  <p className="text-[#8A8A8A] leading-relaxed group-hover:text-[#a0a0a0] transition-colors duration-300">{step.description}</p>
+                  <h3 className="text-xl font-bold text-zinc-100 mb-3">{step.name}</h3>
+                  <p className="text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors duration-300">{step.description}</p>
                 </div>
               </div>
             </ScrollReveal>
@@ -77,8 +77,8 @@ export function HowItWorksSection() {
 
         {/* PLACEHOLDER: Style preferences screenshot */}
         <ScrollReveal delay={450} visibleClassName="animate-slide-tilt-in">
-          <div className="mt-8 max-w-xl mx-auto aspect-video bg-gradient-to-br from-[#1A1A1A] to-primary/10 rounded-2xl flex items-center justify-center border border-[#2A2A2A] hover:border-primary/30 hover:shadow-[0_20px_40px_rgba(196,81,94,0.1)] transition-all duration-500">
-            <p className="text-[#8A8A8A] text-sm">Style preferences screenshot</p>
+          <div className="mt-8 max-w-xl mx-auto aspect-video bg-gradient-to-br from-zinc-900 to-cyan-400/10 rounded-2xl flex items-center justify-center border border-zinc-800 hover:border-cyan-400/30 hover:shadow-[0_20px_40px_rgba(34,211,238,0.08)] transition-all duration-500">
+            <p className="text-zinc-500 text-sm">Style preferences screenshot</p>
           </div>
         </ScrollReveal>
       </div>

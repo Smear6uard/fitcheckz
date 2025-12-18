@@ -40,16 +40,16 @@ export function Footer() {
 
   return (
     <footer className="bg-[#0A0A0A] border-t border-[#2A2A2A] relative">
-      {/* Subtle gradient separator */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-line-accent opacity-30" />
+      {/* Subtle gradient separator - rose accent */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-rose-400/40 to-transparent" />
 
       <div className="mx-auto max-w-6xl px-6 py-20 lg:py-24">
         <div className="xl:grid xl:grid-cols-3 xl:gap-12">
           <div className="space-y-6">
             {/* Styleum logo */}
             <Link href="/" className="flex items-center gap-2 group">
-              <span className="font-serif text-xl text-white tracking-tight">
-                Styleum<span className="text-primary">.</span>
+              <span className="font-sans text-xl font-bold text-white tracking-tight">
+                Styleum<span className="text-cyan-400">.</span>
               </span>
             </Link>
             <p className="text-sm leading-6 text-[#8A8A8A] max-w-xs">

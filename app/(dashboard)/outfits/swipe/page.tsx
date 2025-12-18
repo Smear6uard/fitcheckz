@@ -207,10 +207,10 @@ function SwipePageContent() {
         </Button>
         <Button
           size="lg"
-          className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600"
+          className="rounded-full w-16 h-16 bg-primary hover:bg-primary/90"
           onClick={handleSwipeRight}
         >
-          <Heart className="h-7 w-7 fill-white" />
+          <Heart className="h-7 w-7 fill-current" />
         </Button>
       </div>
     </div>

@@ -33,15 +33,15 @@ const faqs = [
 
 export function FAQSection() {
   return (
-    <section className="py-16 lg:py-20 bg-gradient-to-b from-[#0f0708] via-[#141414] to-[#141414] relative overflow-hidden">
+    <section className="py-16 lg:py-20 bg-gradient-to-b from-zinc-900 via-zinc-900 to-zinc-900 relative overflow-hidden">
       {/* Ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(196,81,94,0.05)_0%,transparent_50%)] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(34,211,238,0.03)_0%,transparent_50%)] pointer-events-none" />
 
       <div className="mx-auto max-w-6xl px-6 relative">
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-xs font-semibold text-primary uppercase tracking-[0.15em] mb-3">FAQ</h2>
-          <p className="mt-2 font-serif text-4xl font-normal tracking-tight text-white sm:text-5xl lg:text-6xl leading-tight text-balance">
-            Common questions
+          <h2 className="text-xs font-semibold text-cyan-400 uppercase tracking-[0.15em] mb-3">FAQ</h2>
+          <p className="mt-2 font-sans text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl lg:text-6xl leading-tight text-balance">
+            You're probably wondering...
           </p>
         </div>
 
@@ -52,12 +52,12 @@ export function FAQSection() {
                 {/* Dark accordion with dramatic hover effects */}
                 <AccordionItem
                   value={`item-${index}`}
-                  className="bg-[#1A1A1A] rounded-xl border border-[#2A2A2A] px-6 transition-all duration-500 hover:border-primary/40 hover:shadow-[0_10px_40px_rgba(196,81,94,0.1)] data-[state=open]:border-primary/30 data-[state=open]:shadow-[0_10px_40px_rgba(196,81,94,0.1)]"
+                  className="bg-zinc-900 rounded-xl border border-zinc-800 px-6 transition-all duration-500 hover:border-cyan-400/30 hover:shadow-[0_10px_40px_rgba(34,211,238,0.08)] data-[state=open]:border-cyan-400/30 data-[state=open]:shadow-[0_10px_40px_rgba(34,211,238,0.08)]"
                 >
-                  <AccordionTrigger className="text-left font-serif font-normal text-white hover:no-underline hover:text-primary transition-colors duration-300">
+                  <AccordionTrigger className="text-left font-sans font-medium text-zinc-100 hover:no-underline hover:text-cyan-400 transition-colors duration-300">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-[#8A8A8A] leading-relaxed">
+                  <AccordionContent className="text-zinc-400 leading-relaxed">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>
