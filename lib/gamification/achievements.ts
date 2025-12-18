@@ -350,40 +350,40 @@ export function getRarityConfig(rarity: Achievement["rarity"]) {
       return {
         gradient: "from-gray-400 to-gray-500",
         glow: "shadow-gray-400/30",
-        bgColor: "bg-gray-100 dark:bg-gray-800",
-        textColor: "text-gray-600 dark:text-gray-400",
+        bgColor: "bg-[#1A1A1A] border border-[#2A2A2A]",
+        textColor: "text-gray-400",
         label: "Common",
       }
     case "uncommon":
       return {
         gradient: "from-green-400 to-green-500",
         glow: "shadow-green-400/30",
-        bgColor: "bg-green-100 dark:bg-green-900/30",
-        textColor: "text-green-600 dark:text-green-400",
+        bgColor: "bg-[#1A1A1A] border border-green-500/30",
+        textColor: "text-green-400",
         label: "Uncommon",
       }
     case "rare":
       return {
         gradient: "from-blue-400 to-blue-500",
         glow: "shadow-blue-400/30",
-        bgColor: "bg-blue-100 dark:bg-blue-900/30",
-        textColor: "text-blue-600 dark:text-blue-400",
+        bgColor: "bg-[#1A1A1A] border border-blue-500/30",
+        textColor: "text-blue-400",
         label: "Rare",
       }
     case "epic":
       return {
         gradient: "from-purple-400 to-purple-500",
         glow: "shadow-purple-400/30",
-        bgColor: "bg-purple-100 dark:bg-purple-900/30",
-        textColor: "text-purple-600 dark:text-purple-400",
+        bgColor: "bg-[#1A1A1A] border border-purple-500/30",
+        textColor: "text-purple-400",
         label: "Epic",
       }
     case "legendary":
       return {
         gradient: "from-amber-400 to-orange-500",
         glow: "shadow-amber-400/30",
-        bgColor: "bg-amber-100 dark:bg-amber-900/30",
-        textColor: "text-amber-600 dark:text-amber-400",
+        bgColor: "bg-[#1A1A1A] border border-amber-500/30",
+        textColor: "text-amber-400",
         label: "Legendary",
       }
   }
