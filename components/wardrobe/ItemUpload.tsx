@@ -223,7 +223,7 @@ export function ItemUpload() {
       />
 
       <Dialog open={showCelebration} onOpenChange={() => {}}>
-        <DialogContent className="relative overflow-hidden z-[100] max-w-lg mx-auto p-0 border-0 shadow-2xl">
+        <DialogContent className="overflow-hidden z-[100] max-w-lg mx-auto p-0 border-0 shadow-2xl">
           {/* Celebration Animation Background */}
           <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
             <CelebrationAnimation trigger={showCelebration} size="lg" />
