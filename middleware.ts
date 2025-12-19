@@ -56,6 +56,14 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Redirect authenticated users from landing page to dashboard
+  // Allow access if ?landing=true is present (for "About" link)
+  if (request.nextUrl.pathname === '/' && !request.nextUrl.searchParams.has('landing')) {
+    if (user) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+  }
+
   return supabaseResponse
 }
 

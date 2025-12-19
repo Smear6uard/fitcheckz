@@ -1,5 +1,7 @@
+import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ProfileForm } from "@/components/profile/ProfileForm"
+import { ExternalLink } from "lucide-react"
 
 export default function ProfilePage() {
   return (
@@ -20,6 +22,24 @@ export default function ProfilePage() {
         </CardHeader>
         <CardContent>
           <ProfileForm />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>About Styleum</CardTitle>
+          <CardDescription>
+            Learn more about the app and what we offer
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Link
+            href="/?landing=true"
+            className="inline-flex items-center gap-2 text-primary hover:underline"
+          >
+            Visit our homepage
+            <ExternalLink className="h-4 w-4" />
+          </Link>
         </CardContent>
       </Card>
     </div>
