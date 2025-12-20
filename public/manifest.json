@@ -1,6 +1,6 @@
 {
-  "name": "FitCheckz - AI Personal Stylist",
-  "short_name": "FitCheckz",
+  "name": "Styleum - Your AI Personal Stylist",
+  "short_name": "Styleum",
   "description": "Your AI-powered outfit recommendation service",
   "start_url": "/",
   "display": "standalone",
@@ -10,13 +10,13 @@
   "categories": ["lifestyle", "shopping"],
   "icons": [
     {
-      "src": "/Favicon.png",
+      "src": "/favicon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/Icon.png",
+      "src": "/icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -26,12 +26,12 @@
     {
       "name": "Add Item",
       "url": "/wardrobe/upload",
-      "icons": [{ "src": "/Favicon.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192" }]
     },
     {
       "name": "Generate Outfit",
       "url": "/outfits/generate",
-      "icons": [{ "src": "/Favicon.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192" }]
     }
   ]
 }

@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { animated, useSpring, config } from "@react-spring/web"
@@ -86,12 +87,21 @@ export function Navbar() {
           <div className="flex items-center gap-8">
             {/* Styleum logo */}
             <Link href="/" className="flex items-center gap-2 touch-target">
-              <animated.span
+              <animated.div
                 style={{ scale: logoSpring.scale }}
-                className="font-serif text-lg text-white origin-left"
+                className="flex items-center gap-2 origin-left"
               >
-                Styleum<span className="text-primary">.</span>
-              </animated.span>
+                <Image
+                  src="/favicon.png"
+                  alt="Styleum"
+                  width={32}
+                  height={32}
+                  className="rounded-md"
+                />
+                <span className="font-serif text-lg text-white">
+                  Styleum<span className="text-primary">.</span>
+                </span>
+              </animated.div>
             </Link>
             <div className="hidden md:flex gap-1">
               {navigation.map((item) => {
@@ -174,6 +184,13 @@ export function Navbar() {
                   className="flex items-center gap-2 -m-1.5 p-1.5"
                   onClick={() => setMobileMenuOpen(false)}
                 >
+                  <Image
+                    src="/favicon.png"
+                    alt="Styleum"
+                    width={32}
+                    height={32}
+                    className="rounded-md"
+                  />
                   <span className="font-serif text-xl text-white">
                     Styleum<span className="text-primary">.</span>
                   </span>

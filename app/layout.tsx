@@ -31,10 +31,6 @@ export const metadata: Metadata = {
     description: "Stop staring at your closet.",
     type: "website",
   },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/Favicon.png",
-  },
 }
 
 export const viewport: Viewport = {

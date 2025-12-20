@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Twitter, Instagram } from "lucide-react"
 import type React from "react"
 
@@ -48,6 +49,13 @@ export function Footer() {
           <div className="space-y-6">
             {/* Styleum logo */}
             <Link href="/" className="flex items-center gap-2 group">
+              <Image
+                src="/favicon.png"
+                alt="Styleum"
+                width={32}
+                height={32}
+                className="rounded-md"
+              />
               <span className="font-sans text-xl font-bold text-white tracking-tight">
                 Styleum<span className="text-cyan-400">.</span>
               </span>
