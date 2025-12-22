@@ -18,7 +18,7 @@ interface FABAction {
 const defaultActions: FABAction[] = [
   {
     icon: Sparkles,
-    label: "Generate Outfit",
+    label: "Curate Outfit",
     href: "/outfits",
     color: "bg-brand-lime text-brand-charcoal",
   },
@@ -77,7 +77,7 @@ export function FloatingActionButton({ className }: FloatingActionButtonProps) {
     }
     return {
       icon: Sparkles,
-      label: "Generate Outfit",
+      label: "Curate Outfit",
       href: "/outfits",
       color: "bg-brand-lime",
     }
@@ -124,7 +124,11 @@ export function FloatingActionButton({ className }: FloatingActionButtonProps) {
   const PrimaryIcon = primaryAction.icon
 
   // Don't show on certain pages
-  if (pathname?.startsWith("/login") || pathname?.startsWith("/signup")) {
+  if (
+    pathname?.startsWith("/login") ||
+    pathname?.startsWith("/signup") ||
+    pathname?.startsWith("/outfits")  // Outfits page has its own CTAs in the feed
+  ) {
     return null
   }
 

@@ -66,6 +66,15 @@ export function Navbar() {
     config: config.gentle,
   })
 
+  // Mobile menu animation - slide from right
+  const menuSpring = useSpring({
+    x: mobileMenuOpen ? 0 : 400, // Slide from right (ensure fully off-screen, max-w-sm = 384px)
+    opacity: mobileMenuOpen ? 1 : 0,
+    backdropOpacity: mobileMenuOpen ? 1 : 0,
+    config: { tension: 250, friction: 25 },
+    immediate: false, // Allow smooth transitions
+  })
+
   return (
     <animated.nav
       style={{
@@ -76,7 +85,7 @@ export function Navbar() {
         ),
       }}
       className={cn(
-        "sticky top-0 z-50 safe-area-top transition-colors duration-300",
+        "sticky top-0 z-[95] safe-area-top transition-colors duration-300",
         scrolled
           ? "bg-[#0A0A0A]/85 border-b border-[#2A2A2A]"
           : "bg-[#0A0A0A]/60 border-b border-transparent"
@@ -131,15 +140,16 @@ export function Navbar() {
               <button
                 type="button"
                 className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-white hover:bg-[#1A1A1A] transition-colors touch-target"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setMobileMenuOpen(true)
-                }}
-                aria-label="Open main menu"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label={mobileMenuOpen ? "Close main menu" : "Open main menu"}
                 aria-expanded={mobileMenuOpen}
               >
-                <span className="sr-only">Open main menu</span>
-                <Menu className="h-6 w-6" aria-hidden="true" />
+                <span className="sr-only">{mobileMenuOpen ? "Close main menu" : "Open main menu"}</span>
+                {mobileMenuOpen ? (
+                  <X className="h-6 w-6" aria-hidden="true" />
+                ) : (
+                  <Menu className="h-6 w-6" aria-hidden="true" />
+                )}
               </button>
             </div>
             <UserMenu />
@@ -156,89 +166,90 @@ export function Navbar() {
         )}
       />
 
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-[100]">
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-            onClick={(e) => {
-              e.stopPropagation()
-              setMobileMenuOpen(false)
-            }}
-            aria-hidden="true"
-          />
-          {/* Menu Panel */}
-          <div
-            className={cn(
-              "fixed inset-y-0 right-0 z-[101] w-full max-w-sm overflow-y-auto bg-[#0A0A0A] shadow-xl transform transition-transform duration-300 ease-out",
-              mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-            )}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="px-6 py-6">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6">
-                <Link
-                  href="/"
-                  className="flex items-center gap-2 -m-1.5 p-1.5"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Image
-                    src="/favicon.png"
-                    alt="Styleum"
-                    width={32}
-                    height={32}
-                    className="rounded-md"
-                  />
-                  <span className="font-serif text-xl text-white">
-                    Styleum<span className="text-primary">.</span>
-                  </span>
-                </Link>
-                <button
-                  type="button"
-                  className="-m-2.5 rounded-md p-2.5 text-white hover:bg-[#1A1A1A] transition-colors"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setMobileMenuOpen(false)
-                  }}
-                  aria-label="Close menu"
-                >
-                  <X className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </div>
-
-              {/* Navigation Items */}
-              <nav className="space-y-1">
-                {navigation.map((item) => {
-                  const Icon = item.icon
-                  const isActive = pathname === item.href || pathname?.startsWith(item.href + "/")
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setMobileMenuOpen(false)
-                      }}
-                      className={cn(
-                        "flex items-center gap-3 rounded-lg px-3 py-3 text-base font-semibold transition-colors touch-target",
-                        isActive
-                          ? "bg-[#1A1A1A] text-white"
-                          : "text-[#8A8A8A] hover:bg-[#1A1A1A] hover:text-white active:bg-[#2A2A2A]"
-                      )}
-                      aria-current={isActive ? "page" : undefined}
-                    >
-                      <Icon className={cn("h-5 w-5 shrink-0", isActive && "text-primary")} aria-hidden="true" />
-                      <span>{item.name}</span>
-                    </Link>
-                  )
-                })}
-              </nav>
+      {/* Mobile menu - Always rendered for smooth animations */}
+      <animated.div
+        className={cn(
+          "md:hidden fixed inset-0 z-[100]",
+          !mobileMenuOpen && "pointer-events-none"
+        )}
+        style={{
+          visibility: mobileMenuOpen ? 'visible' : 'hidden',
+        }}
+      >
+        {/* Backdrop */}
+        <animated.div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+          style={{
+            opacity: menuSpring.backdropOpacity,
+          }}
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+        {/* Menu Panel */}
+        <animated.div
+          className="fixed inset-y-0 right-0 z-[101] w-full max-w-sm overflow-y-auto bg-[#0A0A0A] shadow-xl"
+          style={{
+            transform: menuSpring.x.to((x) => `translateX(${x}px)`),
+            opacity: menuSpring.opacity,
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="px-6 py-6">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <Link
+                href="/"
+                className="flex items-center gap-2 -m-1.5 p-1.5"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Image
+                  src="/favicon.png"
+                  alt="Styleum"
+                  width={32}
+                  height={32}
+                  className="rounded-md"
+                />
+                <span className="font-serif text-xl text-white">
+                  Styleum<span className="text-primary">.</span>
+                </span>
+              </Link>
+              <button
+                type="button"
+                className="-m-2.5 rounded-md p-2.5 text-white hover:bg-[#1A1A1A] transition-colors touch-target"
+                onClick={() => setMobileMenuOpen(false)}
+                aria-label="Close menu"
+              >
+                <X className="h-6 w-6" aria-hidden="true" />
+              </button>
             </div>
+
+            {/* Navigation Items */}
+            <nav className="space-y-1">
+              {navigation.map((item) => {
+                const Icon = item.icon
+                const isActive = pathname === item.href || pathname?.startsWith(item.href + "/")
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-3 py-3 text-base font-semibold transition-colors touch-target",
+                      isActive
+                        ? "bg-[#1A1A1A] text-white"
+                        : "text-[#8A8A8A] hover:bg-[#1A1A1A] hover:text-white active:bg-[#2A2A2A]"
+                    )}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    <Icon className={cn("h-5 w-5 shrink-0", isActive && "text-primary")} aria-hidden="true" />
+                    <span>{item.name}</span>
+                  </Link>
+                )
+              })}
+            </nav>
           </div>
-        </div>
-      )}
+        </animated.div>
+      </animated.div>
     </animated.nav>
   )
 }

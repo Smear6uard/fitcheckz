@@ -463,6 +463,20 @@
     animation: copy-success 0.3s ease-out;
   }
 
+  /* Indeterminate progress bar animation */
+  @keyframes indeterminate {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(400%);
+    }
+  }
+
+  .animate-indeterminate {
+    animation: indeterminate 1.5s ease-in-out infinite;
+  }
+
   /* Toast personality styling - dark theme */
   .toast-success-custom {
     background: linear-gradient(135deg, #18181B, #27272A) !important;
@@ -507,6 +521,105 @@
 
   .shadow-card-hover {
     box-shadow: 0 35px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  /* TikTok-style full-screen vertical swipe feed container */
+  .outfit-feed-fullscreen {
+    position: fixed;
+    inset: 0;
+    z-index: 90; /* Below navbar menu (z-100) */
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    scroll-padding: 20px 0; /* Prevents accidental swipe while scrolling text */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    background: var(--background);
+  }
+
+  .outfit-feed-fullscreen::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Full-screen outfit card for swipe feed */
+  .outfit-card-fullscreen {
+    min-height: 100vh;
+    min-height: 100dvh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  /* Heart burst animation for double-tap like */
+  @keyframes heart-burst {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    15% {
+      transform: scale(1.3);
+      opacity: 1;
+    }
+    30% {
+      transform: scale(0.9);
+    }
+    45% {
+      transform: scale(1.1);
+    }
+    60% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
+
+  .animate-heart-burst {
+    animation: heart-burst 0.8s ease-out forwards;
+  }
+
+  /* Pulse animation for like button */
+  @keyframes like-pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .animate-like-pulse {
+    animation: like-pulse 0.3s ease-out;
+  }
+
+  /* Subtle bounce animation for swipe hint */
+  @keyframes bounce-subtle {
+    0%, 100% {
+      transform: translateY(0) translateX(-50%);
+    }
+    50% {
+      transform: translateY(-8px) translateX(-50%);
+    }
+  }
+
+  .animate-bounce-subtle {
+    animation: bounce-subtle 2s ease-in-out infinite;
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .outfit-feed-fullscreen {
+      scroll-behavior: auto;
+    }
+    .animate-heart-burst,
+    .animate-like-pulse,
+    .animate-bounce-subtle {
+      animation: none;
+    }
   }
 }
 

@@ -27,8 +27,9 @@ export default function OutfitDetailPage() {
     try {
       const res = await fetch("/api/outfits/history")
       if (!res.ok) throw new Error("Failed to fetch outfits")
-      const outfits = await res.json()
-      const foundOutfit = outfits.find((o: any) => o.id === id)
+      const data = await res.json()
+      const outfits = data.outfits || data // Handle both { outfits: [...] } and direct array
+      const foundOutfit = Array.isArray(outfits) ? outfits.find((o: any) => o.id === id) : null
       if (foundOutfit) {
         setOutfit(foundOutfit)
       } else {

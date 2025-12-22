@@ -4,19 +4,16 @@ import { useState, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { animated, useSpring, config } from "@react-spring/web"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Sparkles } from "lucide-react"
+import { ExternalLink } from "lucide-react"
 import type { WardrobeItem } from "@/types/wardrobe"
 import type { OutfitScores } from "@/lib/ai/outfit-scorer"
 import { VisualizationButton } from "./VisualizationButton"
-import { OutfitScoreCard } from "./OutfitScoreCard"
-import { ShareButton } from "@/components/social/ShareButton"
+import { OutfitScoreCard, OutfitScoreBadge } from "./OutfitScoreCard"
+import { OutfitActions } from "./OutfitActions"
 import { PublicToggle } from "@/components/social/PublicToggle"
-import { QuickReactions, type ReactionType } from "./QuickReactions"
-import { useSwipeGesture } from "@/lib/hooks/useSwipeGesture"
-import { toast } from "@/lib/utils/toast-personality"
 import { cn } from "@/lib/utils"
 
 interface OutfitCardProps {
@@ -28,111 +25,78 @@ interface OutfitCardProps {
     risk_level?: number
     occasion?: string
     liked?: boolean
-    reaction?: ReactionType
     visualization_url?: string | null
     scores?: OutfitScores
     overall_score?: number
     is_public?: boolean
   }
+  variant?: "fullscreen" | "grid"
   onLike?: (id: string, liked: boolean) => void
-  onReaction?: (id: string, reaction: ReactionType) => void
+  onFavorite?: (id: string, favorited: boolean) => void
   showPublicToggle?: boolean
+  className?: string
 }
 
-export function OutfitCard({ outfit, onLike, onReaction, showPublicToggle = false }: OutfitCardProps) {
+export function OutfitCard({
+  outfit,
+  variant = "grid",
+  onLike,
+  onFavorite,
+  showPublicToggle = false,
+  className,
+}: OutfitCardProps) {
   const [visualizationUrl, setVisualizationUrl] = useState(outfit.visualization_url)
-  const [currentReaction, setCurrentReaction] = useState<ReactionType>(outfit.reaction || null)
   const [isHovered, setIsHovered] = useState(false)
   const [isFlipped, setIsFlipped] = useState(false)
+  const [showFullDescription, setShowFullDescription] = useState(false)
 
-  // Card hover animation
+  // Card hover animation (grid only)
   const cardSpring = useSpring({
-    transform: isHovered ? "translateY(-4px)" : "translateY(0px)",
-    boxShadow: isHovered
+    transform: isHovered && variant === "grid" ? "translateY(-4px) scale(1.02)" : "translateY(0px) scale(1)",
+    boxShadow: isHovered && variant === "grid"
       ? "0 12px 28px -8px rgba(34, 211, 238, 0.15), 0 8px 16px -4px rgba(0, 0, 0, 0.08)"
       : "0 2px 8px -2px rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.04)",
     config: config.gentle,
   })
 
-  const handleReaction = useCallback(
-    (reaction: ReactionType) => {
-      setCurrentReaction(reaction)
-
-      // Also handle the like state for backwards compatibility
-      if (onLike) {
-        onLike(outfit.id, reaction === "love")
-      }
-
-      if (onReaction) {
-        onReaction(outfit.id, reaction)
-      }
-
-      // Show appropriate toast
-      if (reaction === "love") {
-        toast.success("Outfit saved to favorites!")
-      } else if (reaction === "maybe") {
-        toast.info("Saved for later consideration")
-      } else if (reaction === "nope") {
-        toast.info("Got it, we'll show you different styles")
-      }
+  const handleLike = useCallback(
+    (liked: boolean) => {
+      onLike?.(outfit.id, liked)
     },
-    [outfit.id, onLike, onReaction]
+    [outfit.id, onLike]
   )
 
-  const handleSwipeRight = () => {
-    if (currentReaction !== "love") {
-      handleReaction("love")
-    }
-  }
-
-  const handleSwipeLeft = () => {
-    if (currentReaction !== "nope") {
-      handleReaction("nope")
-    }
-  }
-
-  const { bind, style } = useSwipeGesture({
-    onSwipeRight: handleSwipeRight,
-    onSwipeLeft: handleSwipeLeft,
-    threshold: 100,
-  })
+  const handleFavorite = useCallback(
+    (favorited: boolean) => {
+      onFavorite?.(outfit.id, favorited)
+    },
+    [outfit.id, onFavorite]
+  )
 
   const AnimatedCard = animated(Card)
 
-  return (
-    <AnimatedCard
-      {...bind()}
-      style={{ ...style, ...cardSpring }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="card-enhanced overflow-hidden"
-    >
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Sparkles className="h-4 w-4 text-brand-lime" />
-              Outfit Suggestion
-            </CardTitle>
-            <CardDescription className="mt-1">
-              {outfit.occasion && (
-                <Badge
-                  variant="secondary"
-                  className="mr-2 bg-gradient-to-r from-brand-lavender/30 to-brand-teal/20"
-                >
-                  {outfit.occasion}
-                </Badge>
-              )}
-              {outfit.risk_level && (
-                <span className="text-xs text-muted-foreground">
-                  Boldness: {"🔥".repeat(Math.min(outfit.risk_level, 5))}
-                </span>
-              )}
-            </CardDescription>
+  // Fullscreen variant for mobile feed
+  if (variant === "fullscreen") {
+    return (
+      <div className={cn("outfit-card-fullscreen flex flex-col bg-background safe-area-bottom", className)}>
+        {/* Header: Occasion + Score */}
+        <div className="flex items-center justify-between px-4 py-3 safe-area-top">
+          <div className="flex items-center gap-2">
+            {outfit.occasion && (
+              <Badge
+                variant="secondary"
+                className="bg-gradient-to-r from-brand-accent/20 to-brand-accent-secondary/20 text-foreground"
+              >
+                {outfit.occasion}
+              </Badge>
+            )}
+            {outfit.risk_level && (
+              <span className="text-xs text-muted-foreground">
+                {"🔥".repeat(Math.min(outfit.risk_level, 5))}
+              </span>
+            )}
           </div>
-
-          <div className="flex items-center gap-3">
-            {/* Public toggle */}
+          <div className="flex items-center gap-2">
             {showPublicToggle && (
               <PublicToggle
                 outfitId={outfit.id}
@@ -140,18 +104,179 @@ export function OutfitCard({ outfit, onLike, onReaction, showPublicToggle = fals
                 showLabel={false}
               />
             )}
+            {outfit.overall_score && <OutfitScoreBadge score={outfit.overall_score} />}
+          </div>
+        </div>
 
-            {/* Overall score badge */}
-            {outfit.overall_score && (
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-lime to-brand-teal text-sm font-bold text-brand-charcoal">
-                {outfit.overall_score}
+        {/* Main Content: Large Images */}
+        <div className="flex-1 px-4 pb-2 min-h-0">
+          <div
+            onClick={() => visualizationUrl && setIsFlipped(!isFlipped)}
+            className={cn(
+              "h-full relative rounded-xl overflow-hidden",
+              visualizationUrl && "cursor-pointer"
+            )}
+            style={{ perspective: "1000px" }}
+          >
+            {visualizationUrl ? (
+              <div
+                className="relative w-full h-full transition-transform duration-500 ease-out"
+                style={{
+                  transformStyle: "preserve-3d",
+                  transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+                }}
+              >
+                {/* Front: Visualization */}
+                <div
+                  className="absolute inset-0 rounded-xl overflow-hidden bg-muted"
+                  style={{ backfaceVisibility: "hidden" }}
+                >
+                  <Image
+                    src={visualizationUrl}
+                    alt="Outfit visualization"
+                    fill
+                    className="object-cover"
+                    sizes="100vw"
+                    priority
+                  />
+                </div>
+
+                {/* Back: Items grid */}
+                <div
+                  className="absolute inset-0 rounded-xl overflow-hidden bg-muted p-3"
+                  style={{
+                    backfaceVisibility: "hidden",
+                    transform: "rotateY(180deg)",
+                  }}
+                >
+                  <div className="grid grid-cols-2 gap-3 h-full">
+                    {outfit.items?.slice(0, 4).map((item) => (
+                      <div key={item.id} className="aspect-square relative rounded-lg overflow-hidden bg-background">
+                        <Image
+                          src={item.photo_url}
+                          alt={item.item_name}
+                          fill
+                          className="object-cover"
+                          sizes="50vw"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3 h-full">
+                {outfit.items?.slice(0, 4).map((item) => (
+                  <div key={item.id} className="aspect-square relative rounded-lg overflow-hidden bg-muted">
+                    <Image
+                      src={item.photo_url}
+                      alt={item.item_name}
+                      fill
+                      className="object-cover"
+                      sizes="50vw"
+                    />
+                  </div>
+                ))}
               </div>
             )}
           </div>
         </div>
-      </CardHeader>
-      <CardContent>
-        {/* 3D Flip Card: Tap to flip between visualization and items */}
+
+        {/* Bottom Section: Description + Actions */}
+        <div className="px-4 py-3 space-y-3">
+          {/* AI Explanation with Read More */}
+          {outfit.ai_explanation && (
+            <div>
+              <p
+                className={cn(
+                  "text-sm text-muted-foreground",
+                  !showFullDescription && "line-clamp-2"
+                )}
+              >
+                {outfit.ai_explanation}
+              </p>
+              {outfit.ai_explanation.length > 120 && (
+                <button
+                  onClick={() => setShowFullDescription(!showFullDescription)}
+                  className="text-xs text-brand-accent mt-1 hover:underline"
+                >
+                  {showFullDescription ? "Show less" : "Read more"}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Score (collapsible) */}
+          {outfit.scores && (
+            <OutfitScoreCard scores={outfit.scores} compact />
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex items-center justify-between gap-3">
+            <OutfitActions
+              outfitId={outfit.id}
+              occasion={outfit.occasion}
+              score={outfit.overall_score}
+              isLiked={outfit.liked}
+              isFavorited={outfit.liked}
+              onLike={handleLike}
+              onFavorite={handleFavorite}
+              size="lg"
+            />
+            <div className="flex-1">
+              <VisualizationButton
+                outfitId={outfit.id}
+                existingVisualization={visualizationUrl}
+                onVisualizationComplete={(url) => setVisualizationUrl(url)}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Grid variant (default) for desktop
+  return (
+    <AnimatedCard
+      style={cardSpring}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={cn("card-enhanced overflow-hidden", className)}
+    >
+      {/* Header */}
+      <div className="p-4 pb-2">
+        <div className="flex items-start justify-between">
+          <div className="flex flex-wrap items-center gap-2">
+            {outfit.occasion && (
+              <Badge
+                variant="secondary"
+                className="bg-gradient-to-r from-brand-accent/20 to-brand-accent-secondary/20"
+              >
+                {outfit.occasion}
+              </Badge>
+            )}
+            {outfit.risk_level && (
+              <span className="text-xs text-muted-foreground">
+                {"🔥".repeat(Math.min(outfit.risk_level, 5))}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            {showPublicToggle && (
+              <PublicToggle
+                outfitId={outfit.id}
+                initialIsPublic={outfit.is_public}
+                showLabel={false}
+              />
+            )}
+            {outfit.overall_score && <OutfitScoreBadge score={outfit.overall_score} />}
+          </div>
+        </div>
+      </div>
+
+      <CardContent className="pt-0">
+        {/* 3D Flip Card */}
         <div
           onClick={() => visualizationUrl && setIsFlipped(!isFlipped)}
           className={cn(
@@ -161,7 +286,6 @@ export function OutfitCard({ outfit, onLike, onReaction, showPublicToggle = fals
           style={{ perspective: "1000px" }}
         >
           {visualizationUrl ? (
-            // 3D Flip card when visualization exists
             <div
               className="relative w-full transition-transform duration-500 ease-out"
               style={{
@@ -169,7 +293,7 @@ export function OutfitCard({ outfit, onLike, onReaction, showPublicToggle = fals
                 transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
               }}
             >
-              {/* Front face - Visualization */}
+              {/* Front: Visualization */}
               <div
                 className="aspect-[3/4] relative rounded-lg overflow-hidden bg-muted"
                 style={{ backfaceVisibility: "hidden" }}
@@ -180,13 +304,11 @@ export function OutfitCard({ outfit, onLike, onReaction, showPublicToggle = fals
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  placeholder="blur"
-                  blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cfilter id='b' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='20'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23808080' filter='url(%23b)'/%3E%3C/svg%3E"
                   loading="lazy"
                 />
               </div>
 
-              {/* Back face - Items grid */}
+              {/* Back: Items grid */}
               <div
                 className="absolute inset-0 aspect-[3/4] rounded-lg overflow-hidden bg-muted p-2"
                 style={{
@@ -203,8 +325,6 @@ export function OutfitCard({ outfit, onLike, onReaction, showPublicToggle = fals
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 50vw, 25vw"
-                        placeholder="blur"
-                        blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cfilter id='b' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='20'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23808080' filter='url(%23b)'/%3E%3C/svg%3E"
                         loading="lazy"
                       />
                     </div>
@@ -213,7 +333,6 @@ export function OutfitCard({ outfit, onLike, onReaction, showPublicToggle = fals
               </div>
             </div>
           ) : (
-            // No visualization - just show items grid
             <div className="grid grid-cols-2 gap-2">
               {outfit.items?.slice(0, 4).map((item) => (
                 <div key={item.id} className="aspect-square relative rounded-lg overflow-hidden bg-muted">
@@ -223,8 +342,6 @@ export function OutfitCard({ outfit, onLike, onReaction, showPublicToggle = fals
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 50vw, 25vw"
-                    placeholder="blur"
-                    blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cfilter id='b' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='20'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23808080' filter='url(%23b)'/%3E%3C/svg%3E"
                     loading="lazy"
                   />
                 </div>
@@ -232,59 +349,65 @@ export function OutfitCard({ outfit, onLike, onReaction, showPublicToggle = fals
             </div>
           )}
         </div>
+
+        {/* AI Explanation with Read More */}
         {outfit.ai_explanation && (
-          <p className="text-sm text-muted-foreground mb-4">
-            {outfit.ai_explanation}
-          </p>
+          <div className="mb-4">
+            <p
+              className={cn(
+                "text-sm text-muted-foreground",
+                !showFullDescription && "line-clamp-2"
+              )}
+            >
+              {outfit.ai_explanation}
+            </p>
+            {outfit.ai_explanation.length > 100 && (
+              <button
+                onClick={() => setShowFullDescription(!showFullDescription)}
+                className="text-xs text-brand-accent mt-1 hover:underline"
+              >
+                {showFullDescription ? "Show less" : "Read more"}
+              </button>
+            )}
+          </div>
         )}
 
-        {/* Outfit Score */}
+        {/* Score (collapsible) */}
         {outfit.scores && (
           <div className="mb-4">
             <OutfitScoreCard scores={outfit.scores} compact />
           </div>
         )}
 
-        {/* Quick Reactions */}
-        <div className="mb-4 flex justify-center">
-          <QuickReactions
+        {/* Actions */}
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <OutfitActions
             outfitId={outfit.id}
-            currentReaction={currentReaction}
-            onReaction={handleReaction}
+            occasion={outfit.occasion}
+            score={outfit.overall_score}
+            isLiked={outfit.liked}
+            isFavorited={outfit.liked}
+            onLike={handleLike}
+            onFavorite={handleFavorite}
             size="md"
           />
         </div>
 
+        {/* Visualization + View Details */}
         <div className="space-y-2">
           <VisualizationButton
             outfitId={outfit.id}
             existingVisualization={visualizationUrl}
             onVisualizationComplete={(url) => setVisualizationUrl(url)}
           />
-          <div className="grid grid-cols-2 gap-2">
-            <Button variant="outline" asChild className="touch-target">
-              <Link href={`/outfits/${outfit.id}`}>
-                View Details
-                <ExternalLink className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <ShareButton
-              outfitId={outfit.id}
-              occasion={outfit.occasion}
-              score={outfit.overall_score}
-              className="touch-target"
-            />
-          </div>
-        </div>
-
-        {/* Swipe gesture hint - mobile only */}
-        <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground md:hidden">
-          <span className="rounded-full bg-brand-lavender/20 px-2 py-1">
-            👈 Swipe to react 👉
-          </span>
+          <Button variant="outline" asChild className="w-full touch-target">
+            <Link href={`/outfits/${outfit.id}`}>
+              View Details
+              <ExternalLink className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </CardContent>
     </AnimatedCard>
   )
 }
-
