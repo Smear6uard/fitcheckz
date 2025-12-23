@@ -1,14 +1,12 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { HorizontalChipScroller } from "@/components/ui/horizontal-chip-scroller"
 import { SelectionSummary } from "./SelectionSummary"
 import type { StyleChip } from "@/components/ui/style-chip-selector"
 import { toast } from "@/lib/utils/toast-personality"
-import { Shuffle } from "lucide-react"
-import { GenerationProgress } from "./GenerationProgress"
+import { Shuffle, Loader2 } from "lucide-react"
 import { fetchWithRetry, handleApiError, parseApiError } from "@/lib/utils/api-error-handler"
 import { animated, useSpring, useTransition, config } from "@react-spring/web"
 import { CelebrationAnimation } from "@/components/ui/celebration-animation"
@@ -57,8 +55,17 @@ function getChipInfo(chips: StyleChip[], value: string) {
   }
 }
 
-export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) => void }) {
-  const router = useRouter()
+interface OutfitGeneratorProps {
+  onStartCuration?: () => void
+  onOutfitsReady?: (outfits: any[]) => void
+  onCurationError?: (error: unknown) => void
+}
+
+export function OutfitGenerator({
+  onStartCuration,
+  onOutfitsReady,
+  onCurationError,
+}: OutfitGeneratorProps) {
   const [loading, setLoading] = useState(false)
   const [isRandomizing, setIsRandomizing] = useState(false)
   const [showCelebration, setShowCelebration] = useState(false)
@@ -180,7 +187,15 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Ignore if already curating
+    if (loading) {
+      toast.info("Still curating...")
+      return
+    }
+
     setLoading(true)
+    onStartCuration?.()
 
     try {
       const res = await fetchWithRetry(
@@ -207,34 +222,33 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
             setUsageInfo({ current: usage.current, limit: usage.limit })
             setShowUpgradePrompt(true)
           } else {
-            handleApiError(error, "Outfit Generation")
+            handleApiError(error, "Outfit Curation")
+            onCurationError?.(error)
           }
         } else if (res.status === 400 && error.message?.includes("at least 2 items")) {
           toast.error("Wardrobe too small", {
-            description: "Please add at least 2 items to your wardrobe before generating outfits.",
+            description: "Please add at least 2 items to your wardrobe before curating outfits.",
           })
+          onCurationError?.(error)
         } else {
-          handleApiError(error, "Outfit Generation")
+          handleApiError(error, "Outfit Curation")
+          onCurationError?.(error)
         }
         return
       }
 
       const data = await res.json()
-      const outfitIds = data.outfits.map((o: { id: string }) => o.id).join(",")
-      router.push(`/outfits/swipe?ids=${outfitIds}`)
-      toast.success("Your outfits are ready!")
+      onOutfitsReady?.(data.outfits)
+      toast.success("Your looks are ready!")
     } catch (error: unknown) {
-      handleApiError(error, "Outfit Generation")
+      handleApiError(error, "Outfit Curation")
+      onCurationError?.(error)
     } finally {
       setLoading(false)
     }
   }
 
   const isFormComplete = params.occasion && params.season && params.mood && params.timeOfDay
-
-  if (loading) {
-    return <GenerationProgress />
-  }
 
   return (
     <>
@@ -339,7 +353,7 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
           )
         )}
 
-        {/* Floating Generate Button */}
+        {/* Floating Curate Button */}
         <animated.div
           style={{
             opacity: buttonSpring.opacity,
@@ -353,9 +367,19 @@ export function OutfitGenerator({ onGenerate }: { onGenerate: (outfits: any[]) =
           <Button
             type="submit"
             disabled={loading || !isFormComplete}
-            className="h-14 px-8 rounded-full bg-gradient-to-r from-primary via-[#4ADE80] to-primary shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:scale-105 active:scale-95 transition-all duration-200 text-lg font-semibold"
+            className={cn(
+              "h-14 px-8 rounded-full bg-gradient-to-r from-primary via-[#4ADE80] to-primary shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:scale-105 active:scale-95 transition-all duration-200 text-lg font-semibold",
+              loading && "animate-pulse"
+            )}
           >
-            Create Fits
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Curating...
+              </>
+            ) : (
+              "Curate Looks"
+            )}
           </Button>
         </animated.div>
 
