@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Shirt, LayoutGrid, User, Wand2 } from 'lucide-react'
+import { Home, Shirt, LayoutGrid, ShoppingBag, Wand2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -31,9 +31,9 @@ const navItems = [
     isCenter: false,
   },
   {
-    href: '/profile',
-    label: 'Profile',
-    icon: User,
+    href: '/shop',
+    label: 'Shopping',
+    icon: ShoppingBag,
     isCenter: false,
   },
 ]
@@ -59,16 +59,16 @@ export function BottomNav() {
                 <div
                   className={cn(
                     "flex items-center justify-center w-14 h-14 rounded-full",
-                    "bg-[#C4515E] shadow-lg",
+                    "bg-primary shadow-lg",
                     "transition-transform active:scale-95"
                   )}
                   style={{
-                    boxShadow: '0 4px 12px rgba(196, 81, 94, 0.4)',
+                    boxShadow: '0 4px 12px rgba(34, 211, 238, 0.4)',
                   }}
                 >
-                  <Icon className="w-6 h-6 text-white" />
+                  <Icon className="w-6 h-6 text-primary-foreground" />
                 </div>
-                <span className="text-[10px] font-medium text-[#C4515E] mt-1">{item.label}</span>
+                <span className="text-[10px] font-medium text-primary mt-1">{item.label}</span>
               </Link>
             )
           }
