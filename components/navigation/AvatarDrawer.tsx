@@ -107,10 +107,7 @@ export function AvatarDrawer() {
         }}
       >
         {/* Header with close button */}
-        <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
-          <span className="font-serif text-lg text-foreground">
-            Menu
-          </span>
+        <div className="flex items-center justify-end p-4 border-b border-sidebar-border">
           <Button
             variant="ghost"
             size="icon"
