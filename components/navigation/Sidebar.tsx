@@ -1,18 +1,23 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   Home,
   Shirt,
   Wand2,
   ShoppingBag,
   Bookmark,
+  Trophy,
+  Target,
   Settings,
+  HelpCircle,
+  LogOut,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { createClient } from "@/lib/supabase/client"
 
-const navItems = [
+const mainNavItems = [
   { href: "/dashboard", icon: Home, label: "Home" },
   { href: "/wardrobe", icon: Shirt, label: "Closet" },
   { href: "/outfits/curate", icon: Wand2, label: "Style Me", alwaysTeal: true },
@@ -20,111 +25,156 @@ const navItems = [
   { href: "/outfits", icon: Bookmark, label: "Saved" },
 ]
 
+const secondaryNavItems = [
+  { href: "/achievements", icon: Trophy, label: "Achievements", iconColor: "text-yellow-500" },
+  { href: "/style-quiz", icon: Target, label: "Style Quiz", iconColor: "text-[#14b8a6]" },
+]
+
+const bottomNavItems = [
+  { href: "/settings", icon: Settings, label: "Settings", iconColor: "text-[#9ca3af]" },
+  { href: "/help", icon: HelpCircle, label: "Help", iconColor: "text-[#9ca3af]" },
+]
+
 export function Sidebar({ className }: { className?: string }) {
   const pathname = usePathname()
+  const router = useRouter()
+  const supabase = createClient()
 
   const isActive = (href: string) => {
     if (href === "/outfits") {
-      // Only match /outfits exactly, not /outfits/curate
       return pathname === href
     }
     return pathname === href || pathname?.startsWith(href + "/")
   }
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    router.push("/")
+  }
+
+  const NavItem = ({
+    href,
+    icon: Icon,
+    label,
+    alwaysTeal,
+    iconColor
+  }: {
+    href: string
+    icon: typeof Home
+    label: string
+    alwaysTeal?: boolean
+    iconColor?: string
+  }) => {
+    const active = isActive(href)
+    const showTeal = active || alwaysTeal
+
+    return (
+      <Link
+        href={href}
+        className={cn(
+          "relative flex items-center h-12 mx-2 my-1 px-3 rounded-lg transition-colors duration-150",
+          active && "bg-[rgba(20,184,166,0.1)]",
+          !active && "hover:bg-[rgba(255,255,255,0.05)]"
+        )}
+      >
+        {/* Active indicator */}
+        {active && (
+          <span className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-[3px] bg-[#14b8a6] rounded-r" />
+        )}
+
+        {/* Fixed-width icon container - prevents icon jumping */}
+        <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center">
+          <Icon
+            className={cn(
+              "h-5 w-5 transition-colors duration-200",
+              iconColor ? iconColor : (showTeal ? "text-[#14b8a6]" : "text-[#9ca3af]")
+            )}
+          />
+        </div>
+
+        {/* Label with delayed fade-in */}
+        <span
+          className={cn(
+            "ml-3 text-sm font-medium whitespace-nowrap",
+            "opacity-0 group-hover/sidebar:opacity-100",
+            "transition-opacity duration-200 delay-100",
+            active ? "text-white" : "text-[#9ca3af]"
+          )}
+        >
+          {label}
+        </span>
+      </Link>
+    )
+  }
+
   return (
     <aside
       className={cn(
-        "group/sidebar fixed left-0 top-0 z-40 h-screen",
+        "group/sidebar fixed left-0 top-14 z-40 h-[calc(100vh-3.5rem)]",
         "bg-[#0a0a0a] border-r border-[#1f1f1f]",
-        "w-16 lg:hover:w-[200px] transition-[width] duration-200 ease-out",
+        "w-16 lg:hover:w-[200px] transition-[width] duration-300 ease-out",
+        "overflow-hidden will-change-[width]",
         "flex flex-col",
         "hidden md:flex",
         className
       )}
     >
-      {/* Main navigation */}
-      <nav className="flex-1 pt-4 space-y-1">
-        {navItems.map((item) => {
-          const Icon = item.icon
-          const active = isActive(item.href)
-          const showTeal = active || item.alwaysTeal
+      <nav className="flex flex-col h-full py-4">
+        {/* Main Navigation */}
+        <div className="flex-none space-y-1">
+          {mainNavItems.map((item) => (
+            <NavItem key={item.href} {...item} />
+          ))}
+        </div>
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "relative flex items-center h-12 mx-2 my-1 rounded-lg transition-all duration-200",
-                // Collapsed: center icon
-                "justify-center",
-                // Expanded: left-align with gap
-                "group-hover/sidebar:justify-start group-hover/sidebar:gap-3 group-hover/sidebar:px-4",
-                // Active state
-                active && "bg-[rgba(20,184,166,0.1)]",
-                // Hover state (non-active)
-                !active && "hover:bg-[rgba(255,255,255,0.05)]"
-              )}
-            >
-              {/* Active indicator - teal left border */}
-              {active && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-[3px] bg-[#14b8a6] rounded-r" />
-              )}
-              <Icon
-                className={cn(
-                  "h-6 w-6 shrink-0 transition-colors duration-200",
-                  showTeal ? "text-[#14b8a6]" : "text-[#9ca3af]"
-                )}
-              />
-              <span
-                className={cn(
-                  "text-sm font-medium whitespace-nowrap",
-                  "opacity-0 w-0 overflow-hidden",
-                  "group-hover/sidebar:opacity-100 group-hover/sidebar:w-auto",
-                  "transition-all duration-150",
-                  active ? "text-white" : "text-[#9ca3af]"
-                )}
-              >
-                {item.label}
-              </span>
-            </Link>
-          )
-        })}
-      </nav>
+        {/* Divider */}
+        <div className="border-t border-white/10 mx-3 my-3" />
 
-      {/* Settings at bottom */}
-      <div className="pb-4">
-        <Link
-          href="/settings"
-          className={cn(
-            "relative flex items-center h-12 mx-2 my-1 rounded-lg transition-all duration-200",
-            "justify-center",
-            "group-hover/sidebar:justify-start group-hover/sidebar:gap-3 group-hover/sidebar:px-4",
-            isActive("/settings") && "bg-[rgba(20,184,166,0.1)]",
-            !isActive("/settings") && "hover:bg-[rgba(255,255,255,0.05)]"
-          )}
-        >
-          {isActive("/settings") && (
-            <span className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-[3px] bg-[#14b8a6] rounded-r" />
-          )}
-          <Settings
+        {/* Secondary Navigation */}
+        <div className="flex-none space-y-1">
+          {secondaryNavItems.map((item) => (
+            <NavItem key={item.href} {...item} />
+          ))}
+        </div>
+
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Divider */}
+        <div className="border-t border-white/10 mx-3 my-3" />
+
+        {/* Bottom Navigation */}
+        <div className="flex-none space-y-1">
+          {bottomNavItems.map((item) => (
+            <NavItem key={item.href} {...item} />
+          ))}
+
+          {/* Logout button */}
+          <button
+            onClick={handleLogout}
             className={cn(
-              "h-6 w-6 shrink-0 transition-colors duration-200",
-              isActive("/settings") ? "text-[#14b8a6]" : "text-[#9ca3af]"
-            )}
-          />
-          <span
-            className={cn(
-              "text-sm font-medium whitespace-nowrap",
-              "opacity-0 w-0 overflow-hidden",
-              "group-hover/sidebar:opacity-100 group-hover/sidebar:w-auto",
-              "transition-all duration-150",
-              isActive("/settings") ? "text-white" : "text-[#9ca3af]"
+              "relative flex items-center h-12 mx-2 my-1 px-3 rounded-lg transition-colors duration-150 w-[calc(100%-1rem)]",
+              "hover:bg-[rgba(255,255,255,0.05)]"
             )}
           >
-            Settings
-          </span>
-        </Link>
-      </div>
+            {/* Fixed-width icon container */}
+            <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center">
+              <LogOut className="h-5 w-5 transition-colors duration-200 text-[#C4515E]" />
+            </div>
+
+            {/* Label with delayed fade-in */}
+            <span
+              className={cn(
+                "ml-3 text-sm font-medium whitespace-nowrap text-[#C4515E]",
+                "opacity-0 group-hover/sidebar:opacity-100",
+                "transition-opacity duration-200 delay-100"
+              )}
+            >
+              Log out
+            </span>
+          </button>
+        </div>
+      </nav>
     </aside>
   )
 }

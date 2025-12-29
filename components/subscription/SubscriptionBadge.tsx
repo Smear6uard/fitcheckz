@@ -10,7 +10,7 @@ interface SubscriptionBadgeProps {
 export function SubscriptionBadge({ tier }: SubscriptionBadgeProps) {
   if (tier === "pro") {
     return (
-      <Badge variant="default" className="gap-1">
+      <Badge className="gap-1 bg-[#C4515E] text-white hover:bg-[#B34452]">
         <Crown className="h-3 w-3" />
         Pro
       </Badge>

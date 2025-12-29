@@ -5,8 +5,11 @@ import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { UserMenu } from "@/components/auth/UserMenu"
 import { MobileTopBar } from "./MobileTopBar"
+import { useSubscription } from "@/lib/hooks/useSubscription"
 
 export function TopBar({ className }: { className?: string }) {
+  const { isPro, loading } = useSubscription()
+
   return (
     <>
       {/* Mobile top bar with avatar drawer trigger */}
@@ -34,8 +37,19 @@ export function TopBar({ className }: { className?: string }) {
           </span>
         </Link>
 
-        {/* Right side - user menu */}
-        <UserMenu />
+        {/* Right side - upgrade button + user menu */}
+        <div className="flex items-center gap-3">
+          {/* Upgrade button - only show for free users */}
+          {!loading && !isPro && (
+            <Link
+              href="/subscription"
+              className="px-3 py-1.5 rounded-full border border-[#C4515E] text-[#C4515E] text-sm font-medium hover:bg-[rgba(196,81,94,0.1)] transition-colors"
+            >
+              Upgrade
+            </Link>
+          )}
+          <UserMenu />
+        </div>
       </header>
     </>
   )

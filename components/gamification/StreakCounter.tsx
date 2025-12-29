@@ -98,12 +98,12 @@ export function StreakCounter({ className, variant = "compact" }: StreakCounterP
                 streak.currentStreak > 0
                   ? "bg-gradient-to-r from-orange-500/20 to-red-500/20"
                   : "bg-muted",
-                streak.willExpireToday && "ring-2 ring-amber-400 ring-offset-2 ring-offset-background",
+                streak.willExpireToday && "ring-2 ring-[#C4515E] ring-offset-2 ring-offset-background",
                 className
               )}
             >
               {streak.willExpireToday ? (
-                <AlertTriangle className="h-4 w-4 text-amber-500 animate-pulse" />
+                <AlertTriangle className="h-4 w-4 text-[#C4515E] animate-pulse" />
               ) : (
                 <Flame className={cn("h-4 w-4", fireColor)} />
               )}
@@ -153,9 +153,9 @@ export function StreakCounter({ className, variant = "compact" }: StreakCounterP
         </div>
 
         {streak.willExpireToday && (
-          <div className="flex items-center gap-2 rounded-lg bg-amber-500/20 px-3 py-2">
-            <AlertTriangle className="h-5 w-5 text-amber-500" />
-            <span className="text-sm font-medium text-amber-700 dark:text-amber-400">
+          <div className="flex items-center gap-2 rounded-lg bg-[#C4515E]/20 px-3 py-2">
+            <AlertTriangle className="h-5 w-5 text-[#C4515E]" />
+            <span className="text-sm font-medium text-[#C4515E]">
               Expires today!
             </span>
           </div>

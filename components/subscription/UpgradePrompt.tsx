@@ -121,7 +121,7 @@ export function UpgradePrompt({
           <Button
             onClick={handleUpgrade}
             disabled={loading}
-            className="w-full sm:w-auto bg-primary text-primary-foreground font-semibold hover:bg-primary/90"
+            className="w-full sm:w-auto bg-[#C4515E] text-white font-semibold hover:bg-[#B34452]"
           >
             {loading ? "Loading..." : "Upgrade to Pro - $9.99/month"}
           </Button>
