@@ -23,6 +23,9 @@
   --brand-accent-secondary-light: #FDA4AF;
   --brand-accent-secondary-subtle: rgba(251, 113, 133, 0.12);
 
+  /* Sidebar Active - Cherry Red */
+  --sidebar-active: #F43F5E;
+
   /* Legacy aliases for backwards compatibility */
   --brand-teal: #22D3EE;
   --brand-lime: #22D3EE;
