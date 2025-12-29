@@ -1,197 +1,22 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { OutfitGenerator } from "@/components/outfits/OutfitGenerator"
-import { OutfitCard } from "@/components/outfits/OutfitCard"
+import { useState, useCallback } from "react"
 import { OutfitCardSkeleton } from "@/components/outfits/OutfitCardSkeleton"
-import { OutfitFeed } from "@/components/outfits/OutfitFeed"
 import { OutfitGrid } from "@/components/outfits/OutfitGrid"
-import { PreferenceBar } from "@/components/outfits/PreferenceBar"
-import { StarterOutfitCard } from "@/components/outfits/StarterOutfitCard"
-import { CurationStatus, type CurationState } from "@/components/outfits/CurationStatus"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { EmptyState } from "@/components/ui/empty-state"
-import { Button } from "@/components/ui/button"
-// Removed Collapsible - using conditional rendering instead for full-screen feed mode
-import { History, Heart, Shirt, Plus, ArrowRight } from "lucide-react"
+import { History, Heart } from "lucide-react"
 import { fetchWithRetry, handleApiError, parseApiError } from "@/lib/utils/api-error-handler"
-import { useOutfitCache } from "@/lib/hooks/useOutfitCache"
-import { useIsMobile } from "@/lib/hooks/useMediaQuery"
-import { animated, useTransition, config } from "@react-spring/web"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
 
-export default function OutfitsPage() {
-  // Responsive detection
-  const isMobile = useIsMobile()
-
-  // Outfit caching
-  const { cachedOutfits, setCachedOutfits, isHydrated } = useOutfitCache()
-
-  // Curation state
-  const [curationState, setCurationState] = useState<CurationState>("idle")
-  const [pendingOutfits, setPendingOutfits] = useState<any[]>([])
-  const [revealedOutfits, setRevealedOutfits] = useState<any[]>([])
-  const [showStarterCard, setShowStarterCard] = useState(false)
-  const revealIntervalRef = useRef<NodeJS.Timeout | null>(null)
-  const hasHydratedRef = useRef(false)
-
-  // Preference tracking for PreferenceBar
-  const [selectedPreferences, setSelectedPreferences] = useState<{
-    occasion?: string
-    timeOfDay?: string
-    season?: string
-    mood?: string
-  }>({})
-
-  // Feed mode state - when true, form is hidden and full-screen feed is shown
-  const [isFeedActive, setIsFeedActive] = useState(false)
-
-  // Session-only likes (local state, not persisted to DB)
-  const [sessionLikes, setSessionLikes] = useState<Set<string>>(new Set())
-
-  // Other state
+export default function SavedOutfitsPage() {
   const [history, setHistory] = useState<any[]>([])
   const [favorites, setFavorites] = useState<any[]>([])
   const [loadingHistory, setLoadingHistory] = useState(false)
   const [loadingFavorites, setLoadingFavorites] = useState(false)
-  const [wardrobeItemCount, setWardrobeItemCount] = useState<number | null>(null)
-  const [checkingWardrobe, setCheckingWardrobe] = useState(true)
-
-  // Check if user has reduced motion preference
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
-    setPrefersReducedMotion(mediaQuery.matches)
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
-    mediaQuery.addEventListener("change", handler)
-    return () => mediaQuery.removeEventListener("change", handler)
-  }, [])
-
-  // Hydrate from cache on initial mount only (not when cache updates)
-  useEffect(() => {
-    if (isHydrated && !hasHydratedRef.current) {
-      hasHydratedRef.current = true
-      if (cachedOutfits.length > 0) {
-        setRevealedOutfits(cachedOutfits)
-        // If we have cached outfits on mobile, activate feed mode
-        if (isMobile) {
-          setIsFeedActive(true)
-        }
-      }
-    }
-  }, [isHydrated, cachedOutfits, isMobile])
-
-  // Check wardrobe on mount
-  useEffect(() => {
-    const checkWardrobe = async () => {
-      try {
-        const res = await fetch("/api/wardrobe/stats")
-        if (res.ok) {
-          const data = await res.json()
-          setWardrobeItemCount(data.totalItems || 0)
-        }
-      } catch (error) {
-        console.error("Failed to check wardrobe:", error)
-      } finally {
-        setCheckingWardrobe(false)
-      }
-    }
-    checkWardrobe()
-  }, [])
-
-  // Progressive reveal effect
-  useEffect(() => {
-    if (pendingOutfits.length === 0) return
-
-    // Reset index
-    let currentIndex = 0
-    setCurationState("revealing")
-
-    // Clear any existing interval
-    if (revealIntervalRef.current) {
-      clearInterval(revealIntervalRef.current)
-    }
-
-    // Stagger interval - use shorter interval if reduced motion
-    const staggerMs = prefersReducedMotion ? 100 : 250
-
-    // Copy pendingOutfits to avoid closure issues
-    const outfitsToReveal = [...pendingOutfits]
-
-    revealIntervalRef.current = setInterval(() => {
-      if (currentIndex >= outfitsToReveal.length) {
-        if (revealIntervalRef.current) {
-          clearInterval(revealIntervalRef.current)
-        }
-        setCurationState("idle")
-        setPendingOutfits([])
-        setShowStarterCard(false)
-        // Activate feed mode after generation completes (on mobile)
-        if (isMobile) {
-          setIsFeedActive(true)
-        }
-        return
-      }
-
-      const outfitToAdd = outfitsToReveal[currentIndex]
-      setRevealedOutfits((prev) => {
-        // Prevent duplicates
-        if (prev.some((o) => o.id === outfitToAdd.id)) {
-          return prev
-        }
-        return [...prev, outfitToAdd]
-      })
-
-      // Hide starter card after first real outfit appears
-      if (currentIndex === 0) {
-        setShowStarterCard(false)
-      }
-      currentIndex++
-    }, staggerMs)
-
-    return () => {
-      if (revealIntervalRef.current) {
-        clearInterval(revealIntervalRef.current)
-      }
-    }
-  }, [pendingOutfits, prefersReducedMotion])
-
-  // Callbacks for OutfitGenerator
-  const handleStartCuration = useCallback(() => {
-    setCurationState("curating")
-    setShowStarterCard(true)
-    // Don't clear revealed outfits - keep showing cached ones
-  }, [])
-
-  const handleOutfitsReady = useCallback((outfits: any[]) => {
-    // Save to cache
-    setCachedOutfits(outfits)
-    // Clear previous revealed outfits and start fresh reveal
-    setRevealedOutfits([])
-    setPendingOutfits(outfits)
-    // Activate feed mode on mobile
-    if (isMobile) {
-      setIsFeedActive(true)
-    }
-    // Refresh history
-    fetchHistory()
-  }, [setCachedOutfits, isMobile])
-
-  const handleCurationError = useCallback((error: unknown) => {
-    setCurationState("error")
-    setShowStarterCard(false)
-    // Keep any previously revealed outfits
-  }, [])
-
-  const handleRetry = useCallback(() => {
-    setCurationState("idle")
-    // User can click the button again
-  }, [])
+  const [initialLoad, setInitialLoad] = useState({ history: true, favorites: true })
 
   const fetchHistory = async () => {
+    if (!initialLoad.history) return
     setLoadingHistory(true)
     try {
       const res = await fetchWithRetry("/api/outfits/history")
@@ -200,6 +25,7 @@ export default function OutfitsPage() {
       }
       const data = await res.json()
       setHistory(data.outfits || [])
+      setInitialLoad((prev) => ({ ...prev, history: false }))
     } catch (error) {
       handleApiError(error, "Fetch History")
     } finally {
@@ -208,6 +34,7 @@ export default function OutfitsPage() {
   }
 
   const fetchFavorites = async () => {
+    if (!initialLoad.favorites) return
     setLoadingFavorites(true)
     try {
       const res = await fetchWithRetry("/api/outfits/favorites")
@@ -216,6 +43,7 @@ export default function OutfitsPage() {
       }
       const data = await res.json()
       setFavorites(data)
+      setInitialLoad((prev) => ({ ...prev, favorites: false }))
     } catch (error) {
       handleApiError(error, "Fetch Favorites")
     } finally {
@@ -223,45 +51,32 @@ export default function OutfitsPage() {
     }
   }
 
-  // Session-only like handler (local state only, not persisted to DB)
-  // Used for quick feedback during feed browsing
+  // Session-only like handler
   const handleSessionLike = useCallback((id: string, liked: boolean) => {
-    setSessionLikes((prev) => {
-      const next = new Set(prev)
-      if (liked) {
-        next.add(id)
-      } else {
-        next.delete(id)
-      }
-      return next
-    })
-    // Update revealed outfits UI for visual feedback
-    setRevealedOutfits((prev) =>
+    setHistory((prev) =>
       prev.map((o) => (o.id === id ? { ...o, liked } : o))
     )
   }, [])
 
-  // Favorite handler - persists to DB, shows in Favorites tab
+  // Favorite handler - persists to DB
   const handleFavorite = async (id: string, favorited: boolean) => {
     try {
       const res = await fetchWithRetry(`/api/outfits/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ liked: favorited }), // API uses "liked" field for favorites
+        body: JSON.stringify({ liked: favorited }),
       })
 
       if (!res.ok) {
         throw await parseApiError(res)
       }
 
-      // Update local state
-      setRevealedOutfits((prev) =>
-        prev.map((o) => (o.id === id ? { ...o, liked: favorited } : o))
-      )
       setHistory((prev) =>
         prev.map((o) => (o.id === id ? { ...o, liked: favorited } : o))
       )
       if (favorited) {
+        // Refresh favorites to include new item
+        setInitialLoad((prev) => ({ ...prev, favorites: true }))
         fetchFavorites()
       } else {
         setFavorites((prev) => prev.filter((o) => o.id !== id))
@@ -271,181 +86,26 @@ export default function OutfitsPage() {
     }
   }
 
-  // Curate more handler for end state
-  const handleCurateMore = useCallback(() => {
-    // Exit feed mode to show the generator form
-    setIsFeedActive(false)
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [])
-
-  // Outfit card transitions for progressive reveal (desktop only)
-  const outfitTransitions = useTransition(revealedOutfits, {
-    keys: (outfit) => outfit.id,
-    from: prefersReducedMotion
-      ? { opacity: 0 }
-      : { opacity: 0, transform: "translateY(20px)" },
-    enter: prefersReducedMotion
-      ? { opacity: 1 }
-      : { opacity: 1, transform: "translateY(0px)" },
-    config: config.gentle,
-  })
-
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Outfit Curator</h1>
+        <h1 className="text-3xl font-bold">Saved Outfits</h1>
         <p className="text-muted-foreground">
-          Get personalized outfit recommendations from your wardrobe
+          Your outfit history and favorites
         </p>
       </div>
 
-      <Tabs defaultValue="generate" className="w-full">
+      <Tabs defaultValue="history" className="w-full">
         <TabsList>
-          <TabsTrigger value="generate">Curate</TabsTrigger>
           <TabsTrigger value="history" onClick={fetchHistory}>
+            <History className="h-4 w-4 mr-2" />
             History
           </TabsTrigger>
           <TabsTrigger value="favorites" onClick={fetchFavorites}>
+            <Heart className="h-4 w-4 mr-2" />
             Favorites
           </TabsTrigger>
         </TabsList>
-
-        <TabsContent value="generate" className="space-y-6">
-          {checkingWardrobe ? (
-            <Card>
-              <CardContent className="py-12">
-                <div className="flex items-center justify-center">
-                  <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                </div>
-              </CardContent>
-            </Card>
-          ) : wardrobeItemCount !== null && wardrobeItemCount < 2 ? (
-            <Card className="border-2 border-dashed border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-              <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="rounded-full bg-primary/10 p-4 mb-4">
-                  <Shirt className="h-10 w-10 text-primary" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Build Your Wardrobe First</h3>
-                <p className="text-sm text-muted-foreground mb-6 max-w-md">
-                  You need at least 2 items in your wardrobe to curate outfit recommendations.
-                  Add your clothing items to unlock personalized styling!
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Button asChild size="lg" className="gap-2">
-                    <Link href="/wardrobe/upload">
-                      <Plus className="h-4 w-4" />
-                      Add Items to Wardrobe
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline" size="lg" className="gap-2">
-                    <Link href="/wardrobe">
-                      View Your Wardrobe
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <>
-              {/* Show PreferenceBar when in feed mode on mobile */}
-              {isMobile && isFeedActive && revealedOutfits.length > 0 && (
-                <PreferenceBar
-                  preferences={selectedPreferences}
-                  onEdit={() => setIsFeedActive(false)}
-                  onClear={() => {
-                    setSelectedPreferences({})
-                    setIsFeedActive(false)
-                  }}
-                  className="mb-4"
-                />
-              )}
-
-              {/* Generator Card - hidden completely when feed is active on mobile */}
-              {(!isMobile || !isFeedActive) && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Curate New Looks</CardTitle>
-                    <CardDescription>
-                      Select your preferences and we&apos;ll find the perfect outfit combinations
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <OutfitGenerator
-                      onStartCuration={handleStartCuration}
-                      onOutfitsReady={handleOutfitsReady}
-                      onCurationError={handleCurationError}
-                    />
-                  </CardContent>
-                </Card>
-              )}
-            </>
-          )}
-
-          {/* Curation Status */}
-          {curationState !== "idle" && (
-            <CurationStatus
-              state={curationState}
-              revealedCount={revealedOutfits.length}
-              totalCount={pendingOutfits.length || revealedOutfits.length}
-              onRetry={handleRetry}
-            />
-          )}
-
-          {/* Curated Outfits - Responsive Display */}
-          {(revealedOutfits.length > 0 || showStarterCard) && (
-            <div className="space-y-4">
-              {!isMobile && (
-                <h2 className="text-2xl font-semibold">Your Curated Looks</h2>
-              )}
-
-              {/* Mobile: Full-screen vertical swipe feed */}
-              {isMobile ? (
-                <div className="-mx-4 -mb-4">
-                  {showStarterCard && revealedOutfits.length === 0 ? (
-                    <div className="px-4">
-                      <StarterOutfitCard />
-                    </div>
-                  ) : (
-                    <OutfitFeed
-                      outfits={revealedOutfits}
-                      onLike={handleSessionLike}
-                      onFavorite={handleFavorite}
-                      onCurateMore={handleCurateMore}
-                    />
-                  )}
-                </div>
-              ) : (
-                /* Desktop: Grid layout */
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 justify-items-center">
-                  {/* Starter card - shown briefly while curating */}
-                  {showStarterCard && revealedOutfits.length === 0 && (
-                    <div className="w-full max-w-md">
-                      <StarterOutfitCard />
-                    </div>
-                  )}
-
-                  {/* Real outfit cards with progressive reveal animation */}
-                  {outfitTransitions((style, outfit) => (
-                    <animated.div
-                      key={outfit.id}
-                      style={style}
-                      className="w-full max-w-md"
-                    >
-                      <OutfitCard
-                        outfit={outfit}
-                        variant="grid"
-                        onLike={handleSessionLike}
-                        onFavorite={handleFavorite}
-                      />
-                    </animated.div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </TabsContent>
 
         <TabsContent value="history" className="space-y-4">
           {loadingHistory ? (
@@ -458,7 +118,7 @@ export default function OutfitsPage() {
             <EmptyState
               icon={History}
               title="No outfit history yet"
-              description="Curate your first outfit to see it here. Your style recommendations will appear in this tab."
+              description="Use the Style Me tab to curate your first outfit. Your style recommendations will appear here."
             />
           ) : (
             <OutfitGrid

@@ -4,31 +4,20 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { animated, useSpring } from "@react-spring/web"
+import { useDrag } from "@use-gesture/react"
 import {
-  ShoppingBag,
   Crown,
   Settings,
   HelpCircle,
   LogOut,
-  X,
   ChevronRight,
   Sparkles,
+  Trophy,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "./SidebarContext"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
 import { createClient } from "@/lib/supabase/client"
-
-const primaryMenuItems = [
-  { href: "/shop", icon: ShoppingBag, label: "Shopping" },
-  { href: "/subscription", icon: Crown, label: "Subscription" },
-]
-
-const secondaryMenuItems = [
-  { href: "/settings", icon: Settings, label: "Settings" },
-]
 
 export function AvatarDrawer() {
   const router = useRouter()
@@ -114,8 +103,21 @@ export function AvatarDrawer() {
     config: { tension: 300, friction: 30 },
   })
 
+  // Swipe-left-to-close gesture
+  const bind = useDrag(
+    ({ movement: [mx], velocity: [vx], direction: [dx], cancel }) => {
+      // Close if swiped left more than 100px or fast swipe left
+      if (mx < -100 || (vx > 0.5 && dx < 0)) {
+        cancel()
+        setIsDrawerOpen(false)
+      }
+    },
+    { axis: "x", filterTaps: true }
+  )
+
   const initials = user?.email?.charAt(0).toUpperCase() || "U"
   const displayName = user?.user_metadata?.full_name || user?.user_metadata?.username || "User"
+  const username = user?.user_metadata?.username || user?.email?.split("@")[0] || "user"
 
   return (
     <div
@@ -133,42 +135,30 @@ export function AvatarDrawer() {
         aria-hidden="true"
       />
 
-      {/* Drawer panel */}
+      {/* Drawer panel with swipe gesture */}
       <animated.div
-        className="fixed inset-y-0 left-0 z-[101] w-72 overflow-y-auto bg-background border-r border-sidebar-border"
+        {...bind()}
+        className="fixed inset-y-0 left-0 z-[101] w-72 overflow-y-auto bg-background border-r border-sidebar-border flex flex-col touch-pan-y"
         style={{
           transform: drawerSpring.x.to((x) => `translateX(${x}%)`),
         }}
       >
-        {/* Header with close button */}
-        <div className="flex items-center justify-end p-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleClose}
-            className="text-muted-foreground hover:text-foreground hover:bg-primary/10"
-            aria-label="Close menu"
-          >
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
-
         {/* User profile section with gradient background */}
         <button
           onClick={handleProfileClick}
-          className="w-full flex items-center gap-4 p-4 pt-0 pb-5 text-left group relative"
+          className="w-full flex items-center gap-4 p-4 pt-6 pb-6 text-left group relative"
         >
-          {/* Subtle gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
+          {/* Darker gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
 
-          <Avatar className="h-16 w-16 ring-2 ring-primary/20 relative">
+          <Avatar className="h-[72px] w-[72px] ring-2 ring-primary relative">
             <AvatarImage src={user?.user_metadata?.avatar_url} alt={displayName} />
-            <AvatarFallback className="text-xl bg-primary/10">{initials}</AvatarFallback>
+            <AvatarFallback className="text-2xl bg-primary/10">{initials}</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0 relative">
-            <p className="font-semibold text-foreground truncate text-lg">{displayName}</p>
-            <p className="text-sm text-muted-foreground truncate">{user?.email}</p>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="font-bold text-foreground truncate text-xl">{displayName}</p>
+            <p className="text-sm text-muted-foreground truncate">@{username}</p>
+            <p className="text-sm text-primary mt-1 font-medium">
               {stats.itemCount} items • {stats.outfitCount} outfits
             </p>
           </div>
@@ -177,85 +167,79 @@ export function AvatarDrawer() {
 
         {/* Upgrade prompt for free tier */}
         {!isPro && (
-          <div className="px-4 pb-4">
+          <div className="px-4 pb-6">
             <Link
               href="/subscription"
               onClick={handleClose}
-              className="block p-3 rounded-lg border border-[#C4515E]/30 bg-[#C4515E]/5 hover:bg-[#C4515E]/10 transition-colors"
+              className="block p-4 rounded-xl border border-[#C4515E]/40 bg-gradient-to-r from-[#C4515E]/15 to-[#C4515E]/5 hover:from-[#C4515E]/20 hover:to-[#C4515E]/10 transition-all"
             >
               <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#C4515E]/10">
-                  <Sparkles className="h-4 w-4 text-[#C4515E]" />
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#C4515E]/20">
+                  <Crown className="h-5 w-5 text-[#C4515E]" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium text-sm text-foreground">Upgrade to Pro</p>
-                  <p className="text-xs text-muted-foreground">Unlock unlimited styling</p>
+                  <p className="font-semibold text-sm text-foreground">Upgrade to Pro</p>
+                  <p className="text-xs text-muted-foreground">Unlimited styling + exclusive drops</p>
                 </div>
-                <ChevronRight className="h-4 w-4 text-[#C4515E]" />
+                <ChevronRight className="h-5 w-5 text-[#C4515E]" />
               </div>
             </Link>
           </div>
         )}
 
-        <Separator />
+        {/* Quick Actions */}
+        <nav className="px-3 pt-4 space-y-2">
+          {/* Achievements */}
+          <Link
+            href="/achievements"
+            onClick={handleClose}
+            className="flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-amber-500/10 transition-colors"
+          >
+            <Trophy className="h-6 w-6 text-amber-500 shrink-0" />
+            <span className="text-base font-semibold text-foreground">Achievements</span>
+          </Link>
 
-        {/* Primary menu items */}
-        <nav className="p-2">
-          {primaryMenuItems.map((item) => {
-            const Icon = item.icon
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={handleClose}
-                className="flex items-center gap-3 rounded-lg px-3 py-3 text-base font-medium text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
-              >
-                <Icon className="h-5 w-5 shrink-0" />
-                <span>{item.label}</span>
-              </Link>
-            )
-          })}
+          {/* Style Quiz */}
+          <Link
+            href="/onboarding"
+            onClick={handleClose}
+            className="flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-primary/10 transition-colors"
+          >
+            <Sparkles className="h-6 w-6 text-primary shrink-0" />
+            <span className="text-base font-semibold text-foreground">Style Quiz</span>
+          </Link>
         </nav>
 
-        <Separator className="mx-4" />
-
-        {/* Secondary menu items */}
-        <nav className="p-2">
-          {secondaryMenuItems.map((item) => {
-            const Icon = item.icon
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={handleClose}
-                className="flex items-center gap-3 rounded-lg px-3 py-3 text-base font-medium text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
-              >
-                <Icon className="h-5 w-5 shrink-0" />
-                <span>{item.label}</span>
-              </Link>
-            )
-          })}
+        {/* Account section */}
+        <nav className="px-3 pt-6 space-y-2">
+          {/* Settings */}
+          <Link
+            href="/settings"
+            onClick={handleClose}
+            className="flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-muted transition-colors"
+          >
+            <Settings className="h-6 w-6 text-muted-foreground shrink-0" />
+            <span className="text-base font-semibold text-foreground">Settings</span>
+          </Link>
 
           {/* Help - external link */}
           <button
             onClick={handleHelpClick}
-            className="w-full flex items-center gap-3 rounded-lg px-3 py-3 text-base font-medium text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+            className="w-full flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-muted transition-colors"
           >
-            <HelpCircle className="h-5 w-5 shrink-0" />
-            <span>Help</span>
+            <HelpCircle className="h-6 w-6 text-muted-foreground shrink-0" />
+            <span className="text-base font-semibold text-foreground">Help</span>
           </button>
         </nav>
 
-        <Separator className="mx-4" />
-
-        {/* Log out */}
-        <div className="p-2">
+        {/* Log out - pushed to bottom */}
+        <div className="mt-auto px-3 pt-8 pb-6">
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center gap-3 rounded-lg px-3 py-3 text-base font-medium text-[#C4515E] hover:bg-[#C4515E]/10 transition-colors"
+            className="w-full flex items-center gap-4 rounded-xl px-3 py-4 text-[#C4515E] hover:bg-[#C4515E]/10 transition-colors"
           >
-            <LogOut className="h-5 w-5 shrink-0" />
-            <span>Log out</span>
+            <LogOut className="h-6 w-6 shrink-0" />
+            <span className="text-base font-semibold">Log out</span>
           </button>
         </div>
       </animated.div>
