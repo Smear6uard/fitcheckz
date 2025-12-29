@@ -148,8 +148,8 @@ export function AvatarDrawer() {
           onClick={handleProfileClick}
           className="w-full flex items-center gap-4 p-4 pt-6 pb-6 text-left group relative"
         >
-          {/* Darker gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
+          {/* Dark gradient background for visual separation */}
+          <div className="absolute inset-0 bg-gradient-to-b from-muted/50 to-transparent pointer-events-none" />
 
           <Avatar className="h-[72px] w-[72px] ring-2 ring-primary relative">
             <AvatarImage src={user?.user_metadata?.avatar_url} alt={displayName} />
@@ -171,7 +171,7 @@ export function AvatarDrawer() {
             <Link
               href="/subscription"
               onClick={handleClose}
-              className="block p-4 rounded-xl border border-[#C4515E]/40 bg-gradient-to-r from-[#C4515E]/15 to-[#C4515E]/5 hover:from-[#C4515E]/20 hover:to-[#C4515E]/10 transition-all"
+              className="block p-4 rounded-xl border border-[#C4515E]/40 border-l-4 border-l-[#C4515E] bg-gradient-to-r from-[#C4515E]/15 to-[#C4515E]/5 hover:from-[#C4515E]/20 hover:to-[#C4515E]/10 transition-all"
             >
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#C4515E]/20">
@@ -193,7 +193,7 @@ export function AvatarDrawer() {
           <Link
             href="/achievements"
             onClick={handleClose}
-            className="flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-amber-500/10 transition-colors"
+            className="flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-primary/10 transition-colors"
           >
             <Trophy className="h-6 w-6 text-amber-500 shrink-0" />
             <span className="text-base font-semibold text-foreground">Achievements</span>
@@ -216,7 +216,7 @@ export function AvatarDrawer() {
           <Link
             href="/settings"
             onClick={handleClose}
-            className="flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-muted transition-colors"
+            className="flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-primary/10 transition-colors"
           >
             <Settings className="h-6 w-6 text-muted-foreground shrink-0" />
             <span className="text-base font-semibold text-foreground">Settings</span>
@@ -225,7 +225,7 @@ export function AvatarDrawer() {
           {/* Help - external link */}
           <button
             onClick={handleHelpClick}
-            className="w-full flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-muted transition-colors"
+            className="w-full flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-primary/10 transition-colors"
           >
             <HelpCircle className="h-6 w-6 text-muted-foreground shrink-0" />
             <span className="text-base font-semibold text-foreground">Help</span>
