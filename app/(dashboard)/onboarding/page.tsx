@@ -1,7 +1,7 @@
 import { StyleQuiz } from "@/components/onboarding/StyleQuiz"
 
 export const metadata = {
-  title: "Style Quiz | FitCheckz",
+  title: "Style Quiz | Styleum",
   description: "Tell us about your style preferences to get personalized outfit recommendations",
 }
 

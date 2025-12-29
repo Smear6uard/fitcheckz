@@ -20,14 +20,14 @@ const OCCASION_CHIPS: StyleChip[] = [
   { value: "date", label: "Date", gradient: "from-rose-900/50 via-pink-900/40 to-rose-900/50" },
   { value: "formal", label: "Formal", gradient: "from-purple-900/50 via-indigo-900/40 to-purple-900/50" },
   { value: "gym", label: "Gym", gradient: "from-orange-900/40 via-red-900/30 to-orange-900/40" },
-  { value: "travel", label: "Travel", gradient: "from-cyan-900/50 via-blue-900/40 to-cyan-900/50" },
+  { value: "travel", label: "Travel", gradient: "from-[rgba(13,148,136,0.25)] via-blue-900/40 to-[rgba(13,148,136,0.25)]" },
 ]
 
 const SEASON_CHIPS: StyleChip[] = [
   { value: "spring", label: "Spring", gradient: "from-pink-800/50 to-rose-900/50" },
   { value: "summer", label: "Summer", gradient: "from-yellow-800/40 to-amber-900/40" },
   { value: "fall", label: "Fall", gradient: "from-orange-800/40 to-amber-900/40" },
-  { value: "winter", label: "Winter", gradient: "from-blue-900/50 to-cyan-900/50" },
+  { value: "winter", label: "Winter", gradient: "from-blue-900/50 to-[rgba(13,148,136,0.25)]" },
   { value: "all-season", label: "Any", gradient: "from-slate-700/50 to-gray-800/50" },
 ]
 
@@ -36,7 +36,7 @@ const MOOD_CHIPS: StyleChip[] = [
   { value: "safe", label: "Safe", gradient: "from-emerald-900/50 via-green-900/40 to-emerald-900/50" },
   { value: "trendy", label: "Trendy", gradient: "from-violet-900/50 via-purple-900/40 to-violet-900/50" },
   { value: "classic", label: "Classic", gradient: "from-amber-900/40 via-yellow-900/30 to-amber-900/40" },
-  { value: "comfortable", label: "Comfy", gradient: "from-teal-900/50 via-cyan-900/40 to-teal-900/50" },
+  { value: "comfortable", label: "Comfy", gradient: "from-[rgba(13,148,136,0.25)] via-[rgba(13,148,136,0.2)] to-[rgba(13,148,136,0.25)]" },
 ]
 
 const TIME_CHIPS: StyleChip[] = [

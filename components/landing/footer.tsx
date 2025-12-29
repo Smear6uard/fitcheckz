@@ -57,7 +57,7 @@ export function Footer() {
                 className="rounded-md"
               />
               <span className="font-sans text-xl font-bold text-white tracking-tight">
-                Styleum<span className="text-cyan-400">.</span>
+                Styleum<span className="text-[#14b8a6]">.</span>
               </span>
             </Link>
             <p className="text-sm leading-6 text-[#8A8A8A] max-w-xs">

@@ -18,7 +18,7 @@ function getOpenRouterClient() {
     maxRetries: 0, // We handle retries in our own fetchWithRetry
     defaultHeaders: {
       'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-      'X-Title': 'FitCheckz',
+      'X-Title': 'Styleum',
     },
   })
 }

@@ -103,7 +103,7 @@ export function HorizontalChipScroller({
                 // Use gradient as background if available
                 chip.gradient && `bg-gradient-to-r ${chip.gradient}`,
                 isSelected
-                  ? "border-primary shadow-[0_0_16px_rgba(34,211,238,0.3)] ring-1 ring-primary/50"
+                  ? "border-primary shadow-[0_0_16px_rgba(20,184,166,0.3)] ring-1 ring-primary/50"
                   : cn(
                       "border-border/30 hover:border-primary/40",
                       !chip.gradient && "bg-background/50 backdrop-blur-sm hover:bg-primary/5"

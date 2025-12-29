@@ -67,8 +67,8 @@ export function MostWornItems({ items, className }: MostWornItemsProps) {
         return {
           icon: TrendingUp,
           label: "Rising",
-          gradient: "from-blue-400 to-cyan-500",
-          glow: "shadow-cyan-500/30",
+          gradient: "from-blue-400 to-[#14b8a6]",
+          glow: "shadow-[rgba(20,184,166,0.3)]",
         }
     }
   }

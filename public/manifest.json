@@ -5,7 +5,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#32B8C6",
+  "theme_color": "#14b8a6",
   "orientation": "portrait",
   "categories": ["lifestyle", "shopping"],
   "icons": [

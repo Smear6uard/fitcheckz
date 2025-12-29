@@ -1,6 +1,6 @@
-# Fitcheckz - AI-Powered Personal Styling App
+# Styleum - AI-Powered Personal Styling App
 
-Get your fit checked. Dress with confidence.
+Your AI personal stylist. Dress with confidence.
 
 ## Features
 
@@ -36,7 +36,7 @@ Get your fit checked. Dress with confidence.
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd fitcheckz
+cd styleum
 ```
 
 2. Install dependencies:
@@ -77,7 +77,7 @@ npm run dev
 ## Project Structure
 
 ```
-fitcheckz/
+styleum/
 ├── app/                    # Next.js app directory
 │   ├── (auth)/            # Authentication pages
 │   ├── (dashboard)/       # Protected dashboard pages

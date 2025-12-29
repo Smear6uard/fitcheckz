@@ -60,7 +60,7 @@ export function WardrobeGaps({ stats, className }: WardrobeGapsProps) {
       case "suggestion":
         return {
           icon: Lightbulb,
-          gradient: "from-blue-500/20 to-cyan-500/20",
+          gradient: "from-blue-500/20 to-[rgba(20,184,166,0.2)]",
           border: "border-blue-500/30",
           badge: "bg-blue-500/20 text-blue-700 dark:text-blue-300",
           iconColor: "text-blue-500",

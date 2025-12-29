@@ -150,7 +150,7 @@ export function openShareWindow(url: string, title: string = 'Share'): void {
 export function generateOutfitShareText(
   occasion?: string,
   score?: number,
-  brandName: string = 'FitCheckz'
+  brandName: string = 'Styleum'
 ): string {
   let text = `Check out my ${occasion || 'outfit'} recommendation`
 

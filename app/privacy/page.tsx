@@ -3,8 +3,8 @@ import { Footer } from "@/components/landing/footer"
 import Link from "next/link"
 
 export const metadata = {
-  title: "Privacy Policy | FitCheckz",
-  description: "Privacy Policy for FitCheckz - Learn how we collect, use, and protect your data.",
+  title: "Privacy Policy | Styleum",
+  description: "Privacy Policy for Styleum - Learn how we collect, use, and protect your data.",
 }
 
 export default function PrivacyPage() {
@@ -43,12 +43,12 @@ export default function PrivacyPage() {
             <section id="introduction">
               <h2 className="text-xl font-semibold mb-4 text-foreground">1. Introduction</h2>
               <p className="mb-4">
-                FitCheckz (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is operated by <strong>Sameer Studios LLC</strong>.
+                Styleum (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is operated by <strong>Sameer Studios LLC</strong>.
                 This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use
-                our AI-powered fashion and outfit recommendation service at fitcheckz.com (the &quot;Service&quot;).
+                our AI-powered fashion and outfit recommendation service at styleum.app (the &quot;Service&quot;).
               </p>
               <p>
-                By using FitCheckz, you agree to the collection and use of information in accordance with this policy.
+                By using Styleum, you agree to the collection and use of information in accordance with this policy.
                 If you do not agree with our policies and practices, please do not use our Service.
               </p>
             </section>
@@ -106,7 +106,7 @@ export default function PrivacyPage() {
             <section id="ai-services">
               <h2 className="text-xl font-semibold mb-4 text-foreground">4. AI and Third-Party Services</h2>
               <p className="mb-4">
-                FitCheckz uses artificial intelligence to analyze your wardrobe and generate outfit recommendations.
+                Styleum uses artificial intelligence to analyze your wardrobe and generate outfit recommendations.
                 Your data may be processed by the following third-party services:
               </p>
 
@@ -169,7 +169,7 @@ export default function PrivacyPage() {
               </ul>
               <p className="mt-4">
                 To exercise these rights, please contact us at{" "}
-                <a href="mailto:hello@fitcheckz.com" className="text-primary hover:underline">hello@fitcheckz.com</a>.
+                <a href="mailto:hello@styleum.app" className="text-primary hover:underline">hello@styleum.app</a>.
               </p>
             </section>
 
@@ -191,7 +191,7 @@ export default function PrivacyPage() {
             <section id="children">
               <h2 className="text-xl font-semibold mb-4 text-foreground">9. Children&apos;s Privacy</h2>
               <p className="mb-4">
-                FitCheckz is not intended for children under 13 years of age. We do not knowingly collect personal
+                Styleum is not intended for children under 13 years of age. We do not knowingly collect personal
                 information from children under 13. If you are a parent or guardian and believe your child has
                 provided us with personal information, please contact us immediately.
               </p>
@@ -260,12 +260,12 @@ export default function PrivacyPage() {
               <p className="mb-4">If you have questions about this Privacy Policy or our data practices, please contact us:</p>
               <div className="bg-secondary/50 p-4 rounded-lg">
                 <p className="font-medium text-foreground">Sameer Studios LLC</p>
-                <p>Operating FitCheckz</p>
+                <p>Operating Styleum</p>
                 <p className="mt-2">
                   Email:{" "}
-                  <a href="mailto:hello@fitcheckz.com" className="text-primary hover:underline">hello@fitcheckz.com</a>
+                  <a href="mailto:hello@styleum.app" className="text-primary hover:underline">hello@styleum.app</a>
                 </p>
-                <p>Website: <Link href="/" className="text-primary hover:underline">fitcheckz.com</Link></p>
+                <p>Website: <Link href="/" className="text-primary hover:underline">styleum.app</Link></p>
               </div>
             </section>
           </div>

@@ -66,7 +66,7 @@ export async function GET(
                 color: "transparent",
               }}
             >
-              FitCheckz
+              Styleum
             </div>
             <div
               style={{
@@ -239,7 +239,7 @@ export async function GET(
             }}
           >
             <span>Created with</span>
-            <span style={{ color: "#a3e635", fontWeight: 700 }}>FitCheckz</span>
+            <span style={{ color: "#a3e635", fontWeight: 700 }}>Styleum</span>
             <span>🔥</span>
           </div>
         </div>

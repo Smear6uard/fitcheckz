@@ -173,7 +173,7 @@ export function WeatherBadge({
               style={fadeSpring}
               onClick={handleRefresh}
               className={cn(
-                "flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500/10 to-cyan-500/10 px-3 py-1.5",
+                "flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500/10 to-[rgba(20,184,166,0.1)] px-3 py-1.5",
                 "border border-blue-500/20 transition-all hover:border-blue-500/40",
                 className
               )}
@@ -215,7 +215,7 @@ export function WeatherBadge({
     <animated.div
       style={fadeSpring}
       className={cn(
-        "rounded-xl border bg-gradient-to-br from-blue-500/5 to-cyan-500/5 p-4",
+        "rounded-xl border bg-gradient-to-br from-blue-500/5 to-[rgba(20,184,166,0.05)] p-4",
         className
       )}
     >
@@ -229,7 +229,7 @@ export function WeatherBadge({
         </div>
       ) : weather ? (
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500/20 to-[rgba(20,184,166,0.2)]">
             <span className="text-3xl">{getWeatherEmoji(weather.condition)}</span>
           </div>
 
@@ -280,7 +280,7 @@ export function WeatherBadge({
             <span>{weather.humidity}%</span>
           </div>
           <div className="flex items-center gap-1.5 text-sm">
-            <Wind className="h-4 w-4 text-cyan-500" />
+            <Wind className="h-4 w-4 text-[#14b8a6]" />
             <span>{weather.windSpeed}mph</span>
           </div>
           <div className="flex-1 text-right">

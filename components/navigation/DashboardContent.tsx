@@ -2,23 +2,19 @@
 
 import { type ReactNode } from "react"
 import { cn } from "@/lib/utils"
-import { useSidebar } from "./SidebarContext"
 
 interface DashboardContentProps {
   children: ReactNode
 }
 
 export function DashboardContent({ children }: DashboardContentProps) {
-  const { isCollapsed } = useSidebar()
-
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen transition-[margin-left] duration-200 ease-out",
-        // Desktop: offset by sidebar width
-        "md:ml-60",
-        // When collapsed on desktop
-        isCollapsed && "md:ml-16"
+        "flex flex-col min-h-screen",
+        // Desktop: fixed offset for collapsed sidebar (64px)
+        // Sidebar expands as overlay on hover, so no dynamic margin needed
+        "md:ml-16"
       )}
     >
       {children}

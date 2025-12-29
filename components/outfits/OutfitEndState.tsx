@@ -64,7 +64,7 @@ export function OutfitEndState({
         }}
         className="mb-6"
       >
-        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-500/20 to-cyan-500/20 flex items-center justify-center">
+        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-500/20 to-[rgba(20,184,166,0.2)] flex items-center justify-center">
           <CheckCircle2 className="w-10 h-10 text-green-500" />
         </div>
       </animated.div>
@@ -97,8 +97,8 @@ export function OutfitEndState({
         <div className="h-8 w-px bg-border" />
 
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-cyan-500" />
+          <div className="w-8 h-8 rounded-full bg-[rgba(20,184,166,0.2)] flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-[#14b8a6]" />
           </div>
           <div className="text-left">
             <p className="text-lg font-bold">{totalOutfits}</p>

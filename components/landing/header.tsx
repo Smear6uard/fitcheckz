@@ -73,7 +73,7 @@ export function Header() {
               className="rounded-md"
             />
             <span className="font-sans text-xl md:text-2xl font-bold text-zinc-100 tracking-tight">
-              Styleum<span className="text-cyan-400">.</span>
+              Styleum<span className="text-[#14b8a6]">.</span>
             </span>
           </Link>
         </div>
@@ -144,7 +144,7 @@ export function Header() {
                 className="rounded-md"
               />
               <span className="font-sans text-xl font-bold text-zinc-100 tracking-tight">
-                Styleum<span className="text-cyan-400">.</span>
+                Styleum<span className="text-[#14b8a6]">.</span>
               </span>
             </Link>
             <button

@@ -4,12 +4,12 @@ import Link from "next/link"
 
 export function CTASection() {
   return (
-    <section className="py-16 lg:py-20 bg-gradient-to-br from-cyan-500 via-cyan-400 to-cyan-500 relative overflow-hidden">
+    <section className="py-16 lg:py-20 bg-gradient-to-br from-[#14b8a6] via-[#14b8a6] to-[#14b8a6] relative overflow-hidden">
       {/* Multiple layered glows for depth */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/15 rounded-full blur-3xl" />
         <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-cyan-600/50 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[rgba(13,148,136,0.5)] rounded-full blur-3xl" />
       </div>
 
       {/* Animated particles/sparkles effect via pseudo gradients */}
@@ -33,7 +33,7 @@ export function CTASection() {
             {/* Primary button with enhanced glow and animations */}
             <Button
               size="lg"
-              className="group/btn bg-zinc-950 text-cyan-400 hover:bg-zinc-900 hover:scale-105 hover:brightness-110 transition-all duration-300 shadow-[0_10px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_0_40px_rgba(0,0,0,0.6)] text-base px-8 py-6 w-full sm:w-auto"
+              className="group/btn bg-zinc-950 text-[#14b8a6] hover:bg-zinc-900 hover:scale-105 hover:brightness-110 transition-all duration-300 shadow-[0_10px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_0_40px_rgba(0,0,0,0.6)] text-base px-8 py-6 w-full sm:w-auto"
               asChild
             >
               <Link href="/signup" className="flex items-center">

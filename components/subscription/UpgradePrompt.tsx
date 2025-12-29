@@ -64,10 +64,10 @@ export function UpgradePrompt({
     if (type === "outfit") {
       return {
         title: "Unlock Unlimited Outfit Suggestions",
-        description: `You've used all ${limit} of your weekly outfit suggestions. Upgrade to Pro for unlimited AI-powered outfit recommendations!`,
+        description: `You've used all ${limit} of your weekly outfit suggestions. Upgrade to Pro for unlimited outfit recommendations!`,
         features: [
           { icon: Infinity, text: "Unlimited outfit suggestions" },
-          { icon: Sparkles, text: "Advanced AI recommendations" },
+          { icon: Sparkles, text: "Premium styling recommendations" },
           { icon: TrendingUp, text: "Priority processing" },
         ],
       }

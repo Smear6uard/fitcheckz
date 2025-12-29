@@ -187,7 +187,7 @@ function AchievementUnlockContent({
   })
 
   const handleShare = useCallback(async () => {
-    const shareText = `I just unlocked "${achievement.name}" on FitCheckz! ${achievement.emoji}`
+    const shareText = `I just unlocked "${achievement.name}" on Styleum! ${achievement.emoji}`
     if (navigator.share) {
       try {
         await navigator.share({

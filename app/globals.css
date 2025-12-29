@@ -6,17 +6,17 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Styleum Brand Colors - Dark with Cyan Accent (Gen Z) */
+  /* Styleum Brand Colors - Dark with Teal Accent (Gen Z) */
   --brand-black: #09090B;
   --brand-charcoal: #18181B;
   --brand-dark-gray: #27272A;
   --brand-medium-gray: #3F3F46;
   --brand-light-gray: #71717A;
   --brand-white: #FAFAFA;
-  --brand-accent: #22D3EE;
-  --brand-accent-light: #67E8F9;
-  --brand-accent-dark: #06B6D4;
-  --brand-accent-subtle: rgba(34, 211, 238, 0.12);
+  --brand-accent: #14b8a6;
+  --brand-accent-light: #2dd4bf;
+  --brand-accent-dark: #0d9488;
+  --brand-accent-subtle: rgba(20, 184, 166, 0.12);
 
   /* Secondary Accent - Rose (use sparingly) */
   --brand-accent-secondary: #FB7185;
@@ -27,8 +27,8 @@
   --sidebar-active: #F43F5E;
 
   /* Legacy aliases for backwards compatibility */
-  --brand-teal: #22D3EE;
-  --brand-lime: #22D3EE;
+  --brand-teal: #14b8a6;
+  --brand-lime: #14b8a6;
   --brand-cream: #09090B;
   --brand-lavender: #3F3F46;
   --brand-blush: #27272A;
@@ -44,33 +44,33 @@
   --card-foreground: #FAFAFA;
   --popover: #18181B;
   --popover-foreground: #FAFAFA;
-  --primary: #22D3EE;
+  --primary: #14b8a6;
   --primary-foreground: #09090B;
   --secondary: #27272A;
   --secondary-foreground: #FAFAFA;
   --muted: #27272A;
   --muted-foreground: #A1A1AA;
-  --accent: #22D3EE;
+  --accent: #14b8a6;
   --accent-foreground: #09090B;
   --destructive: #F87171;
   --destructive-foreground: #FAFAFA;
   --border: #3F3F46;
   --input: #27272A;
-  --ring: #22D3EE;
-  --chart-1: #22D3EE;
-  --chart-2: #67E8F9;
-  --chart-3: #06B6D4;
+  --ring: #14b8a6;
+  --chart-1: #14b8a6;
+  --chart-2: #2dd4bf;
+  --chart-3: #0d9488;
   --chart-4: #A1A1AA;
   --chart-5: #4ADE80;
   --radius: 0.75rem;
   --sidebar: #18181B;
   --sidebar-foreground: #FAFAFA;
-  --sidebar-primary: #22D3EE;
+  --sidebar-primary: #14b8a6;
   --sidebar-primary-foreground: #09090B;
   --sidebar-accent: #27272A;
-  --sidebar-accent-foreground: #22D3EE;
+  --sidebar-accent-foreground: #14b8a6;
   --sidebar-border: #3F3F46;
-  --sidebar-ring: #22D3EE;
+  --sidebar-ring: #14b8a6;
 }
 
 .dark {
@@ -81,19 +81,19 @@
   --card-foreground: #FAFAFA;
   --popover: #18181B;
   --popover-foreground: #FAFAFA;
-  --primary: #22D3EE;
+  --primary: #14b8a6;
   --primary-foreground: #09090B;
   --secondary: #27272A;
   --secondary-foreground: #FAFAFA;
   --muted: #27272A;
   --muted-foreground: #A1A1AA;
-  --accent: #22D3EE;
+  --accent: #14b8a6;
   --accent-foreground: #09090B;
   --destructive: #F87171;
   --destructive-foreground: #FAFAFA;
   --border: #3F3F46;
   --input: #27272A;
-  --ring: #22D3EE;
+  --ring: #14b8a6;
 }
 
 @theme inline {
@@ -143,9 +143,9 @@
   --color-brand-dark-gray: #27272A;
   --color-brand-medium-gray: #3F3F46;
   --color-brand-light-gray: #71717A;
-  --color-brand-accent: #22D3EE;
-  --color-brand-accent-light: #67E8F9;
-  --color-brand-accent-dark: #06B6D4;
+  --color-brand-accent: #14b8a6;
+  --color-brand-accent-light: #2dd4bf;
+  --color-brand-accent-dark: #0d9488;
   --color-brand-success: #4ADE80;
   --color-brand-error: #F87171;
 
@@ -214,7 +214,7 @@
   /* Squiggle underline for accent text */
   .squiggle-underline {
     text-decoration: underline;
-    text-decoration-color: #22D3EE;
+    text-decoration-color: #14b8a6;
     text-decoration-style: wavy;
     text-underline-offset: 6px;
     text-decoration-thickness: 2px;
@@ -233,13 +233,13 @@
     text-decoration: underline;
     text-decoration-thickness: 2px;
     text-underline-offset: 4px;
-    text-decoration-color: #22D3EE;
+    text-decoration-color: #14b8a6;
     text-decoration-style: wavy;
   }
 
   /* Text gradient for accent */
   .text-gradient-accent {
-    background: linear-gradient(135deg, #22D3EE, #67E8F9);
+    background: linear-gradient(135deg, #14b8a6, #2dd4bf);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -251,11 +251,11 @@
   }
 
   .bg-gradient-radial-accent {
-    background: radial-gradient(circle, rgba(34, 211, 238, 0.18) 0%, transparent 55%);
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.18) 0%, transparent 55%);
   }
 
   .bg-gradient-line-accent {
-    background: linear-gradient(90deg, transparent, #22D3EE, transparent);
+    background: linear-gradient(90deg, transparent, #14b8a6, transparent);
   }
 
   /* Slide/tilt-in animation for screenshot placeholders */
@@ -418,7 +418,7 @@
   .card-enhanced:hover {
     transform: translateY(-4px);
     box-shadow:
-      0 8px 16px rgba(34, 211, 238, 0.15),
+      0 8px 16px rgba(20, 184, 166, 0.15),
       0 20px 40px rgba(0, 0, 0, 0.3);
     border-color: #52525B;
   }
@@ -433,7 +433,7 @@
     content: '';
     position: absolute;
     inset: -2px;
-    background: linear-gradient(135deg, #22D3EE, #67E8F9);
+    background: linear-gradient(135deg, #14b8a6, #2dd4bf);
     border-radius: inherit;
     opacity: 0;
     z-index: -1;
@@ -511,11 +511,11 @@
 
   /* Accent glow shadow */
   .shadow-accent-glow {
-    box-shadow: 0 0 80px rgba(34, 211, 238, 0.15);
+    box-shadow: 0 0 80px rgba(20, 184, 166, 0.15);
   }
 
   .shadow-accent-lift {
-    box-shadow: 0 12px 35px rgba(34, 211, 238, 0.35);
+    box-shadow: 0 12px 35px rgba(20, 184, 166, 0.35);
   }
 
   .shadow-card {

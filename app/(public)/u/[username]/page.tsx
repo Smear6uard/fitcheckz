@@ -19,16 +19,16 @@ export async function generateMetadata({ params }: PageProps) {
 
   if (!profile) {
     return {
-      title: "Profile Not Found | FitCheckz",
+      title: "Profile Not Found | Styleum",
     }
   }
 
   return {
-    title: `${profile.display_name || profile.username} | FitCheckz`,
+    title: `${profile.display_name || profile.username} | Styleum`,
     description:
-      profile.bio || `Check out ${profile.display_name || profile.username}'s style on FitCheckz`,
+      profile.bio || `Check out ${profile.display_name || profile.username}'s style on Styleum`,
     openGraph: {
-      title: `${profile.display_name || profile.username} on FitCheckz`,
+      title: `${profile.display_name || profile.username} on Styleum`,
       description:
         profile.bio || `Check out ${profile.display_name || profile.username}'s style`,
       images: profile.avatar_url ? [profile.avatar_url] : [],

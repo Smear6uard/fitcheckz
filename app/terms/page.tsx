@@ -3,8 +3,8 @@ import { Footer } from "@/components/landing/footer"
 import Link from "next/link"
 
 export const metadata = {
-  title: "Terms of Service | FitCheckz",
-  description: "Terms of Service for FitCheckz - Read about our terms and conditions for using the service.",
+  title: "Terms of Service | Styleum",
+  description: "Terms of Service for Styleum - Read about our terms and conditions for using the service.",
 }
 
 export default function TermsPage() {
@@ -46,15 +46,15 @@ export default function TermsPage() {
             <section id="acceptance">
               <h2 className="text-xl font-semibold mb-4 text-foreground">1. Acceptance of Terms</h2>
               <p className="mb-4">
-                These Terms of Service (&quot;Terms&quot;) govern your access to and use of FitCheckz, an AI-powered
+                These Terms of Service (&quot;Terms&quot;) govern your access to and use of Styleum, an AI-powered
                 fashion and outfit recommendation service operated by <strong>Sameer Studios LLC</strong> (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;).
               </p>
               <p className="mb-4">
-                By accessing or using FitCheckz at fitcheckz.com (the &quot;Service&quot;), you agree to be bound by these Terms.
+                By accessing or using Styleum at styleum.app (the &quot;Service&quot;), you agree to be bound by these Terms.
                 If you do not agree to these Terms, you may not access or use the Service.
               </p>
               <p>
-                <strong>Age Requirement:</strong> You must be at least 13 years of age to use FitCheckz. By using the Service,
+                <strong>Age Requirement:</strong> You must be at least 13 years of age to use Styleum. By using the Service,
                 you represent and warrant that you are at least 13 years old.
               </p>
             </section>
@@ -62,7 +62,7 @@ export default function TermsPage() {
             {/* 2. Service Description */}
             <section id="service-description">
               <h2 className="text-xl font-semibold mb-4 text-foreground">2. Service Description</h2>
-              <p className="mb-4">FitCheckz provides:</p>
+              <p className="mb-4">Styleum provides:</p>
               <ul className="list-disc pl-6 mb-4 space-y-1">
                 <li>AI-powered outfit recommendations based on your uploaded wardrobe</li>
                 <li>Digital wardrobe management and organization</li>
@@ -125,13 +125,13 @@ export default function TermsPage() {
               <p className="mb-4">
                 The Service, including its original content, features, functionality, design, code, and branding
                 (excluding user content), is owned by Sameer Studios LLC and is protected by copyright, trademark,
-                and other intellectual property laws. The FitCheckz name, logo, and all related marks are
+                and other intellectual property laws. The Styleum name, logo, and all related marks are
                 trademarks of Sameer Studios LLC.
               </p>
 
               <h3 className="text-lg font-medium mb-2 text-foreground">Your Content</h3>
               <p className="mb-4">
-                You retain ownership of all photos and content you upload to FitCheckz. By uploading content,
+                You retain ownership of all photos and content you upload to Styleum. By uploading content,
                 you grant us a non-exclusive, worldwide, royalty-free license to use, process, display, and
                 store your content solely for the purpose of providing and improving the Service.
               </p>
@@ -150,7 +150,7 @@ export default function TermsPage() {
               <div className="bg-secondary/50 p-4 rounded-lg mb-4">
                 <p className="font-medium text-foreground mb-2">Important Notice:</p>
                 <p>
-                  FitCheckz uses artificial intelligence to generate outfit recommendations and styling suggestions.
+                  Styleum uses artificial intelligence to generate outfit recommendations and styling suggestions.
                   These recommendations are for informational and entertainment purposes only.
                 </p>
               </div>
@@ -170,7 +170,7 @@ export default function TermsPage() {
 
               <h3 className="text-lg font-medium mb-2 text-foreground">Free Tier</h3>
               <p className="mb-4">
-                FitCheckz offers a free tier with limited features and usage caps. Free tier limitations
+                Styleum offers a free tier with limited features and usage caps. Free tier limitations
                 may change at any time.
               </p>
 
@@ -329,12 +329,12 @@ export default function TermsPage() {
               <p className="mb-4">If you have any questions about these Terms, please contact us:</p>
               <div className="bg-secondary/50 p-4 rounded-lg">
                 <p className="font-medium text-foreground">Sameer Studios LLC</p>
-                <p>Operating FitCheckz</p>
+                <p>Operating Styleum</p>
                 <p className="mt-2">
                   Email:{" "}
-                  <a href="mailto:hello@fitcheckz.com" className="text-primary hover:underline">hello@fitcheckz.com</a>
+                  <a href="mailto:hello@styleum.app" className="text-primary hover:underline">hello@styleum.app</a>
                 </p>
-                <p>Website: <Link href="/" className="text-primary hover:underline">fitcheckz.com</Link></p>
+                <p>Website: <Link href="/" className="text-primary hover:underline">styleum.app</Link></p>
               </div>
             </section>
           </div>

@@ -63,7 +63,7 @@ export function BottomNav() {
                     "transition-transform active:scale-95"
                   )}
                   style={{
-                    boxShadow: '0 4px 12px rgba(34, 211, 238, 0.4)',
+                    boxShadow: '0 4px 12px rgba(20, 184, 166, 0.4)',
                   }}
                 >
                   <Icon className="w-6 h-6 text-primary-foreground" />

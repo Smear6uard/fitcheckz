@@ -139,7 +139,7 @@ export function ItemUpload() {
       if (totalCount === 1) {
         setMilestone("first")
         setShowCelebration(true)
-        toast.success("🎉 Your first item! Welcome to FitCheckz!")
+        toast.success("🎉 Your first item! Welcome to Styleum!")
         // Reset form but keep submitting state until dialog closes
         setFormData({ item_name: "", category: "" })
         setFile(null)
@@ -192,8 +192,8 @@ export function ItemUpload() {
     switch (milestone) {
       case "first":
         return {
-          title: "🎉 Welcome to FitCheckz!",
-          description: "You've added your first item! Keep adding more to unlock AI-powered outfit recommendations.",
+          title: "🎉 Welcome to Styleum!",
+          description: "You've added your first item! Keep adding more to unlock personalized outfit recommendations.",
         }
       case "style-score":
         return {
