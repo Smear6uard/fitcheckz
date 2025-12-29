@@ -10,6 +10,8 @@ interface SidebarContextType {
   toggleSidebar: () => void
   isMobileMenuOpen: boolean
   setIsMobileMenuOpen: (open: boolean) => void
+  isDrawerOpen: boolean
+  setIsDrawerOpen: (open: boolean) => void
   isHydrated: boolean
 }
 
@@ -18,6 +20,7 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined)
 export function SidebarProvider({ children }: { children: ReactNode }) {
   const { isCollapsed, setIsCollapsed, toggleSidebar, isHydrated } = useSidebarState()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const isTablet = useIsTablet()
   const isMobile = useIsMobile()
 
@@ -28,9 +31,9 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
     }
   }, [isTablet, isHydrated, setIsCollapsed])
 
-  // Prevent body scroll when mobile menu is open
+  // Prevent body scroll when mobile menu or drawer is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
+    if (isMobileMenuOpen || isDrawerOpen) {
       document.body.style.overflow = "hidden"
     } else {
       document.body.style.overflow = ""
@@ -38,25 +41,27 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
     return () => {
       document.body.style.overflow = ""
     }
-  }, [isMobileMenuOpen])
+  }, [isMobileMenuOpen, isDrawerOpen])
 
-  // Close mobile menu on escape key
+  // Close mobile menu or drawer on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isMobileMenuOpen) {
-        setIsMobileMenuOpen(false)
+      if (e.key === "Escape") {
+        if (isMobileMenuOpen) setIsMobileMenuOpen(false)
+        if (isDrawerOpen) setIsDrawerOpen(false)
       }
     }
     document.addEventListener("keydown", handleEscape)
     return () => document.removeEventListener("keydown", handleEscape)
-  }, [isMobileMenuOpen])
+  }, [isMobileMenuOpen, isDrawerOpen])
 
-  // Close mobile menu when viewport becomes desktop
+  // Close mobile menu and drawer when viewport becomes desktop
   useEffect(() => {
-    if (!isMobile && isMobileMenuOpen) {
-      setIsMobileMenuOpen(false)
+    if (!isMobile) {
+      if (isMobileMenuOpen) setIsMobileMenuOpen(false)
+      if (isDrawerOpen) setIsDrawerOpen(false)
     }
-  }, [isMobile, isMobileMenuOpen])
+  }, [isMobile, isMobileMenuOpen, isDrawerOpen])
 
   return (
     <SidebarContext.Provider
@@ -66,6 +71,8 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
         toggleSidebar,
         isMobileMenuOpen,
         setIsMobileMenuOpen,
+        isDrawerOpen,
+        setIsDrawerOpen,
         isHydrated,
       }}
     >

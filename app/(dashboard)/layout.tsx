@@ -6,7 +6,7 @@ import { OnboardingGuard } from "@/components/layout/OnboardingGuard"
 import { SidebarProvider } from "@/components/navigation/SidebarContext"
 import { Sidebar } from "@/components/navigation/Sidebar"
 import { TopBar } from "@/components/navigation/TopBar"
-import { MobileNavOverlay } from "@/components/navigation/MobileNavOverlay"
+import { AvatarDrawer } from "@/components/navigation/AvatarDrawer"
 import { DashboardContent } from "@/components/navigation/DashboardContent"
 
 export default async function DashboardLayout({
@@ -39,10 +39,10 @@ export default async function DashboardLayout({
               </main>
             </DashboardContent>
 
-            {/* Mobile navigation overlay */}
-            <MobileNavOverlay />
+            {/* Mobile avatar drawer */}
+            <AvatarDrawer />
 
-            {/* Mobile bottom nav for quick access */}
+            {/* Mobile bottom nav */}
             <BottomNav />
           </div>
         </SidebarProvider>
