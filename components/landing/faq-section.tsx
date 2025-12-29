@@ -33,7 +33,7 @@ const faqs = [
 
 export function FAQSection() {
   return (
-    <section className="py-16 lg:py-20 bg-gradient-to-b from-zinc-900 via-zinc-900 to-zinc-900 relative overflow-hidden">
+    <section className="py-16 lg:py-20 bg-[#0a0a0a] relative overflow-hidden">
       {/* Ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(20,184,166,0.03)_0%,transparent_50%)] pointer-events-none" />
 
@@ -46,7 +46,7 @@ export function FAQSection() {
         </div>
 
         <div className="mx-auto max-w-3xl">
-          <Accordion type="single" collapsible className="w-full space-y-4">
+          <Accordion type="single" collapsible defaultValue="item-0" className="w-full space-y-4">
             {faqs.map((faq, index) => (
               <ScrollReveal key={faq.question} delay={index * 100}>
                 {/* Dark accordion with dramatic hover effects */}

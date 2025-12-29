@@ -26,7 +26,7 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="py-16 lg:py-20 bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-900 relative overflow-hidden">
+    <section id="how-it-works" className="py-16 lg:py-20 bg-[#0f0f0f] relative overflow-hidden">
       {/* Top gradient divider line */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[rgba(20,184,166,0.6)] to-transparent" />
 
@@ -58,8 +58,8 @@ export function HowItWorksSection() {
 
                 <div className="relative z-10">
                   <div className="flex items-start gap-4 mb-6">
-                    {/* Huge muted step number - lights up on hover */}
-                    <span className="text-7xl font-black text-zinc-800 leading-none transition-colors duration-500 group-hover:text-zinc-700" style={{ fontFamily: 'system-ui, -apple-system' }}>
+                    {/* Prominent teal step number */}
+                    <span className="text-6xl md:text-7xl font-bold text-[#14b8a6]/20 leading-none transition-colors duration-500 group-hover:text-[#14b8a6]/30">
                       {step.step}
                     </span>
                     {/* Icon with teal gradient glow - pulses on hover */}

@@ -123,7 +123,7 @@ export function Footer() {
         <div className="mt-16 border-t border-[#2A2A2A] pt-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-xs text-[#8A8A8A]">
-              Made for style-seekers everywhere
+              Stop staring. Start styling.
             </p>
             <p className="text-xs text-[#8A8A8A]">
               &copy; {new Date().getFullYear()} Sameer Studios LLC. All rights reserved.

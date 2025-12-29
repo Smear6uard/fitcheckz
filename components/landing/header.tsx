@@ -1,13 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { animated, useSpring } from "@react-spring/web"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import { UserMenu } from "@/components/auth/UserMenu"
-import { cn } from "@/lib/utils"
 
 const navigation = [
   { name: "Features", href: "#features" },
@@ -18,23 +17,11 @@ const navigation = [
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  // Prevent body scroll when mobile menu is open
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = ""
-    }
-    return () => {
-      document.body.style.overflow = ""
-    }
-  }, [mobileMenuOpen])
-
-  // Mobile menu animation - slide from right
+  // Dropdown animation - fade + slide down
   const menuSpring = useSpring({
-    x: mobileMenuOpen ? 0 : 100,
-    backdropOpacity: mobileMenuOpen ? 1 : 0,
-    config: { tension: 300, friction: 30 },
+    opacity: mobileMenuOpen ? 1 : 0,
+    y: mobileMenuOpen ? 0 : -8,
+    config: { tension: 300, friction: 26 },
   })
 
   // Simple inline scroll handler that accounts for fixed header
@@ -61,135 +48,116 @@ export function Header() {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-zinc-950/90 backdrop-blur-xl border-b border-white/5">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
-        <div className="flex lg:flex-1">
-          <Link href="/" className="flex items-center gap-2 -m-1.5 p-1.5">
-            <Image
-              src="/favicon.png"
-              alt="Styleum"
-              width={32}
-              height={32}
-              className="rounded-md"
-            />
-            <span className="font-sans text-xl md:text-2xl font-bold text-zinc-100 tracking-tight">
-              Styleum<span className="text-[#14b8a6]">.</span>
-            </span>
-          </Link>
-        </div>
-
-        <div className="flex lg:hidden">
-          <button
-            type="button"
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-white"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <span className="sr-only">Open main menu</span>
-            <Menu className="h-6 w-6" aria-hidden="true" />
-          </button>
-        </div>
-
-        {/* Navbar links with smooth hover transitions */}
-        <div className="hidden lg:flex lg:gap-x-10">
-          {navigation.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              onClick={(e) => handleNavClick(e, item.href)}
-              className="text-sm font-medium text-zinc-400 hover:text-zinc-100 transition-colors duration-200"
-            >
-              {item.name}
-            </a>
-          ))}
-        </div>
-
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4">
-          <UserMenu />
-        </div>
-      </nav>
-
-      {/* Mobile menu - Always rendered for smooth animations */}
-      <div
-        className={cn(
-          "lg:hidden fixed inset-0 z-[100]",
-          !mobileMenuOpen && "pointer-events-none"
-        )}
-        style={{ visibility: mobileMenuOpen ? "visible" : "hidden" }}
-      >
-        {/* Backdrop */}
-        <animated.div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-          style={{ opacity: menuSpring.backdropOpacity }}
+    <>
+      {/* Backdrop */}
+      {mobileMenuOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-40"
           onClick={() => setMobileMenuOpen(false)}
           aria-hidden="true"
         />
-        {/* Slide-in panel */}
-        <animated.div
-          className="fixed inset-y-0 right-0 z-[101] w-full overflow-y-auto bg-zinc-950 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10"
-          style={{
-            transform: menuSpring.x.to((x) => `translateX(${x}%)`),
-          }}
-        >
-          <div className="flex items-center justify-between">
-            <Link
-              href="/"
-              className="flex items-center gap-2 -m-1.5 p-1.5"
-              onClick={() => setMobileMenuOpen(false)}
-            >
+      )}
+
+      <header className="fixed top-0 left-0 right-0 z-50 bg-zinc-950/90 backdrop-blur-xl border-b border-white/5">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <nav className="flex h-16 items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/favicon.png"
                 alt="Styleum"
-                width={28}
-                height={28}
+                width={32}
+                height={32}
                 className="rounded-md"
               />
-              <span className="font-sans text-xl font-bold text-zinc-100 tracking-tight">
+              <span className="font-sans text-xl md:text-2xl font-bold text-zinc-100 tracking-tight">
                 Styleum<span className="text-[#14b8a6]">.</span>
               </span>
             </Link>
-            <button
-              type="button"
-              className="-m-2.5 rounded-md p-2.5 text-white hover:bg-white/5 transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-              aria-label="Close menu"
-            >
-              <X className="h-6 w-6" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="mt-6 flow-root">
-            <div className="-my-6 divide-y divide-white/10">
-              <div className="space-y-2 py-6">
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    onClick={(e) => handleNavClick(e, item.href)}
-                    className="-mx-3 block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/5 transition-colors"
-                  >
-                    {item.name}
-                  </a>
-                ))}
-              </div>
-              <div className="py-6 space-y-3">
-                <Button
-                  variant="outline"
-                  className="w-full bg-transparent border-white/20 text-white hover:bg-white/5"
-                  asChild
+
+            {/* Desktop nav - centered */}
+            <div className="hidden lg:flex lg:gap-x-10">
+              {navigation.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  onClick={(e) => handleNavClick(e, item.href)}
+                  className="text-sm font-medium text-zinc-400 hover:text-zinc-100 transition-colors duration-200"
                 >
-                  <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                    Log in
-                  </Link>
-                </Button>
-                <Button className="w-full" asChild>
-                  <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
-                    Get Started
-                  </Link>
-                </Button>
+                  {item.name}
+                </a>
+              ))}
+            </div>
+
+            {/* Right side - CTA + mobile menu button */}
+            <div className="flex items-center gap-4">
+              <div className="hidden lg:flex">
+                <UserMenu />
               </div>
+              <button
+                type="button"
+                className="lg:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              >
+                {mobileMenuOpen ? (
+                  <X className="h-5 w-5" aria-hidden="true" />
+                ) : (
+                  <Menu className="h-5 w-5" aria-hidden="true" />
+                )}
+              </button>
+            </div>
+          </nav>
+        </div>
+
+        {/* Mobile dropdown menu */}
+        <animated.div
+          className="lg:hidden overflow-hidden"
+          style={{
+            opacity: menuSpring.opacity,
+            transform: menuSpring.y.to((y) => `translateY(${y}px)`),
+            height: mobileMenuOpen ? 'auto' : 0,
+            pointerEvents: mobileMenuOpen ? 'auto' : 'none',
+          }}
+        >
+          <div className="bg-[#0f0f0f] border-t border-white/10 p-6 space-y-1">
+            {navigation.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                onClick={(e) => handleNavClick(e, item.href)}
+                className="block px-4 py-3 text-base font-medium text-white rounded-lg hover:bg-white/5 transition-colors"
+              >
+                {item.name}
+              </a>
+            ))}
+
+            {/* Divider */}
+            <div className="border-t border-white/10 my-4" />
+
+            {/* CTA Buttons */}
+            <div className="space-y-3">
+              <Button
+                variant="outline"
+                className="w-full bg-transparent border-white/20 text-white hover:bg-white/5"
+                asChild
+              >
+                <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                  Log in
+                </Link>
+              </Button>
+              <Button
+                className="w-full bg-[#14b8a6] hover:bg-[#0d9488] text-white"
+                asChild
+              >
+                <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
+                  Try it free →
+                </Link>
+              </Button>
             </div>
           </div>
         </animated.div>
-      </div>
-    </header>
+      </header>
+    </>
   )
 }

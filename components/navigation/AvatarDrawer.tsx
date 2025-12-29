@@ -13,6 +13,9 @@ import {
   ChevronRight,
   Sparkles,
   Trophy,
+  Gift,
+  Target,
+  Lock,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "./SidebarContext"
@@ -24,6 +27,7 @@ export function AvatarDrawer() {
   const { isDrawerOpen, setIsDrawerOpen } = useSidebar()
   const [user, setUser] = useState<any>(null)
   const [stats, setStats] = useState({ itemCount: 0, outfitCount: 0 })
+  const [streak, setStreak] = useState(0)
   const [isPro, setIsPro] = useState(false)
 
   useEffect(() => {
@@ -52,6 +56,15 @@ export function AvatarDrawer() {
           itemCount: itemCount || 0,
           outfitCount: outfitCount || 0,
         })
+
+        // Fetch streak data
+        const { data: streakData } = await supabase
+          .from("user_streaks")
+          .select("current_streak")
+          .eq("user_id", user.id)
+          .single()
+
+        setStreak(streakData?.current_streak || 0)
 
         // Check subscription status
         const { data: subscription } = await supabase
@@ -143,104 +156,155 @@ export function AvatarDrawer() {
           transform: drawerSpring.x.to((x) => `translateX(${x}%)`),
         }}
       >
-        {/* User profile section with gradient background */}
+        {/* User profile section */}
         <button
           onClick={handleProfileClick}
-          className="w-full flex items-center gap-4 p-4 pt-6 pb-6 text-left group relative"
+          className="w-full flex items-center gap-3 p-4 pb-2 text-left group"
         >
-          {/* Dark gradient background for visual separation */}
-          <div className="absolute inset-0 bg-gradient-to-b from-muted/50 to-transparent pointer-events-none" />
-
-          <Avatar className="h-[72px] w-[72px] ring-2 ring-primary relative">
+          <Avatar className="h-14 w-14 ring-2 ring-primary">
             <AvatarImage src={user?.user_metadata?.avatar_url} alt={displayName} />
-            <AvatarFallback className="text-2xl bg-primary/10">{initials}</AvatarFallback>
+            <AvatarFallback className="text-xl bg-primary/10">{initials}</AvatarFallback>
           </Avatar>
-          <div className="flex-1 min-w-0 relative">
-            <p className="font-bold text-foreground truncate text-xl">{displayName}</p>
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-foreground truncate text-lg">{displayName}</p>
             <p className="text-sm text-muted-foreground truncate">@{username}</p>
-            <p className="text-sm text-primary mt-1 font-medium">
-              {stats.itemCount} items • {stats.outfitCount} outfits
-            </p>
+            <p className="text-xs text-[#14b8a6] mt-0.5">Edit Profile</p>
           </div>
-          <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0 group-hover:text-primary transition-colors relative" />
+          <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0 group-hover:text-primary transition-colors" />
         </button>
+
+        {/* Stats Dashboard */}
+        <div className="grid grid-cols-3 gap-2 px-4 pb-4">
+          <div className="bg-white/5 rounded-lg p-3 text-center">
+            <p className="text-xl font-bold text-foreground">{stats.itemCount}</p>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Items</p>
+          </div>
+          <div className="bg-white/5 rounded-lg p-3 text-center">
+            <p className="text-xl font-bold text-foreground">{stats.outfitCount}</p>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Outfits</p>
+          </div>
+          {streak > 0 ? (
+            <div className="bg-orange-500/15 border border-orange-500/30 rounded-lg p-3 text-center">
+              <p className="text-xl font-bold text-foreground">🔥 {streak}</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Streak</p>
+            </div>
+          ) : (
+            <button
+              onClick={() => { handleClose(); router.push("/dashboard"); }}
+              className="relative bg-white/5 rounded-lg p-3 text-center hover:bg-white/10 transition-colors group"
+            >
+              <p className="text-xl font-bold text-foreground">🎯 Start</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Streak</p>
+              <ChevronRight className="absolute right-1 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity" />
+            </button>
+          )}
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-white/10 mx-4" />
 
         {/* Upgrade prompt for free tier */}
         {!isPro && (
-          <div className="px-4 pb-6">
+          <div className="px-4 py-4">
             <Link
               href="/subscription"
               onClick={handleClose}
-              className="block p-4 rounded-xl border border-[#C4515E]/40 border-l-4 border-l-[#C4515E] bg-gradient-to-r from-[#C4515E]/15 to-[#C4515E]/5 hover:from-[#C4515E]/20 hover:to-[#C4515E]/10 transition-all"
+              className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#C4515E]/15 to-transparent border-l-[3px] border-l-[#C4515E] rounded-xl hover:from-[#C4515E]/20 transition-colors"
             >
-              <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#C4515E]/20">
-                  <Crown className="h-5 w-5 text-[#C4515E]" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-semibold text-sm text-foreground">Upgrade to Pro</p>
-                  <p className="text-xs text-muted-foreground">Unlimited styling + exclusive drops</p>
-                </div>
-                <ChevronRight className="h-5 w-5 text-[#C4515E]" />
+              <Crown className="h-5 w-5 text-[#C4515E] shrink-0" />
+              <div className="flex-1">
+                <p className="font-semibold text-foreground">Upgrade to Pro</p>
+                <p className="text-sm text-muted-foreground">Unlimited outfits, weather AI & more</p>
               </div>
+              <ChevronRight className="h-5 w-5 text-muted-foreground" />
             </Link>
           </div>
         )}
 
-        {/* Quick Actions */}
-        <nav className="px-3 pt-4 space-y-2">
+        {/* Divider */}
+        <div className="border-t border-white/10 mx-4" />
+
+        {/* Weekly Challenge Card (Placeholder) */}
+        <div className="px-4 py-4">
+          <div className="p-4 bg-gradient-to-r from-[#14b8a6]/15 to-transparent border-l-[3px] border-l-[#14b8a6] rounded-xl opacity-75">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Target className="h-5 w-5 text-[#14b8a6]" />
+                <p className="font-semibold text-foreground">Weekly Challenge</p>
+              </div>
+              <span className="flex items-center gap-1 text-[10px] bg-[#14b8a6]/20 text-[#14b8a6] px-2 py-0.5 rounded-full"><Lock className="h-3 w-3" />Coming Soon</span>
+            </div>
+            <p className="text-sm text-muted-foreground">Style challenges with rewards</p>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-white/10 mx-4" />
+
+        {/* Menu Items */}
+        <nav className="px-3 pt-2 space-y-1">
           {/* Achievements */}
           <Link
             href="/achievements"
             onClick={handleClose}
-            className="flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-primary/10 transition-colors"
+            className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-[rgba(20,184,166,0.1)] active:bg-[rgba(20,184,166,0.15)] transition-colors duration-150"
           >
-            <Trophy className="h-6 w-6 text-amber-500 shrink-0" />
-            <span className="text-base font-semibold text-foreground">Achievements</span>
+            <Trophy className="h-5 w-5 text-amber-500 shrink-0" />
+            <span className="text-sm font-medium text-foreground">Achievements</span>
           </Link>
 
           {/* Style Quiz */}
           <Link
             href="/onboarding"
             onClick={handleClose}
-            className="flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-primary/10 transition-colors"
+            className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-[rgba(20,184,166,0.1)] active:bg-[rgba(20,184,166,0.15)] transition-colors duration-150"
           >
-            <Sparkles className="h-6 w-6 text-primary shrink-0" />
-            <span className="text-base font-semibold text-foreground">Style Quiz</span>
+            <Sparkles className="h-5 w-5 text-[#14b8a6] shrink-0" />
+            <span className="text-sm font-medium text-foreground">Style Quiz</span>
           </Link>
-        </nav>
 
-        {/* Account section */}
-        <nav className="px-3 pt-6 space-y-2">
+          {/* Invite Friends (Placeholder) */}
+          <button
+            disabled
+            className="w-full flex items-center gap-3 rounded-lg px-4 py-3 opacity-50 cursor-not-allowed"
+          >
+            <Gift className="h-5 w-5 text-[#14b8a6] shrink-0" />
+            <span className="text-sm font-medium text-foreground">Invite Friends</span>
+            <span className="ml-auto flex items-center gap-1 text-[10px] text-[#14b8a6]"><Lock className="h-3 w-3" />Coming Soon</span>
+          </button>
+
           {/* Settings */}
           <Link
             href="/settings"
             onClick={handleClose}
-            className="flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-primary/10 transition-colors"
+            className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-[rgba(20,184,166,0.1)] active:bg-[rgba(20,184,166,0.15)] transition-colors duration-150"
           >
-            <Settings className="h-6 w-6 text-muted-foreground shrink-0" />
-            <span className="text-base font-semibold text-foreground">Settings</span>
+            <Settings className="h-5 w-5 text-muted-foreground shrink-0" />
+            <span className="text-sm font-medium text-foreground">Settings</span>
           </Link>
 
-          {/* Help - external link */}
+          {/* Help */}
           <button
             onClick={handleHelpClick}
-            className="w-full flex items-center gap-4 rounded-xl px-3 py-4 hover:bg-primary/10 transition-colors"
+            className="w-full flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-[rgba(20,184,166,0.1)] active:bg-[rgba(20,184,166,0.15)] transition-colors duration-150"
           >
-            <HelpCircle className="h-6 w-6 text-muted-foreground shrink-0" />
-            <span className="text-base font-semibold text-foreground">Help</span>
+            <HelpCircle className="h-5 w-5 text-muted-foreground shrink-0" />
+            <span className="text-sm font-medium text-foreground">Help</span>
           </button>
         </nav>
 
         {/* Log out - pushed to bottom */}
-        <div className="mt-auto px-3 pt-8 pb-6">
-          <button
-            onClick={handleSignOut}
-            className="w-full flex items-center gap-4 rounded-xl px-3 py-4 text-[#C4515E] hover:bg-[#C4515E]/10 transition-colors"
-          >
-            <LogOut className="h-6 w-6 shrink-0" />
-            <span className="text-base font-semibold">Log out</span>
-          </button>
+        <div className="mt-auto">
+          <div className="border-t border-white/10 mx-4" />
+          <div className="px-3 py-4">
+            <button
+              onClick={handleSignOut}
+              className="w-full flex items-center gap-3 rounded-lg px-4 py-3 text-[#C4515E] hover:bg-[#C4515E]/10 active:bg-[#C4515E]/15 transition-colors duration-150"
+            >
+              <LogOut className="h-5 w-5 shrink-0" />
+              <span className="text-sm font-medium">Log out</span>
+            </button>
+          </div>
         </div>
       </animated.div>
     </div>

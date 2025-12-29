@@ -3,7 +3,7 @@
 export function SeeItInActionSection() {
   return (
     // Visual demo section with dark theme
-    <section className="py-20 bg-gradient-to-b from-zinc-900 via-zinc-900 to-zinc-900 text-white overflow-hidden relative">
+    <section className="py-20 bg-[#0a0a0a] text-white overflow-hidden relative">
       {/* Ambient glows */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[radial-gradient(ellipse,rgba(20,184,166,0.06)_0%,transparent_70%)] pointer-events-none" />
 
@@ -37,19 +37,19 @@ export function SeeItInActionSection() {
           </div>
         </div>
 
-        {/* Stats strip with teal accent and hover effects */}
-        <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center text-sm md:text-base">
-          <div className="group cursor-default">
-            <div className="text-4xl md:text-5xl font-bold text-[#14b8a6] transition-all duration-300 group-hover:scale-110 group-hover:text-[#14b8a6]">30s</div>
-            <div className="text-zinc-500 mt-2 text-sm uppercase tracking-wider group-hover:text-zinc-400 transition-colors duration-300">Average styling time</div>
+        {/* Stats strip with visual card containers */}
+        <div className="mt-16 flex justify-center gap-4 md:gap-8">
+          <div className="px-6 py-4 rounded-xl bg-white/[0.03] border border-white/[0.05] text-center group cursor-default hover:border-white/[0.1] transition-all duration-300">
+            <div className="text-3xl font-bold text-[#14b8a6] transition-all duration-300 group-hover:scale-110">30s</div>
+            <div className="text-xs text-zinc-400 mt-1 uppercase tracking-wider">Avg styling time</div>
           </div>
-          <div className="group cursor-default">
-            <div className="text-4xl md:text-5xl font-bold text-[#14b8a6] transition-all duration-300 group-hover:scale-110 group-hover:text-[#14b8a6]">1000+</div>
-            <div className="text-zinc-500 mt-2 text-sm uppercase tracking-wider group-hover:text-zinc-400 transition-colors duration-300">Outfit combinations</div>
+          <div className="px-6 py-4 rounded-xl bg-white/[0.03] border border-white/[0.05] text-center group cursor-default hover:border-white/[0.1] transition-all duration-300">
+            <div className="text-3xl font-bold text-[#14b8a6] transition-all duration-300 group-hover:scale-110">1000+</div>
+            <div className="text-xs text-zinc-400 mt-1 uppercase tracking-wider">Outfit combos</div>
           </div>
-          <div className="group cursor-default">
-            <div className="text-4xl md:text-5xl font-bold text-[#14b8a6] transition-all duration-300 group-hover:scale-110 group-hover:text-[#14b8a6]">0</div>
-            <div className="text-zinc-500 mt-2 text-sm uppercase tracking-wider group-hover:text-zinc-400 transition-colors duration-300">Fashion degree required</div>
+          <div className="px-6 py-4 rounded-xl bg-white/[0.03] border border-white/[0.05] text-center group cursor-default hover:border-white/[0.1] transition-all duration-300">
+            <div className="text-3xl font-bold text-[#14b8a6] transition-all duration-300 group-hover:scale-110">0</div>
+            <div className="text-xs text-zinc-400 mt-1 uppercase tracking-wider">Fashion degree</div>
           </div>
         </div>
       </div>

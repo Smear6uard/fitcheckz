@@ -3,7 +3,6 @@ import { HeroSection } from "@/components/landing/hero-section"
 import { FeaturesSection } from "@/components/landing/features-section"
 import { HowItWorksSection } from "@/components/landing/how-it-works-section"
 import { DifferentSection } from "@/components/landing/different-section"
-import { EmailCaptureSection } from "@/components/landing/email-capture-section"
 import { PricingSection } from "@/components/landing/pricing-section"
 import { FAQSection } from "@/components/landing/faq-section"
 import { CTASection } from "@/components/landing/cta-section"
@@ -30,15 +29,12 @@ export default function LandingPage() {
           <DifferentSection />
         </ScrollReveal>
         <ScrollReveal delay={400}>
-          <EmailCaptureSection />
-        </ScrollReveal>
-        <ScrollReveal delay={500}>
           <PricingSection />
         </ScrollReveal>
-        <ScrollReveal delay={600}>
+        <ScrollReveal delay={500}>
           <FAQSection />
         </ScrollReveal>
-        <ScrollReveal delay={700}>
+        <ScrollReveal delay={600}>
           <CTASection />
         </ScrollReveal>
       </main>

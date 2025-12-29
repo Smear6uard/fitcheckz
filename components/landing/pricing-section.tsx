@@ -21,7 +21,7 @@ const tiers = [
   {
     name: "Pro",
     id: "tier-pro",
-    price: "$9.99",
+    price: "$6.99",
     period: "/month",
     bestFor: "style obsessives",
     description: "Unlimited styling for the fashion-forward.",
@@ -40,7 +40,7 @@ const tiers = [
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="py-16 lg:py-20 bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 relative overflow-hidden">
+    <section id="pricing" className="py-16 lg:py-20 bg-[#0f0f0f] relative overflow-hidden">
       {/* Ambient glows */}
       <div className="absolute top-1/4 -left-40 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(20,184,166,0.05)_0%,transparent_60%)] pointer-events-none" />
       <div className="absolute bottom-1/4 -right-40 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(20,184,166,0.05)_0%,transparent_60%)] pointer-events-none" />
@@ -63,18 +63,15 @@ export function PricingSection() {
                 key={tier.id}
                 className={`relative flex flex-col rounded-2xl p-8 transition-all duration-500 group overflow-hidden ${
                   tier.featured
-                    ? "bg-zinc-900 border-2 border-[#14b8a6] shadow-[0_0_60px_rgba(20,184,166,0.15)] scale-105 lg:scale-110 hover:-translate-y-3 hover:shadow-[0_0_100px_rgba(20,184,166,0.25)]"
-                    : "bg-zinc-900 border border-zinc-800 hover:shadow-[0_20px_50px_rgba(20,184,166,0.08)] hover:-translate-y-2 hover:border-[rgba(20,184,166,0.3)]"
+                    ? "bg-gradient-to-b from-[rgba(20,184,166,0.1)] to-transparent border border-[rgba(20,184,166,0.3)] shadow-lg shadow-[rgba(20,184,166,0.1)] scale-105 hover:-translate-y-3 hover:shadow-[0_0_60px_rgba(20,184,166,0.2)]"
+                    : "bg-white/[0.02] border border-white/[0.05] hover:shadow-[0_20px_50px_rgba(20,184,166,0.08)] hover:-translate-y-2 hover:border-white/[0.1]"
                 }`}
               >
-                {/* Background glow on hover for non-featured */}
-                {!tier.featured && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[rgba(20,184,166,0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                )}
-
-                {/* Top gradient line for featured */}
+                {/* Most Popular badge for featured tier */}
                 {tier.featured && (
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#14b8a6] to-transparent" />
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#14b8a6] text-white text-xs font-semibold shadow-lg">
+                    Most Popular
+                  </div>
                 )}
 
                 <div className="relative z-10">
@@ -82,12 +79,6 @@ export function PricingSection() {
                     <h3 className="text-lg font-semibold text-zinc-100">
                       {tier.name}
                     </h3>
-                    {/* Teal accent badge for featured tier */}
-                    {tier.featured && (
-                      <span className="rounded-full bg-[#14b8a6] text-zinc-950 px-3 py-1 text-xs font-medium">
-                        Popular
-                      </span>
-                    )}
                   </div>
                   <p className="text-xs font-medium mb-4 text-zinc-500">
                     {tier.featured ? "For" : "Best for"} {tier.bestFor}

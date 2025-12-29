@@ -6,7 +6,7 @@ import Link from "next/link"
 
 export function HeroSection() {
   return (
-    <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-20 overflow-hidden bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900">
+    <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-20 overflow-hidden bg-[#0a0a0a]">
       {/* Background decoration - subtle teal glows */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         {/* Main center glow */}
@@ -23,11 +23,6 @@ export function HeroSection() {
         <div className="grid lg:grid-cols-5 gap-12 lg:gap-16 items-center">
           {/* Left: Text Content (60% on desktop) */}
           <div className="lg:col-span-3 text-center lg:text-left">
-            {/* Badge with accent border */}
-            <span className="inline-flex mb-6 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-primary border border-primary/30 rounded-full bg-primary/10">
-              AI Stylist
-            </span>
-
             <h1 className="font-sans text-5xl font-bold tracking-tight text-zinc-100 sm:text-6xl lg:text-7xl leading-[1.05] text-balance">
               Stop staring at your{" "}
               <span className="font-bold text-[#14b8a6]">closet.</span>
@@ -45,7 +40,7 @@ export function HeroSection() {
                 asChild
               >
                 <Link href="/signup" className="flex items-center">
-                  <span>Try it free</span>
+                  <span>Get your first outfit</span>
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:scale-110" />
                 </Link>
               </Button>
@@ -56,7 +51,7 @@ export function HeroSection() {
                 className="group/btn2 text-base px-8 py-6 w-full sm:w-auto bg-transparent border-zinc-700 text-zinc-100 hover:border-[#14b8a6] hover:bg-[rgba(20,184,166,0.1)] hover:text-white hover:scale-105 hover:shadow-[0_0_20px_rgba(20,184,166,0.3)] transition-all duration-300"
                 asChild
               >
-                <Link href="#how-it-works">See How It Works</Link>
+                <Link href="#how-it-works">See how it works</Link>
               </Button>
             </div>
 

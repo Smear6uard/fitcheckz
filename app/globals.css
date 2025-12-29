@@ -165,9 +165,18 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+  }
+  img, video, iframe {
+    max-width: 100%;
+    height: auto;
   }
 }
 
@@ -647,14 +656,28 @@
     @apply hover:-translate-y-1 hover:border-muted-foreground/30;
   }
 
-  /* Primary button styling */
+  /* Primary button styling with enhanced hover */
   .btn-primary {
-    @apply bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold transition-all duration-300 hover:bg-primary/90 hover:-translate-y-0.5 inline-flex items-center gap-2;
+    @apply bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold transition-all duration-200 inline-flex items-center gap-2;
   }
 
-  /* Secondary button styling */
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(20, 184, 166, 0.3);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  /* Secondary button styling with enhanced hover */
   .btn-secondary {
-    @apply bg-transparent text-foreground px-8 py-4 rounded-lg font-medium border border-border transition-all duration-300 hover:border-muted-foreground hover:bg-white/[0.03];
+    @apply bg-transparent text-foreground px-8 py-4 rounded-lg font-medium border border-border transition-all duration-200;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
   }
 
   /* Section badge */

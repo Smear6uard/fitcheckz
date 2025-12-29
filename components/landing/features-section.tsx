@@ -6,40 +6,39 @@ import { ScrollReveal } from "@/components/common/ScrollReveal"
 const features = [
   {
     name: "AI Style Analysis",
-    description:
-      "Analyzes your actual wardrobe items for color, fit, and style compatibility. Learns your preferences from what you wear.",
+    description: "Learns your colors, fit, and vibe automatically.",
     icon: Sparkles,
   },
   {
     name: "Digital Wardrobe",
-    description: "Upload photos of clothes you actually own. Organize by category, color, and occasion. Your real closet, digitized.",
+    description: "Your real closet, organized and searchable.",
     icon: Camera,
   },
   {
     name: "Color Coordination",
-    description: "Matches colors based on your skin tone and color theory. Suggests combinations that work with your existing pieces.",
+    description: "Matches colors that actually work together.",
     icon: Palette,
   },
   {
     name: "Occasion Planning",
-    description: "Get outfit suggestions for specific events, weather, and times of day. From work meetings to weekend brunch.",
+    description: "Right outfit for work, dates, or weekends.",
     icon: Calendar,
   },
   {
     name: "Style Evolution",
-    description: "Tracks which outfits you actually wear. Learns your style patterns and suggests new directions to explore.",
+    description: "Tracks what you wear. Gets smarter over time.",
     icon: TrendingUp,
   },
   {
     name: "Privacy First",
-    description: "Your photos and data are encrypted and stored securely. We never share or sell your wardrobe information.",
+    description: "Your photos stay yours. Always encrypted.",
     icon: Lock,
   },
 ]
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="py-16 lg:py-20 bg-gradient-to-b from-zinc-900 via-zinc-950 to-zinc-950 relative">
+    <section id="features" className="py-16 lg:py-20 bg-[#0f0f0f] relative">
       {/* Subtle ambient glow */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(20,184,166,0.06)_0%,transparent_60%)] pointer-events-none" />
 
@@ -48,14 +47,11 @@ export function FeaturesSection() {
         <div className="max-w-4xl text-left mb-16">
           <h2 className="text-xs font-semibold text-[#14b8a6] uppercase tracking-[0.15em] mb-3">FEATURES</h2>
           <p className="mt-2 font-sans text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl lg:text-6xl leading-tight text-balance">
-            Your actual clothes.{" "}
+            Your closet.{" "}
             <span className="relative inline-block">
-              <span className="text-[#14b8a6]">Actual fits.</span>
+              <span className="text-[#14b8a6]">Styled by AI.</span>
               <span className="absolute -bottom-1 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-[#14b8a6] to-transparent rounded-full opacity-90" />
             </span>
-          </p>
-          <p className="mt-4 text-base leading-7 text-zinc-400 max-w-xl">
-            Your closet. Styled by AI.
           </p>
         </div>
 
