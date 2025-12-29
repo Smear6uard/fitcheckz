@@ -1,11 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { animated, useSpring } from "@react-spring/web"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import { UserMenu } from "@/components/auth/UserMenu"
+import { cn } from "@/lib/utils"
 
 const navigation = [
   { name: "Features", href: "#features" },
@@ -15,6 +17,25 @@ const navigation = [
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [mobileMenuOpen])
+
+  // Mobile menu animation - slide from right
+  const menuSpring = useSpring({
+    x: mobileMenuOpen ? 0 : 100,
+    backdropOpacity: mobileMenuOpen ? 1 : 0,
+    config: { tension: 300, friction: 30 },
+  })
 
   // Simple inline scroll handler that accounts for fixed header
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -87,60 +108,88 @@ export function Header() {
         </div>
       </nav>
 
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50">
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
-          <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-zinc-950 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
-            <div className="flex items-center justify-between">
-              <Link href="/" className="flex items-center gap-2 -m-1.5 p-1.5">
-                <Image
-                  src="/favicon.png"
-                  alt="Styleum"
-                  width={28}
-                  height={28}
-                  className="rounded-md"
-                />
-                <span className="font-sans text-xl font-bold text-zinc-100 tracking-tight">
-                  Styleum<span className="text-cyan-400">.</span>
-                </span>
-              </Link>
-              <button
-                type="button"
-                className="-m-2.5 rounded-md p-2.5 text-white"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <span className="sr-only">Close menu</span>
-                <X className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </div>
-            <div className="mt-6 flow-root">
-              <div className="-my-6 divide-y divide-white/10">
-                <div className="space-y-2 py-6">
-                  {navigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      onClick={(e) => handleNavClick(e, item.href)}
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-white hover:bg-white/5"
-                    >
-                      {item.name}
-                    </a>
-                  ))}
-                </div>
-                <div className="py-6 space-y-3">
-                  <Button variant="outline" className="w-full bg-transparent border-white/20 text-white hover:bg-white/5" asChild>
-                    <Link href="/login">Log in</Link>
-                  </Button>
-                  <Button className="w-full" asChild>
-                    <Link href="/signup">Get Started</Link>
-                  </Button>
-                </div>
+      {/* Mobile menu - Always rendered for smooth animations */}
+      <div
+        className={cn(
+          "lg:hidden fixed inset-0 z-[100]",
+          !mobileMenuOpen && "pointer-events-none"
+        )}
+        style={{ visibility: mobileMenuOpen ? "visible" : "hidden" }}
+      >
+        {/* Backdrop */}
+        <animated.div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+          style={{ opacity: menuSpring.backdropOpacity }}
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+        {/* Slide-in panel */}
+        <animated.div
+          className="fixed inset-y-0 right-0 z-[101] w-full overflow-y-auto bg-zinc-950 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10"
+          style={{
+            transform: menuSpring.x.to((x) => `translateX(${x}%)`),
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <Link
+              href="/"
+              className="flex items-center gap-2 -m-1.5 p-1.5"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Image
+                src="/favicon.png"
+                alt="Styleum"
+                width={28}
+                height={28}
+                className="rounded-md"
+              />
+              <span className="font-sans text-xl font-bold text-zinc-100 tracking-tight">
+                Styleum<span className="text-cyan-400">.</span>
+              </span>
+            </Link>
+            <button
+              type="button"
+              className="-m-2.5 rounded-md p-2.5 text-white hover:bg-white/5 transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <X className="h-6 w-6" aria-hidden="true" />
+            </button>
+          </div>
+          <div className="mt-6 flow-root">
+            <div className="-my-6 divide-y divide-white/10">
+              <div className="space-y-2 py-6">
+                {navigation.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    onClick={(e) => handleNavClick(e, item.href)}
+                    className="-mx-3 block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/5 transition-colors"
+                  >
+                    {item.name}
+                  </a>
+                ))}
+              </div>
+              <div className="py-6 space-y-3">
+                <Button
+                  variant="outline"
+                  className="w-full bg-transparent border-white/20 text-white hover:bg-white/5"
+                  asChild
+                >
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                    Log in
+                  </Link>
+                </Button>
+                <Button className="w-full" asChild>
+                  <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
+                    Get Started
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        </animated.div>
+      </div>
     </header>
   )
 }
