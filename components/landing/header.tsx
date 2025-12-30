@@ -66,8 +66,9 @@ export function Header() {
               </div>
             </Link>
 
-            {/* Desktop nav - centered feel */}
-            <div className="hidden lg:flex lg:items-center lg:gap-12">
+            {/* Right side - all nav items */}
+            <div className="hidden lg:flex lg:items-center lg:gap-8">
+              {/* Nav links */}
               {navigation.map((item) => (
                 <a
                   key={item.name}
@@ -76,36 +77,31 @@ export function Header() {
                   className="relative text-sm font-medium text-white/50 hover:text-white transition-colors py-2 group"
                 >
                   {item.name}
-                  {/* Underline on hover */}
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#C4515E] group-hover:w-full transition-all duration-300" />
                 </a>
               ))}
-            </div>
 
-            {/* Right side - CTA cluster */}
-            <div className="hidden lg:flex lg:items-center lg:gap-4">
-              {/* Sign in - text link */}
+              {/* Sign in */}
               <Link
                 href="/login"
                 className="text-sm font-medium text-white/50 hover:text-white transition-colors px-3 py-2"
               >
                 Sign in
               </Link>
-              
-              {/* Primary CTA - pill with 7AM badge */}
+
+              {/* Primary CTA */}
               <Link
                 href="/signup"
                 className="group flex items-center gap-2 bg-[#C4515E] hover:bg-[#B34452] text-white font-semibold pl-3 pr-5 py-3 rounded-full text-sm transition-all hover:-translate-y-0.5 shadow-lg shadow-[#C4515E]/25"
               >
-                {/* 7AM badge */}
                 <span className="flex items-center justify-center w-10 h-6 font-mono text-xs bg-white/20 rounded-md group-hover:bg-white/30 transition-colors">
                   7AM
                 </span>
                 <span>Get started</span>
-                <svg 
-                  className="w-4 h-4 ml-0.5 group-hover:translate-x-0.5 transition-transform" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="w-4 h-4 ml-0.5 group-hover:translate-x-0.5 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
