@@ -68,7 +68,7 @@ export function HeroScroll() {
               transition={{ duration: 0.6 }}
             >
               <h2 className="text-display font-bold">
-                <span className="text-[#C4515E]/40">But feel like you</span>
+                <span className="text-[#C4515E]/60">But feel like you</span>
                 <br />
                 <span className="text-[#C4515E]">have nothing.</span>
               </h2>
@@ -117,7 +117,7 @@ export function HeroScroll() {
                   <span>Get tomorrow&apos;s outfit</span>
                 </Link>
                 <p className="text-[#9CA3AF] text-sm mt-4">
-                  Free forever · 2 min setup
+                  AI-powered styling · Free forever · 2 min setup
                 </p>
               </motion.div>
 
