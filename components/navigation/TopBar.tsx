@@ -18,7 +18,7 @@ export function TopBar({ className }: { className?: string }) {
       {/* Desktop top bar - logo left, avatar right */}
       <header
         className={cn(
-          "sticky top-0 z-50 h-14 border-b border-[#1f1f1f] bg-[#0f0f0f]",
+          "sticky top-0 z-50 h-14 border-b border-border bg-background",
           "hidden md:flex items-center justify-between px-4",
           className
         )}
@@ -32,7 +32,7 @@ export function TopBar({ className }: { className?: string }) {
             height={28}
             className="rounded-md"
           />
-          <span className="font-serif text-lg text-white">
+          <span className="font-serif text-lg text-foreground">
             Styleum<span className="text-primary">.</span>
           </span>
         </Link>

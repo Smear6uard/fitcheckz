@@ -59,8 +59,8 @@ export function QuizOption({
         "relative flex flex-col items-center justify-center gap-2 rounded-2xl border-2 p-4 transition-colors",
         "min-h-[100px] touch-target",
         isSelected
-          ? "border-brand-lime bg-gradient-to-br from-brand-lime/10 to-brand-teal/10"
-          : "border-border bg-card hover:border-brand-lavender hover:bg-accent/50"
+          ? "border-primary bg-primary/10"
+          : "border-border bg-card hover:border-primary/50 hover:bg-accent/50"
       )}
     >
       {/* Selection glow */}
@@ -69,12 +69,12 @@ export function QuizOption({
           opacity: glowSpring.opacity,
           transform: glowSpring.scale.to((s) => `scale(${s})`),
         }}
-        className="absolute inset-0 rounded-2xl bg-gradient-to-br from-brand-lime/20 to-brand-teal/20 blur-sm"
+        className="absolute inset-0 rounded-2xl bg-primary/20 blur-sm"
       />
 
       {/* Checkmark for selected */}
       {isSelected && (
-        <div className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-brand-lime text-xs font-bold text-brand-charcoal shadow-md">
+        <div className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground shadow-md">
           ✓
         </div>
       )}

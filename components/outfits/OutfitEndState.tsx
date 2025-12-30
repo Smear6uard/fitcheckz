@@ -64,7 +64,7 @@ export function OutfitEndState({
         }}
         className="mb-6"
       >
-        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-500/20 to-[rgba(20,184,166,0.2)] flex items-center justify-center">
+        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-500/20 to-primary/20 flex items-center justify-center">
           <CheckCircle2 className="w-10 h-10 text-green-500" />
         </div>
       </animated.div>
@@ -97,8 +97,8 @@ export function OutfitEndState({
         <div className="h-8 w-px bg-border" />
 
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-[rgba(20,184,166,0.2)] flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-[#14b8a6]" />
+          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-primary" />
           </div>
           <div className="text-left">
             <p className="text-lg font-bold">{totalOutfits}</p>
@@ -114,7 +114,7 @@ export function OutfitEndState({
       >
         <Button
           onClick={onCurateMore}
-          className="w-full gap-2 bg-gradient-to-r from-brand-accent to-brand-accent-dark hover:opacity-90"
+          className="w-full gap-2 bg-primary hover:bg-primary/90"
           size="lg"
         >
           <Sparkles className="w-4 h-4" />

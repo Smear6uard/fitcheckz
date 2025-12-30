@@ -81,7 +81,7 @@ export function PricingCard({
           <Button
             onClick={handleUpgrade}
             disabled={loading}
-            className="w-full bg-[#14b8a6] text-white hover:bg-[#0d9488]"
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
           >
             {loading ? "Processing..." : "Upgrade to Pro"}
           </Button>

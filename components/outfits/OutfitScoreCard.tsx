@@ -20,7 +20,7 @@ interface OutfitScoreCardProps {
  */
 function getScorePillColor(score: number): string {
   if (score >= 80) return "bg-green-500/20 text-green-400 border-green-500/30"
-  if (score >= 60) return "bg-[rgba(20,184,166,0.2)] text-[#14b8a6] border-[rgba(20,184,166,0.3)]"
+  if (score >= 60) return "bg-primary/20 text-primary border-primary/30"
   if (score >= 40) return "bg-amber-500/20 text-amber-400 border-amber-500/30"
   return "bg-red-500/20 text-red-400 border-red-500/30"
 }

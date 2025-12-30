@@ -102,7 +102,7 @@ export function PublicProfile({
       {/* Profile header */}
       <animated.div
         style={headerSpring}
-        className="relative rounded-2xl border bg-gradient-to-br from-brand-cream via-white to-brand-lavender/20 p-6 sm:p-8"
+        className="relative rounded-2xl border bg-gradient-to-br from-background via-white to-secondary p-6 sm:p-8"
       >
         {/* Background pattern */}
         <div className="absolute inset-0 overflow-hidden rounded-2xl opacity-5">
@@ -113,7 +113,7 @@ export function PublicProfile({
           {/* Avatar */}
           <Avatar className="h-24 w-24 sm:h-32 sm:w-32 ring-4 ring-white shadow-lg">
             <AvatarImage src={profile.avatar_url} />
-            <AvatarFallback className="text-2xl bg-gradient-to-br from-brand-lime to-brand-teal text-brand-charcoal">
+            <AvatarFallback className="text-2xl bg-primary text-primary-foreground">
               {getInitials(profile.display_name || profile.username)}
             </AvatarFallback>
           </Avatar>
@@ -128,7 +128,7 @@ export function PublicProfile({
                 {profile.aesthetic_preference && (
                   <Badge
                     variant="secondary"
-                    className="bg-gradient-to-r from-brand-lavender/30 to-brand-teal/20"
+                    className="bg-primary/20"
                   >
                     {getAestheticEmoji(profile.aesthetic_preference)}{" "}
                     {profile.aesthetic_preference}
@@ -197,7 +197,7 @@ export function PublicProfile({
       {/* Outfits grid */}
       <div>
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-brand-lime" />
+          <Sparkles className="h-5 w-5 text-primary" />
           Public Outfits
         </h2>
 
@@ -281,7 +281,7 @@ function OutfitPreviewCard({
 
         {/* Score badge */}
         {outfit.overall_score && (
-          <div className="absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-brand-lime to-brand-teal text-xs font-bold text-brand-charcoal">
+          <div className="absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
             {outfit.overall_score}
           </div>
         )}

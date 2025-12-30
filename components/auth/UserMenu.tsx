@@ -68,7 +68,7 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+        <Button variant="ghost" className="relative h-9 w-9 rounded-full hover:bg-primary/10">
           <Avatar className="h-9 w-9">
             <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email} />
             <AvatarFallback>{initials}</AvatarFallback>

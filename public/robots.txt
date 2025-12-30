@@ -1,0 +1,22 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://styleum.app/sitemap.xml
+
+# Disallow admin and API routes
+Disallow: /api/
+Disallow: /admin/
+
+# Disallow auth pages from indexing (duplicate content)
+Disallow: /login
+Disallow: /signup
+Disallow: /reset-password
+
+# Disallow protected dashboard pages
+Disallow: /wardrobe
+Disallow: /outfits
+Disallow: /analytics
+Disallow: /profile
+Disallow: /subscription

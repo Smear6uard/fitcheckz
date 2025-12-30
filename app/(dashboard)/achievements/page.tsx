@@ -51,11 +51,11 @@ interface AchievementsResponse {
 }
 
 const categoryConfig = {
-  wardrobe: { icon: Shirt, label: "Wardrobe", color: "text-brand-teal" },
-  outfits: { icon: Sparkles, label: "Outfits", color: "text-brand-lime" },
+  wardrobe: { icon: Shirt, label: "Wardrobe", color: "text-primary" },
+  outfits: { icon: Sparkles, label: "Outfits", color: "text-primary" },
   streak: { icon: Flame, label: "Streaks", color: "text-orange-500" },
   social: { icon: Users, label: "Social", color: "text-blue-500" },
-  style: { icon: Palette, label: "Style", color: "text-brand-lavender" },
+  style: { icon: Palette, label: "Style", color: "text-muted-foreground" },
 }
 
 const rarityOrder = ["common", "uncommon", "rare", "epic", "legendary"] as const
@@ -136,7 +136,7 @@ export default function AchievementsPage() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
-        <Loader2 className="h-8 w-8 animate-spin text-brand-teal mb-4" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
         <p className="text-muted-foreground">Loading your achievements...</p>
       </div>
     )
@@ -359,11 +359,10 @@ export default function AchievementsPage() {
                       <div
                         className={cn(
                           "flex h-10 w-10 items-center justify-center rounded-lg",
-                          config.color === "text-brand-teal" && "bg-brand-teal/20",
-                          config.color === "text-brand-lime" && "bg-brand-lime/20",
+                          config.color === "text-primary" && "bg-primary/20",
                           config.color === "text-orange-500" && "bg-orange-500/20",
                           config.color === "text-blue-500" && "bg-blue-500/20",
-                          config.color === "text-brand-lavender" && "bg-brand-lavender/20"
+                          config.color === "text-muted-foreground" && "bg-secondary"
                         )}
                       >
                         <Icon className={cn("h-5 w-5", config.color)} />
@@ -397,7 +396,7 @@ export default function AchievementsPage() {
       )}
 
       {/* Share Progress Card */}
-      <Card className="border-brand-teal/50 bg-gradient-to-r from-brand-teal/10 to-brand-lime/10">
+      <Card className="border-primary/50 bg-primary/10">
         <CardContent className="flex flex-col sm:flex-row items-center justify-between gap-4 py-6">
           <div>
             <p className="font-semibold">Share your achievements</p>

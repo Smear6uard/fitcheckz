@@ -77,14 +77,14 @@ export function StyleChipSelector({
                 "relative flex flex-col items-center justify-center gap-1.5 rounded-xl border-2 p-3 transition-colors",
                 "touch-target min-h-[72px]",
                 isSelected
-                  ? "border-brand-lime bg-gradient-to-br from-brand-lime/10 to-brand-teal/10 shadow-md"
-                  : "border-border bg-card hover:border-brand-lavender hover:bg-accent/50",
+                  ? "border-primary bg-primary/10 shadow-md"
+                  : "border-border bg-card hover:border-primary/50 hover:bg-accent/50",
                 disabled && "cursor-not-allowed opacity-50"
               )}
             >
               {/* Selection indicator */}
               {isSelected && (
-                <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-lime text-xs font-bold text-brand-charcoal">
+                <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
                   ✓
                 </div>
               )}
@@ -152,8 +152,8 @@ export function InlineChipSelector({
               "inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-all",
               "touch-target",
               isSelected
-                ? "bg-brand-teal text-white shadow-md"
-                : "bg-accent text-muted-foreground hover:bg-brand-lavender/50",
+                ? "bg-primary text-primary-foreground shadow-md"
+                : "bg-accent text-muted-foreground hover:bg-primary/20",
               disabled && "cursor-not-allowed opacity-50"
             )}
           >
@@ -203,7 +203,7 @@ export function SliderChipSelector({
       {/* Sliding indicator */}
       <animated.div
         style={indicatorSpring}
-        className="absolute inset-y-1 rounded-lg bg-gradient-to-r from-brand-teal to-brand-lime shadow-md"
+        className="absolute inset-y-1 rounded-lg bg-primary shadow-md"
       />
 
       {/* Options */}
@@ -219,7 +219,7 @@ export function SliderChipSelector({
             className={cn(
               "relative z-10 flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors",
               "touch-target",
-              isSelected ? "text-white" : "text-muted-foreground",
+              isSelected ? "text-primary-foreground" : "text-muted-foreground",
               !disabled && "hover:text-foreground"
             )}
           >

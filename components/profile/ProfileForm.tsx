@@ -126,7 +126,7 @@ export function ProfileForm() {
           </div>
           <div className="flex items-center gap-2">
             {formData.is_public ? (
-              <Globe className="h-4 w-4 text-brand-teal" />
+              <Globe className="h-4 w-4 text-primary" />
             ) : (
               <Lock className="h-4 w-4 text-muted-foreground" />
             )}
@@ -140,7 +140,7 @@ export function ProfileForm() {
           </div>
         </div>
         {formData.is_public && (
-          <p className="text-xs text-brand-teal">
+          <p className="text-xs text-primary">
             Your profile will be visible at fitcheckz.com/u/{formData.username}
           </p>
         )}

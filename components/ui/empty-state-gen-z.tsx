@@ -54,7 +54,7 @@ const VARIANTS: Record<
     actionHref: "/wardrobe/add",
     icon: Shirt,
     emoji: "👗",
-    accentColor: "from-brand-teal to-brand-lime",
+    accentColor: "bg-primary",
   },
   outfits: {
     title: "No fits yet? We can fix that",
@@ -64,7 +64,7 @@ const VARIANTS: Record<
     actionHref: "/outfits/generate",
     icon: Sparkles,
     emoji: "✨",
-    accentColor: "from-brand-lime to-brand-teal",
+    accentColor: "bg-primary",
   },
   favorites: {
     title: "No saved looks... yet",
@@ -74,7 +74,7 @@ const VARIANTS: Record<
     actionHref: "/outfits/generate",
     icon: Heart,
     emoji: "💕",
-    accentColor: "from-brand-blush to-brand-lavender",
+    accentColor: "bg-primary/80",
   },
   history: {
     title: "Your style journey starts here",
@@ -84,7 +84,7 @@ const VARIANTS: Record<
     actionHref: "/outfits/generate",
     icon: TrendingUp,
     emoji: "📈",
-    accentColor: "from-brand-lavender to-brand-teal",
+    accentColor: "bg-primary",
   },
   analytics: {
     title: "Not enough data yet",
@@ -94,7 +94,7 @@ const VARIANTS: Record<
     actionHref: "/wardrobe/add",
     icon: Palette,
     emoji: "🎨",
-    accentColor: "from-brand-teal to-brand-lavender",
+    accentColor: "bg-primary",
   },
 }
 
@@ -117,7 +117,7 @@ export function EmptyStateGenZ({
   const displayActionHref = actionHref || config_data?.actionHref
   const Icon = CustomIcon || config_data?.icon || Sparkles
   const emoji = config_data?.emoji || "✨"
-  const accentColor = config_data?.accentColor || "from-brand-teal to-brand-lime"
+  const accentColor = config_data?.accentColor || "bg-primary"
 
   // Floating animation for icon
   const floatSpring = useSpring({
@@ -162,7 +162,7 @@ export function EmptyStateGenZ({
         {/* Background glow */}
         <div
           className={cn(
-            "absolute inset-0 rounded-full bg-gradient-to-br opacity-20 blur-xl",
+            "absolute inset-0 rounded-full opacity-20 blur-xl",
             accentColor
           )}
           style={{ transform: "scale(1.5)" }}
@@ -171,7 +171,7 @@ export function EmptyStateGenZ({
         {/* Icon circle */}
         <div
           className={cn(
-            "relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br shadow-lg",
+            "relative flex h-24 w-24 items-center justify-center rounded-full shadow-lg",
             accentColor
           )}
         >
@@ -201,14 +201,14 @@ export function EmptyStateGenZ({
           {displayActionHref ? (
             <Button
               asChild
-              className="btn-glow bg-gradient-to-r from-brand-teal to-brand-lime font-semibold text-brand-charcoal hover:opacity-90"
+              className="btn-glow bg-primary font-semibold text-primary-foreground hover:opacity-90"
             >
               <Link href={displayActionHref}>{displayActionLabel}</Link>
             </Button>
           ) : onAction ? (
             <Button
               onClick={onAction}
-              className="btn-glow bg-gradient-to-r from-brand-teal to-brand-lime font-semibold text-brand-charcoal hover:opacity-90"
+              className="btn-glow bg-primary font-semibold text-primary-foreground hover:opacity-90"
             >
               {displayActionLabel}
             </Button>

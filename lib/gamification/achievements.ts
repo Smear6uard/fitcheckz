@@ -350,7 +350,7 @@ export function getRarityConfig(rarity: Achievement["rarity"]) {
       return {
         gradient: "from-gray-400 to-gray-500",
         glow: "shadow-gray-400/30",
-        bgColor: "bg-[#1A1A1A] border border-[#2A2A2A]",
+        bgColor: "bg-card border border-border",
         textColor: "text-gray-400",
         label: "Common",
       }
@@ -358,7 +358,7 @@ export function getRarityConfig(rarity: Achievement["rarity"]) {
       return {
         gradient: "from-green-400 to-green-500",
         glow: "shadow-green-400/30",
-        bgColor: "bg-[#1A1A1A] border border-green-500/30",
+        bgColor: "bg-card border border-green-500/30",
         textColor: "text-green-400",
         label: "Uncommon",
       }
@@ -366,7 +366,7 @@ export function getRarityConfig(rarity: Achievement["rarity"]) {
       return {
         gradient: "from-blue-400 to-blue-500",
         glow: "shadow-blue-400/30",
-        bgColor: "bg-[#1A1A1A] border border-blue-500/30",
+        bgColor: "bg-card border border-blue-500/30",
         textColor: "text-blue-400",
         label: "Rare",
       }
@@ -374,7 +374,7 @@ export function getRarityConfig(rarity: Achievement["rarity"]) {
       return {
         gradient: "from-purple-400 to-purple-500",
         glow: "shadow-purple-400/30",
-        bgColor: "bg-[#1A1A1A] border border-purple-500/30",
+        bgColor: "bg-card border border-purple-500/30",
         textColor: "text-purple-400",
         label: "Epic",
       }
@@ -382,7 +382,7 @@ export function getRarityConfig(rarity: Achievement["rarity"]) {
       return {
         gradient: "from-amber-400 to-orange-500",
         glow: "shadow-amber-400/30",
-        bgColor: "bg-[#1A1A1A] border border-amber-500/30",
+        bgColor: "bg-card border border-amber-500/30",
         textColor: "text-amber-400",
         label: "Legendary",
       }

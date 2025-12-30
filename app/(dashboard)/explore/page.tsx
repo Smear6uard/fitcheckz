@@ -26,7 +26,7 @@ export default function ExplorePage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-3">
-            <Compass className="h-8 w-8 text-brand-teal" />
+            <Compass className="h-8 w-8 text-primary" />
             Explore
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -38,10 +38,10 @@ export default function ExplorePage() {
 
       {/* Stats/highlights banner */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border bg-gradient-to-br from-brand-lime/10 to-transparent p-4">
+        <div className="rounded-xl border bg-gradient-to-br from-primary/10 to-transparent p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-lime/20">
-              <TrendingUp className="h-5 w-5 text-brand-lime" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
+              <TrendingUp className="h-5 w-5 text-primary" />
             </div>
             <div>
               <p className="text-2xl font-bold">Trending</p>
@@ -52,10 +52,10 @@ export default function ExplorePage() {
           </div>
         </div>
 
-        <div className="rounded-xl border bg-gradient-to-br from-brand-lavender/10 to-transparent p-4">
+        <div className="rounded-xl border bg-gradient-to-br from-secondary to-transparent p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-lavender/20">
-              <Users className="h-5 w-5 text-brand-lavender" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+              <Users className="h-5 w-5 text-muted-foreground" />
             </div>
             <div>
               <p className="text-2xl font-bold">Community</p>
@@ -66,10 +66,10 @@ export default function ExplorePage() {
           </div>
         </div>
 
-        <div className="rounded-xl border bg-gradient-to-br from-brand-teal/10 to-transparent p-4">
+        <div className="rounded-xl border bg-gradient-to-br from-primary/10 to-transparent p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-teal/20">
-              <Compass className="h-5 w-5 text-brand-teal" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
+              <Compass className="h-5 w-5 text-primary" />
             </div>
             <div>
               <p className="text-2xl font-bold">Discover</p>

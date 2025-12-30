@@ -97,7 +97,7 @@ export function PublicToggle({
                 <Icon
                   className={cn(
                     "h-4 w-4 transition-colors",
-                    isPublic ? "text-brand-teal" : "text-muted-foreground"
+                    isPublic ? "text-primary" : "text-muted-foreground"
                   )}
                 />
               )}
@@ -108,7 +108,7 @@ export function PublicToggle({
               onCheckedChange={handleToggle}
               disabled={isLoading}
               className={cn(
-                isPublic && "data-[state=checked]:bg-brand-teal"
+                isPublic && "data-[state=checked]:bg-primary"
               )}
             />
             {showLabel && (

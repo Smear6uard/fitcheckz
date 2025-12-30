@@ -75,8 +75,8 @@ export function QuizComplete({ onContinue, preferences }: QuizCompleteProps) {
         }}
         className="relative mb-6"
       >
-        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-brand-lime to-brand-teal shadow-lg">
-          <Sparkles className="h-12 w-12 text-brand-charcoal" />
+        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary shadow-lg">
+          <Sparkles className="h-12 w-12 text-primary-foreground" />
         </div>
         <span className="absolute -right-2 -top-2 text-4xl">🎉</span>
       </animated.div>
@@ -100,7 +100,7 @@ export function QuizComplete({ onContinue, preferences }: QuizCompleteProps) {
       {/* Summary */}
       <animated.div
         style={contentSpring}
-        className="mb-8 w-full max-w-md rounded-2xl border border-brand-lavender/30 bg-card/50 p-6"
+        className="mb-8 w-full max-w-md rounded-2xl border border-primary/30 bg-card/50 p-6"
       >
         <h3 className="mb-4 text-lg font-semibold text-foreground">
           Your Style Profile
@@ -140,7 +140,7 @@ export function QuizComplete({ onContinue, preferences }: QuizCompleteProps) {
       <animated.div style={buttonSpring}>
         <Button
           onClick={onContinue}
-          className="btn-glow h-14 gap-2 bg-gradient-to-r from-brand-teal to-brand-lime px-8 text-lg font-semibold text-brand-charcoal"
+          className="btn-glow h-14 gap-2 bg-primary px-8 text-lg font-semibold text-primary-foreground"
         >
           Let's Go!
           <ArrowRight className="h-5 w-5" />

@@ -12,11 +12,11 @@ interface CelebrationAnimationProps {
 }
 
 const defaultColors = [
-  "#C8A46A", // gold accent
-  "#589991", // primary sage teal
-  "#D8E8E5", // primary tint
+  "#C4515E", // primary cherry red
+  "#B34452", // primary hover
   "#E8D5C8", // blush
   "#F5F3EE", // cream
+  "#FAFAF9", // background
 ]
 
 const sizeMap = {
@@ -138,7 +138,7 @@ export function SparkleBurst({
       onComplete={onComplete}
       particleCount={8}
       size="sm"
-      colors={["#C8A46A", "#589991", "#D8E8E5"]}
+      colors={["#C4515E", "#B34452", "#E8D5C8"]}
     />
   )
 }

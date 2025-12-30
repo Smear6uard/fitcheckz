@@ -293,7 +293,7 @@ export function StyleQuiz({ onComplete }: StyleQuizProps) {
         <Button
           onClick={handleNext}
           disabled={!canProceed || isSubmitting}
-          className="btn-glow gap-2 bg-gradient-to-r from-brand-teal to-brand-lime font-semibold text-brand-charcoal"
+          className="btn-glow gap-2 bg-primary font-semibold text-primary-foreground"
         >
           {isLastStep ? (isSubmitting ? "Saving..." : "Finish") : "Next"}
           {!isLastStep && <ArrowRight className="h-4 w-4" />}

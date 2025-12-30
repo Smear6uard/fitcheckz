@@ -155,7 +155,7 @@ export function PullToRefresh({
           className={cn(
             "flex flex-col items-center gap-2 py-4 px-6 rounded-full",
             "bg-card/90 backdrop-blur-sm shadow-lg border",
-            isTriggered && "border-brand-teal"
+            isTriggered && "border-primary"
           )}
         >
           <animated.div
@@ -170,7 +170,7 @@ export function PullToRefresh({
               <Loader2
                 className={cn(
                   "h-6 w-6",
-                  isTriggered ? "text-brand-teal" : "text-muted-foreground"
+                  isTriggered ? "text-primary" : "text-muted-foreground"
                 )}
               />
             ) : (
@@ -178,11 +178,11 @@ export function PullToRefresh({
                 <Shirt
                   className={cn(
                     "h-6 w-6 transition-colors",
-                    isTriggered ? "text-brand-teal" : "text-muted-foreground"
+                    isTriggered ? "text-primary" : "text-muted-foreground"
                   )}
                 />
                 {isTriggered && (
-                  <Sparkles className="absolute -top-1 -right-1 h-3 w-3 text-brand-lime" />
+                  <Sparkles className="absolute -top-1 -right-1 h-3 w-3 text-primary" />
                 )}
               </div>
             )}
@@ -192,7 +192,7 @@ export function PullToRefresh({
             className={cn(
               "text-xs font-medium transition-colors",
               isTriggered || isRefreshing
-                ? "text-brand-teal"
+                ? "text-primary"
                 : "text-muted-foreground"
             )}
           >

@@ -20,13 +20,13 @@ const defaultActions: FABAction[] = [
     icon: Sparkles,
     label: "Curate Outfit",
     href: "/outfits",
-    color: "bg-brand-lime text-brand-charcoal",
+    color: "bg-primary text-primary-foreground",
   },
   {
     icon: Shirt,
     label: "Add Item",
     href: "/wardrobe?action=add",
-    color: "bg-brand-teal text-white",
+    color: "bg-primary text-primary-foreground",
   },
 ]
 
@@ -72,14 +72,14 @@ export function FloatingActionButton({ className }: FloatingActionButtonProps) {
         icon: Shirt,
         label: "Add Item",
         href: "/wardrobe?action=add",
-        color: "bg-brand-teal",
+        color: "bg-primary",
       }
     }
     return {
       icon: Sparkles,
       label: "Curate Outfit",
       href: "/outfits",
-      color: "bg-brand-lime",
+      color: "bg-primary",
     }
   }, [pathname])
 

@@ -27,12 +27,12 @@ const mainNavItems = [
 
 const secondaryNavItems = [
   { href: "/achievements", icon: Trophy, label: "Achievements", iconColor: "text-yellow-500" },
-  { href: "/style-quiz", icon: Target, label: "Style Quiz", iconColor: "text-[#14b8a6]" },
+  { href: "/style-quiz", icon: Target, label: "Style Quiz", iconColor: "text-primary" },
 ]
 
 const bottomNavItems = [
-  { href: "/settings", icon: Settings, label: "Settings", iconColor: "text-[#9ca3af]" },
-  { href: "/help", icon: HelpCircle, label: "Help", iconColor: "text-[#9ca3af]" },
+  { href: "/settings", icon: Settings, label: "Settings", iconColor: "text-muted-foreground" },
+  { href: "/help", icon: HelpCircle, label: "Help", iconColor: "text-muted-foreground" },
 ]
 
 export function Sidebar({ className }: { className?: string }) {
@@ -73,13 +73,13 @@ export function Sidebar({ className }: { className?: string }) {
         href={href}
         className={cn(
           "relative flex items-center h-12 mx-2 my-1 px-3 rounded-lg transition-colors duration-150",
-          active && "bg-[rgba(20,184,166,0.1)]",
-          !active && "hover:bg-[rgba(255,255,255,0.05)]"
+          active && "bg-primary/10",
+          !active && "hover:bg-secondary"
         )}
       >
         {/* Active indicator */}
         {active && (
-          <span className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-[3px] bg-[#14b8a6] rounded-r" />
+          <span className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-[3px] bg-primary rounded-r" />
         )}
 
         {/* Fixed-width icon container - prevents icon jumping */}
@@ -87,7 +87,7 @@ export function Sidebar({ className }: { className?: string }) {
           <Icon
             className={cn(
               "h-5 w-5 transition-colors duration-200",
-              iconColor ? iconColor : (showTeal ? "text-[#14b8a6]" : "text-[#9ca3af]")
+              iconColor ? iconColor : (showTeal ? "text-primary" : "text-muted-foreground")
             )}
           />
         </div>
@@ -98,7 +98,7 @@ export function Sidebar({ className }: { className?: string }) {
             "ml-3 text-sm font-medium whitespace-nowrap",
             "opacity-0 group-hover/sidebar:opacity-100",
             "transition-opacity duration-200 delay-100",
-            active ? "text-white" : "text-[#9ca3af]"
+            active ? "text-foreground" : "text-muted-foreground"
           )}
         >
           {label}
@@ -111,7 +111,7 @@ export function Sidebar({ className }: { className?: string }) {
     <aside
       className={cn(
         "group/sidebar fixed left-0 top-14 z-40 h-[calc(100vh-3.5rem)]",
-        "bg-[#0a0a0a] border-r border-[#1f1f1f]",
+        "bg-background border-r border-border",
         "w-16 lg:hover:w-[200px] transition-[width] duration-300 ease-out",
         "overflow-hidden will-change-[width]",
         "flex flex-col",
@@ -154,7 +154,7 @@ export function Sidebar({ className }: { className?: string }) {
             onClick={handleLogout}
             className={cn(
               "relative flex items-center h-12 mx-2 my-1 px-3 rounded-lg transition-colors duration-150 w-[calc(100%-1rem)]",
-              "hover:bg-[rgba(255,255,255,0.05)]"
+              "hover:bg-secondary"
             )}
           >
             {/* Fixed-width icon container */}

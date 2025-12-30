@@ -168,18 +168,18 @@ export function AvatarDrawer() {
           <div className="flex-1 min-w-0">
             <p className="font-bold text-foreground truncate text-lg">{displayName}</p>
             <p className="text-sm text-muted-foreground truncate">@{username}</p>
-            <p className="text-xs text-[#14b8a6] mt-0.5">Edit Profile</p>
+            <p className="text-xs text-primary mt-0.5">Edit Profile</p>
           </div>
           <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0 group-hover:text-primary transition-colors" />
         </button>
 
         {/* Stats Dashboard */}
         <div className="grid grid-cols-3 gap-2 px-4 pb-4">
-          <div className="bg-white/5 rounded-lg p-3 text-center">
+          <div className="bg-secondary rounded-lg p-3 text-center">
             <p className="text-xl font-bold text-foreground">{stats.itemCount}</p>
             <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Items</p>
           </div>
-          <div className="bg-white/5 rounded-lg p-3 text-center">
+          <div className="bg-secondary rounded-lg p-3 text-center">
             <p className="text-xl font-bold text-foreground">{stats.outfitCount}</p>
             <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Outfits</p>
           </div>
@@ -191,7 +191,7 @@ export function AvatarDrawer() {
           ) : (
             <button
               onClick={() => { handleClose(); router.push("/dashboard"); }}
-              className="relative bg-white/5 rounded-lg p-3 text-center hover:bg-white/10 transition-colors group"
+              className="relative bg-secondary rounded-lg p-3 text-center hover:bg-secondary/80 transition-colors group"
             >
               <p className="text-xl font-bold text-foreground">🎯 Start</p>
               <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Streak</p>
@@ -201,7 +201,7 @@ export function AvatarDrawer() {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-white/10 mx-4" />
+        <div className="border-t border-border mx-4" />
 
         {/* Upgrade prompt for free tier */}
         {!isPro && (
@@ -222,24 +222,24 @@ export function AvatarDrawer() {
         )}
 
         {/* Divider */}
-        <div className="border-t border-white/10 mx-4" />
+        <div className="border-t border-border mx-4" />
 
         {/* Weekly Challenge Card (Placeholder) */}
         <div className="px-4 py-4">
-          <div className="p-4 bg-gradient-to-r from-[#14b8a6]/15 to-transparent border-l-[3px] border-l-[#14b8a6] rounded-xl opacity-75">
+          <div className="p-4 bg-gradient-to-r from-primary/15 to-transparent border-l-[3px] border-l-primary rounded-xl opacity-75">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <Target className="h-5 w-5 text-[#14b8a6]" />
+                <Target className="h-5 w-5 text-primary" />
                 <p className="font-semibold text-foreground">Weekly Challenge</p>
               </div>
-              <span className="flex items-center gap-1 text-[10px] bg-[#14b8a6]/20 text-[#14b8a6] px-2 py-0.5 rounded-full"><Lock className="h-3 w-3" />Coming Soon</span>
+              <span className="flex items-center gap-1 text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded-full"><Lock className="h-3 w-3" />Coming Soon</span>
             </div>
             <p className="text-sm text-muted-foreground">Style challenges with rewards</p>
           </div>
         </div>
 
         {/* Divider */}
-        <div className="border-t border-white/10 mx-4" />
+        <div className="border-t border-border mx-4" />
 
         {/* Menu Items */}
         <nav className="px-3 pt-2 space-y-1">
@@ -247,7 +247,7 @@ export function AvatarDrawer() {
           <Link
             href="/achievements"
             onClick={handleClose}
-            className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-[rgba(20,184,166,0.1)] active:bg-[rgba(20,184,166,0.15)] transition-colors duration-150"
+            className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-primary/10 active:bg-primary/15 transition-colors duration-150"
           >
             <Trophy className="h-5 w-5 text-amber-500 shrink-0" />
             <span className="text-sm font-medium text-foreground">Achievements</span>
@@ -257,9 +257,9 @@ export function AvatarDrawer() {
           <Link
             href="/onboarding"
             onClick={handleClose}
-            className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-[rgba(20,184,166,0.1)] active:bg-[rgba(20,184,166,0.15)] transition-colors duration-150"
+            className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-primary/10 active:bg-primary/15 transition-colors duration-150"
           >
-            <Sparkles className="h-5 w-5 text-[#14b8a6] shrink-0" />
+            <Sparkles className="h-5 w-5 text-primary shrink-0" />
             <span className="text-sm font-medium text-foreground">Style Quiz</span>
           </Link>
 
@@ -268,16 +268,16 @@ export function AvatarDrawer() {
             disabled
             className="w-full flex items-center gap-3 rounded-lg px-4 py-3 opacity-50 cursor-not-allowed"
           >
-            <Gift className="h-5 w-5 text-[#14b8a6] shrink-0" />
+            <Gift className="h-5 w-5 text-primary shrink-0" />
             <span className="text-sm font-medium text-foreground">Invite Friends</span>
-            <span className="ml-auto flex items-center gap-1 text-[10px] text-[#14b8a6]"><Lock className="h-3 w-3" />Coming Soon</span>
+            <span className="ml-auto flex items-center gap-1 text-[10px] text-primary"><Lock className="h-3 w-3" />Coming Soon</span>
           </button>
 
           {/* Settings */}
           <Link
             href="/settings"
             onClick={handleClose}
-            className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-[rgba(20,184,166,0.1)] active:bg-[rgba(20,184,166,0.15)] transition-colors duration-150"
+            className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-primary/10 active:bg-primary/15 transition-colors duration-150"
           >
             <Settings className="h-5 w-5 text-muted-foreground shrink-0" />
             <span className="text-sm font-medium text-foreground">Settings</span>
@@ -295,7 +295,7 @@ export function AvatarDrawer() {
 
         {/* Log out - pushed to bottom */}
         <div className="mt-auto">
-          <div className="border-t border-white/10 mx-4" />
+          <div className="border-t border-border mx-4" />
           <div className="px-3 py-4">
             <button
               onClick={handleSignOut}

@@ -47,7 +47,7 @@ export function ExploreOutfitCard({ outfit, currentUserId }: ExploreOutfitCardPr
   const cardSpring = useSpring({
     transform: isHovered ? "translateY(-4px) scale(1.01)" : "translateY(0px) scale(1)",
     boxShadow: isHovered
-      ? "0 16px 32px -8px rgba(32, 200, 168, 0.2), 0 8px 16px -4px rgba(0, 0, 0, 0.1)"
+      ? "0 16px 32px -8px rgba(196, 81, 94, 0.2), 0 8px 16px -4px rgba(0, 0, 0, 0.1)"
       : "0 2px 8px -2px rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.04)",
     config: config.gentle,
   })
@@ -102,7 +102,7 @@ export function ExploreOutfitCard({ outfit, currentUserId }: ExploreOutfitCardPr
 
         {/* Score badge */}
         {outfit.overall_score && (
-          <div className="absolute top-3 right-3 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-lime to-brand-teal text-sm font-bold text-brand-charcoal shadow-lg">
+          <div className="absolute top-3 right-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground shadow-lg">
             {outfit.overall_score}
           </div>
         )}
@@ -126,14 +126,14 @@ export function ExploreOutfitCard({ outfit, currentUserId }: ExploreOutfitCardPr
           >
             <Avatar className="h-8 w-8 ring-2 ring-white/20">
               <AvatarImage src={outfit.author.avatar_url} />
-              <AvatarFallback className="text-xs bg-brand-lavender text-brand-charcoal">
+              <AvatarFallback className="text-xs bg-primary/20 text-foreground">
                 {getInitials(
                   outfit.author.display_name || outfit.author.username
                 )}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-white font-medium text-sm truncate group-hover/author:text-brand-lime transition-colors">
+              <p className="text-white font-medium text-sm truncate group-hover/author:text-primary transition-colors">
                 {outfit.author.display_name || outfit.author.username}
               </p>
               <p className="text-white/60 text-xs">

@@ -87,8 +87,8 @@ export function Navbar() {
       className={cn(
         "sticky top-0 z-[95] safe-area-top transition-colors duration-300",
         scrolled
-          ? "bg-[#0A0A0A]/85 border-b border-[#2A2A2A]"
-          : "bg-[#0A0A0A]/60 border-b border-transparent"
+          ? "bg-background/85 border-b border-border"
+          : "bg-background/60 border-b border-transparent"
       )}
     >
       <div className="container mx-auto px-4">
@@ -107,7 +107,7 @@ export function Navbar() {
                   height={32}
                   className="rounded-md"
                 />
-                <span className="font-serif text-lg text-white">
+                <span className="font-serif text-lg text-foreground">
                   Styleum<span className="text-primary">.</span>
                 </span>
               </animated.div>
@@ -123,7 +123,7 @@ export function Navbar() {
                     asChild
                     className={cn(
                       "gap-2 touch-target transition-all duration-200",
-                      isActive && "bg-[#1A1A1A] text-white"
+                      isActive && "bg-secondary text-foreground"
                     )}
                   >
                     <Link href={item.href}>
@@ -139,7 +139,7 @@ export function Navbar() {
             <div className="flex md:hidden">
               <button
                 type="button"
-                className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-white hover:bg-[#1A1A1A] transition-colors touch-target"
+                className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-foreground hover:bg-secondary transition-colors touch-target"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label={mobileMenuOpen ? "Close main menu" : "Open main menu"}
                 aria-expanded={mobileMenuOpen}
@@ -187,7 +187,7 @@ export function Navbar() {
         />
         {/* Menu Panel */}
         <animated.div
-          className="fixed inset-y-0 right-0 z-[101] w-full max-w-sm overflow-y-auto bg-[#0A0A0A] shadow-xl"
+          className="fixed inset-y-0 right-0 z-[101] w-full max-w-sm overflow-y-auto bg-background shadow-xl"
           style={{
             transform: menuSpring.x.to((x) => `translateX(${x}px)`),
             opacity: menuSpring.opacity,
@@ -209,13 +209,13 @@ export function Navbar() {
                   height={32}
                   className="rounded-md"
                 />
-                <span className="font-serif text-xl text-white">
+                <span className="font-serif text-xl text-foreground">
                   Styleum<span className="text-primary">.</span>
                 </span>
               </Link>
               <button
                 type="button"
-                className="-m-2.5 rounded-md p-2.5 text-white hover:bg-[#1A1A1A] transition-colors touch-target"
+                className="-m-2.5 rounded-md p-2.5 text-foreground hover:bg-secondary transition-colors touch-target"
                 onClick={() => setMobileMenuOpen(false)}
                 aria-label="Close menu"
               >
@@ -236,8 +236,8 @@ export function Navbar() {
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-3 text-base font-semibold transition-colors touch-target",
                       isActive
-                        ? "bg-[#1A1A1A] text-white"
-                        : "text-[#8A8A8A] hover:bg-[#1A1A1A] hover:text-white active:bg-[#2A2A2A]"
+                        ? "bg-secondary text-foreground"
+                        : "text-muted-foreground hover:bg-secondary hover:text-foreground active:bg-secondary"
                     )}
                     aria-current={isActive ? "page" : undefined}
                   >

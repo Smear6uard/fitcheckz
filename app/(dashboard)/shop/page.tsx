@@ -11,7 +11,7 @@ export default function ShopPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-3">
-            <ShoppingBag className="h-8 w-8 text-brand-teal" />
+            <ShoppingBag className="h-8 w-8 text-primary" />
             Style Shop
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -23,10 +23,10 @@ export default function ShopPage() {
 
       {/* Features banner */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border bg-gradient-to-br from-brand-lime/10 to-transparent p-4">
+        <div className="rounded-xl border bg-gradient-to-br from-primary/10 to-transparent p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-lime/20">
-              <Target className="h-5 w-5 text-brand-lime" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
+              <Target className="h-5 w-5 text-primary" />
             </div>
             <div>
               <p className="font-semibold">Gap Analysis</p>
@@ -37,10 +37,10 @@ export default function ShopPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border bg-gradient-to-br from-brand-lavender/10 to-transparent p-4">
+        <div className="rounded-xl border bg-gradient-to-br from-secondary to-transparent p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-lavender/20">
-              <Sparkles className="h-5 w-5 text-brand-lavender" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+              <Sparkles className="h-5 w-5 text-muted-foreground" />
             </div>
             <div>
               <p className="font-semibold">AI Suggestions</p>
@@ -51,10 +51,10 @@ export default function ShopPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border bg-gradient-to-br from-brand-teal/10 to-transparent p-4">
+        <div className="rounded-xl border bg-gradient-to-br from-primary/10 to-transparent p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-teal/20">
-              <ShoppingBag className="h-5 w-5 text-brand-teal" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
+              <ShoppingBag className="h-5 w-5 text-primary" />
             </div>
             <div>
               <p className="font-semibold">Shop Direct</p>

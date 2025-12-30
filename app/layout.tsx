@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#14b8a6",
+  themeColor: "#C4515E",
   width: "device-width",
   initialScale: 1,
 }
@@ -51,7 +51,7 @@ export default function RootLayout({
           {children}
           <Toaster
             position="top-center"
-            theme="dark"
+            theme="light"
             offset={16}
             toastOptions={{
               className: "z-[9999]",

@@ -111,7 +111,7 @@ export function DashboardContent({
       </div>
 
       {/* Daily Outfit Card */}
-      <Card className="bg-[#141414] border-[#2A2A2A] overflow-hidden">
+      <Card className="bg-card border-border overflow-hidden">
         <CardContent className="p-4 space-y-4">
           {/* Outfit Items Row */}
           <div className="flex items-center justify-center gap-3">
@@ -120,7 +120,7 @@ export function DashboardContent({
                 <div
                   key={item.id}
                   className={cn(
-                    "relative w-20 h-20 rounded-lg overflow-hidden bg-muted/50 border border-[#2A2A2A]",
+                    "relative w-20 h-20 rounded-lg overflow-hidden bg-muted/50 border border-border",
                     isShuffling && "animate-pulse"
                   )}
                 >
@@ -135,13 +135,13 @@ export function DashboardContent({
             ) : (
               // Placeholder when no items
               <>
-                <div className="w-20 h-20 rounded-lg bg-muted/30 border border-dashed border-[#2A2A2A] flex items-center justify-center">
+                <div className="w-20 h-20 rounded-lg bg-muted/30 border border-dashed border-border flex items-center justify-center">
                   <Shirt className="h-8 w-8 text-muted-foreground/50" />
                 </div>
-                <div className="w-20 h-20 rounded-lg bg-muted/30 border border-dashed border-[#2A2A2A] flex items-center justify-center">
+                <div className="w-20 h-20 rounded-lg bg-muted/30 border border-dashed border-border flex items-center justify-center">
                   <Shirt className="h-8 w-8 text-muted-foreground/50" />
                 </div>
-                <div className="w-20 h-20 rounded-lg bg-muted/30 border border-dashed border-[#2A2A2A] flex items-center justify-center">
+                <div className="w-20 h-20 rounded-lg bg-muted/30 border border-dashed border-border flex items-center justify-center">
                   <Shirt className="h-8 w-8 text-muted-foreground/50" />
                 </div>
               </>
@@ -169,7 +169,7 @@ export function DashboardContent({
               variant="outline"
               onClick={handleShuffle}
               disabled={wardrobeCount < 3 || isShuffling}
-              className="border-[#2A2A2A]"
+              className="border-border"
             >
               <Shuffle className={cn("h-4 w-4", isShuffling && "animate-spin")} />
             </Button>
@@ -181,7 +181,7 @@ export function DashboardContent({
       <div className="grid grid-cols-2 gap-3">
         {/* Streak Card */}
         <Link href="/achievements">
-          <Card className="bg-[#141414] border-[#2A2A2A] hover:border-primary/50 transition-colors cursor-pointer">
+          <Card className="bg-card border-border hover:border-primary/50 transition-colors cursor-pointer">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-1">
                 <Flame className="h-5 w-5 text-orange-500" />
@@ -198,7 +198,7 @@ export function DashboardContent({
 
         {/* Items Card */}
         <Link href="/wardrobe">
-          <Card className="bg-[#141414] border-[#2A2A2A] hover:border-primary/50 transition-colors cursor-pointer">
+          <Card className="bg-card border-border hover:border-primary/50 transition-colors cursor-pointer">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-1">
                 <Shirt className="h-5 w-5 text-primary" />
@@ -213,7 +213,7 @@ export function DashboardContent({
       {/* Conditional Card */}
       {wardrobeCount < 10 ? (
         // Build Your Closet
-        <Card className="bg-[#141414] border-[#2A2A2A]">
+        <Card className="bg-card border-border">
           <CardContent className="p-4 space-y-4">
             <div>
               <h3 className="font-semibold text-foreground">Build Your Closet</h3>
@@ -238,7 +238,7 @@ export function DashboardContent({
         </Card>
       ) : (
         // Complete Your Wardrobe
-        <Card className="bg-[#141414] border-[#2A2A2A] border-l-4 border-l-[#C4515E]">
+        <Card className="bg-card border-border border-l-4 border-l-[#C4515E]">
           <CardContent className="p-4">
             <h3 className="font-semibold text-foreground mb-1">
               Complete Your Wardrobe

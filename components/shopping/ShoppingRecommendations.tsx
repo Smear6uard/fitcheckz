@@ -114,7 +114,7 @@ export function ShoppingRecommendations() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-brand-teal mb-4" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
         <p className="text-muted-foreground">Analyzing your wardrobe...</p>
       </div>
     )
@@ -203,7 +203,7 @@ export function ShoppingRecommendations() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-brand-teal">
+            <p className="text-3xl font-bold text-primary">
               {analysis.missingEssentials.length + analysis.styleGaps.length}
             </p>
             <p className="text-xs text-muted-foreground">areas to improve</p>
@@ -242,10 +242,10 @@ export function ShoppingRecommendations() {
       {/* Identified Gaps */}
       {(analysis.missingEssentials.length > 0 ||
         analysis.styleGaps.length > 0) && (
-        <Card className="border-brand-teal/50 bg-brand-teal/5">
+        <Card className="border-primary/50 bg-primary/5">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-brand-teal" />
+              <AlertCircle className="h-5 w-5 text-primary" />
               Wardrobe Gaps Identified
             </CardTitle>
           </CardHeader>
@@ -257,7 +257,7 @@ export function ShoppingRecommendations() {
                     key={index}
                     className="flex items-center gap-2 text-sm text-muted-foreground"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand-teal" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                     {gap}
                   </div>
                 )
@@ -271,7 +271,7 @@ export function ShoppingRecommendations() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-brand-lime" />
+            <Sparkles className="h-6 w-6 text-primary" />
             Recommended For You
           </h2>
           <p className="text-muted-foreground">
@@ -325,7 +325,7 @@ export function ShoppingRecommendations() {
 
       {/* Wishlist Summary */}
       {wishlist.length > 0 && (
-        <Card className="bg-gradient-to-r from-brand-lime/10 to-brand-teal/10">
+        <Card className="bg-primary/10">
           <CardContent className="flex items-center justify-between py-4">
             <div>
               <p className="font-medium">

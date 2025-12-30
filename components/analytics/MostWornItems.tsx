@@ -67,8 +67,8 @@ export function MostWornItems({ items, className }: MostWornItemsProps) {
         return {
           icon: TrendingUp,
           label: "Rising",
-          gradient: "from-blue-400 to-[#14b8a6]",
-          glow: "shadow-[rgba(20,184,166,0.3)]",
+          gradient: "from-blue-400 to-primary",
+          glow: "shadow-primary/30",
         }
     }
   }
@@ -128,7 +128,7 @@ export function MostWornItems({ items, className }: MostWornItemsProps) {
                 >
                   <div className={cn(
                     "relative aspect-square rounded-xl overflow-hidden border-2 border-transparent transition-all",
-                    "hover:border-brand-lime hover:shadow-lg",
+                    "hover:border-primary hover:shadow-lg",
                     index === 0 && "ring-2 ring-amber-400 ring-offset-2 ring-offset-background"
                   )}>
                     {item.image_url ? (

@@ -232,7 +232,7 @@ export function ItemUpload() {
           {/* Content */}
           <div className="relative z-10 bg-gradient-to-br from-primary/10 via-background to-primary/5 p-8 rounded-lg">
             <DialogHeader className="relative z-10 text-center">
-              <DialogTitle className="text-3xl font-bold text-center mb-4 bg-gradient-to-r from-primary to-brand-lime bg-clip-text text-transparent">
+              <DialogTitle className="text-3xl font-bold text-center mb-4 text-primary">
                 {milestoneMsg.title}
               </DialogTitle>
               <DialogDescription className="text-base pt-2 text-center text-foreground/90 max-w-md mx-auto">
@@ -240,10 +240,10 @@ export function ItemUpload() {
               </DialogDescription>
             </DialogHeader>
             <div className="flex justify-center pt-8 pb-2 relative z-10">
-              <Button 
-                onClick={handleCelebrationComplete} 
+              <Button
+                onClick={handleCelebrationComplete}
                 size="lg"
-                className="bg-gradient-to-r from-brand-teal to-brand-lime text-brand-charcoal font-semibold hover:from-brand-teal/90 hover:to-brand-lime/90 shadow-lg px-8"
+                className="bg-primary text-primary-foreground font-semibold hover:bg-primary/90 shadow-lg px-8"
               >
                 Continue
               </Button>

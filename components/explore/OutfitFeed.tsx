@@ -128,7 +128,7 @@ export function OutfitFeed({ currentUserId }: OutfitFeedProps) {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-brand-teal mb-4" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
         <p className="text-muted-foreground">Loading trending outfits...</p>
       </div>
     )
@@ -182,7 +182,7 @@ export function OutfitFeed({ currentUserId }: OutfitFeedProps) {
                 className={cn(
                   "cursor-pointer transition-colors",
                   occasion === occ.value
-                    ? "bg-brand-teal hover:bg-brand-teal/90"
+                    ? "bg-primary hover:bg-primary/90"
                     : "hover:bg-muted"
                 )}
                 onClick={() => setOccasion(occ.value)}
@@ -213,7 +213,7 @@ export function OutfitFeed({ currentUserId }: OutfitFeedProps) {
       {/* Load more sentinel */}
       <div ref={loadMoreRef} className="h-20 flex items-center justify-center">
         {isLoadingMore && (
-          <Loader2 className="h-6 w-6 animate-spin text-brand-teal" />
+          <Loader2 className="h-6 w-6 animate-spin text-primary" />
         )}
         {!hasMore && outfits.length > 0 && (
           <p className="text-sm text-muted-foreground">

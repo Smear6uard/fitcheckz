@@ -53,7 +53,7 @@ export function RecommendationCard({
   const cardSpring = useSpring({
     transform: isHovered ? "translateY(-4px)" : "translateY(0px)",
     boxShadow: isHovered
-      ? "0 12px 24px -8px rgba(32, 200, 168, 0.15)"
+      ? "0 12px 24px -8px rgba(196, 81, 94, 0.15)"
       : "0 2px 8px -2px rgba(0, 0, 0, 0.08)",
     config: config.gentle,
   })
@@ -61,17 +61,17 @@ export function RecommendationCard({
   const priorityConfig = {
     high: {
       label: "Essential",
-      color: "bg-brand-lime text-brand-charcoal",
+      color: "bg-primary text-primary-foreground",
       icon: TrendingUp,
     },
     medium: {
       label: "Recommended",
-      color: "bg-brand-teal text-white",
+      color: "bg-primary/80 text-primary-foreground",
       icon: Sparkles,
     },
     low: {
       label: "Nice to Have",
-      color: "bg-brand-lavender text-brand-charcoal",
+      color: "bg-muted text-muted-foreground",
       icon: Minus,
     },
   }
@@ -148,9 +148,9 @@ export function RecommendationCard({
         </p>
 
         {/* Reason chip */}
-        <div className="flex items-start gap-2 text-sm bg-brand-lime/10 rounded-lg p-3">
-          <Sparkles className="h-4 w-4 text-brand-lime shrink-0 mt-0.5" />
-          <span className="text-brand-charcoal">{recommendation.reason}</span>
+        <div className="flex items-start gap-2 text-sm bg-primary/10 rounded-lg p-3">
+          <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+          <span className="text-foreground">{recommendation.reason}</span>
         </div>
 
         {/* Suggested colors */}
@@ -196,7 +196,7 @@ export function RecommendationCard({
             disabled={isAdded}
           >
             {isAdded ? (
-              <Check className="h-4 w-4 text-brand-teal" />
+              <Check className="h-4 w-4 text-primary" />
             ) : (
               <ShoppingBag className="h-4 w-4" />
             )}

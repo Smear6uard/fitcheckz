@@ -1,69 +1,88 @@
 "use client"
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
-import { ScrollReveal } from "@/components/common/ScrollReveal"
+import { motion, useInView } from "framer-motion"
+import { useRef, useState } from "react"
 
 const faqs = [
   {
-    question: "How does Styleum use my photos?",
+    question: "Will it actually match my style?",
     answer:
-      "Your wardrobe photos are stored securely and only used to generate outfit recommendations. We never share or sell your data.",
+      "Yes. You tell us your vibe, then the AI learns from what you wear and skip. After a week, it knows what you like better than you do.",
   },
   {
-    question: "How does the AI make recommendations?",
+    question: "What if I only have like 20 items?",
     answer:
-      "Our AI analyzes your items for color, style, and occasion compatibility, then suggests combinations based on your preferences and what works together.",
+      "Perfect. Most people only actually wear 20-30 things anyway. We'll find combinations you never knew existed in there.",
   },
   {
-    question: "Can I cancel anytime?",
+    question: "How long does setup actually take?",
     answer:
-      "Yes. You can cancel your Pro subscription at any time from your account settings. No questions asked.",
-  },
-  {
-    question: "What happens to my data if I delete my account?",
-    answer:
-      "All your photos and data are permanently deleted when you delete your account.",
+      "2 minutes. Snap some photos, answer 3 questions, wake up to outfits tomorrow. That's it.",
   },
 ]
 
 export function FAQSection() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.2 })
+  const [openIndex, setOpenIndex] = useState<number | null>(0)
+
   return (
-    <section className="py-16 lg:py-20 bg-[#0a0a0a] relative overflow-hidden">
-      {/* Ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(20,184,166,0.03)_0%,transparent_50%)] pointer-events-none" />
+    <section id="faq" className="bg-[#FDFBF7] py-12 md:py-16" ref={ref}>
+      <div className="max-w-2xl mx-auto px-6">
+        {/* Header */}
+        <motion.h2
+          className="text-3xl md:text-4xl font-bold text-[#1A1A1A] text-center mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+        >
+          You&apos;re probably wondering...
+        </motion.h2>
 
-      <div className="mx-auto max-w-6xl px-6 relative">
-        <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-xs font-semibold text-[#14b8a6] uppercase tracking-[0.15em] mb-3">FAQ</h2>
-          <p className="mt-2 font-sans text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl lg:text-6xl leading-tight text-balance">
-            You're probably wondering...
-          </p>
-        </div>
-
-        <div className="mx-auto max-w-3xl">
-          <Accordion type="single" collapsible defaultValue="item-0" className="w-full space-y-4">
-            {faqs.map((faq, index) => (
-              <ScrollReveal key={faq.question} delay={index * 100}>
-                {/* Dark accordion with dramatic hover effects */}
-                <AccordionItem
-                  value={`item-${index}`}
-                  className="bg-zinc-900 rounded-xl border border-zinc-800 px-6 transition-all duration-500 hover:border-[rgba(20,184,166,0.3)] hover:shadow-[0_10px_40px_rgba(20,184,166,0.08)] data-[state=open]:border-[rgba(20,184,166,0.3)] data-[state=open]:shadow-[0_10px_40px_rgba(20,184,166,0.08)]"
+        {/* Accordion */}
+        <div className="space-y-3">
+          {faqs.map((faq, index) => (
+            <motion.div
+              key={index}
+              className="bg-white rounded-xl border border-[#EBE5DC] overflow-hidden"
+              initial={{ opacity: 0, y: 16 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: index * 0.05 }}
+            >
+              <button
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full flex items-center justify-between p-5 text-left"
+              >
+                <span className="font-semibold text-[#1A1A1A] pr-4">
+                  {faq.question}
+                </span>
+                <svg
+                  className={`w-5 h-5 text-[#6B7280] flex-shrink-0 transition-transform duration-200 ${
+                    openIndex === index ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <AccordionTrigger className="text-left font-sans font-medium text-zinc-100 hover:no-underline hover:text-[#14b8a6] transition-colors duration-300">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-zinc-400 leading-relaxed">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              </ScrollReveal>
-            ))}
-          </Accordion>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <div
+                className={`overflow-hidden transition-all duration-200 ${
+                  openIndex === index ? "max-h-40" : "max-h-0"
+                }`}
+              >
+                <p className="px-5 pb-5 text-[#4C4C4B] leading-relaxed">
+                  {faq.answer}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

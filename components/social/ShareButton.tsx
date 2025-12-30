@@ -134,7 +134,7 @@ export function ShareButton({
           size={size}
           className={cn(
             "gap-2 transition-all",
-            isOpen && "bg-brand-lime/20 border-brand-lime",
+            isOpen && "bg-primary/20 border-primary",
             className
           )}
         >
@@ -184,7 +184,7 @@ export function ShareButton({
             onClick={handleNativeShare}
             className="cursor-pointer gap-3"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-lime to-brand-teal">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <Share2 className="h-4 w-4 text-white" />
             </div>
             <div className="flex flex-col">

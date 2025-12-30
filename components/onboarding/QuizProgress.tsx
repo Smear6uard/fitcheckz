@@ -28,7 +28,7 @@ export function QuizProgress({
       <div className="relative h-2 overflow-hidden rounded-full bg-muted">
         <animated.div
           style={progressSpring}
-          className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-brand-teal via-brand-lime to-brand-teal"
+          className="absolute inset-y-0 left-0 rounded-full bg-primary"
         />
       </div>
 
@@ -78,9 +78,9 @@ function StepIndicator({
         className={cn(
           "flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-colors",
           isCompleted
-            ? "bg-brand-teal text-white"
+            ? "bg-primary text-primary-foreground"
             : isCurrent
-              ? "bg-gradient-to-br from-brand-lime to-brand-teal text-brand-charcoal"
+              ? "bg-primary text-primary-foreground"
               : "bg-muted text-muted-foreground"
         )}
       >
